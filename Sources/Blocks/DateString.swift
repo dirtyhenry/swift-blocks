@@ -33,8 +33,16 @@ public struct DateString {
         self.init(date: date, calendar: calendar, formatter: formatter)
     }
 
-    private init(date: Date, calendar: Calendar = .current, formatter: ISO8601DateFormatter? = nil) {
-        self.formatter = formatter ?? Self.createFormatter(timeZone: calendar.timeZone)
+    /// Returns a date string initialized using their ISO 8601 representation.
+    /// - Parameters:
+    ///   - date: The date to represent.
+    ///   - calendar: The calendar — including the time zone — to use. The default is the current calendar.
+    public init(date: Date, calendar: Calendar = .current) {
+        self.init(date: date, calendar: calendar, formatter: Self.createFormatter(timeZone: calendar.timeZone))
+    }
+
+    private init(date: Date, calendar: Calendar = .current, formatter: ISO8601DateFormatter) {
+        self.formatter = formatter
         self.date = date
         self.calendar = calendar
     }
