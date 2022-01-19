@@ -11,7 +11,7 @@ release:
 	swift build -c release
 
 format:
-	swiftformat .
+	swiftformat --verbose .
 	swiftlint lint --autocorrect .
 	
 lint:
