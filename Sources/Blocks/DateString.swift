@@ -1,9 +1,30 @@
 import Foundation
 
+/// A string that represents dates using their ISO 8601 representations.
+///
+/// `DateString` is a way to handle dates with no time — such as `2022-03-02` for March 2nd of 2022 — to
+/// perform operations with convenience including adding days, dealing with ranges, etc.
+///
+/// ## Usage Overview
+///
+/// A date string can be initiated from a string literal, and can be used to create ranges.
+///
+/// ```swift
+/// let dateString: DateString = "2022-03-01"
+/// let aWeekLater = dateString.advanced(by: 7)
+/// for day in march1st ..< aWeekLater {
+///   print(day)
+/// }
+/// ```
 public struct DateString {
     // MARK: - Creating an instance
 
-    init?(from dateAsString: String, calendar: Calendar = .current) {
+    /// Returns a date string initialized using their ISO 8601 representation.
+    /// - Parameters:
+    ///   - dateAsString: The ISO 8601 representation of the date. For instance, `2022-03-02`for March 2nd of 2022.
+    ///   - calendar: The calendar — including the time zone — to use. The default is the current calendar.
+    /// - Returns:A date string, or `nil` if a valid date could not be created from `dateAsString`.
+    public init?(from dateAsString: String, calendar: Calendar = .current) {
         let formatter = Self.createFormatter(timeZone: calendar.timeZone)
         guard let date = formatter.date(from: dateAsString) else {
             return nil
@@ -26,7 +47,15 @@ public struct DateString {
 
     // MARK: - Converting to other formats
 
-    func string(with alternativeFormatter: DateFormatter) -> String {
+    /// Returns a string representation of the date that the system formats using the receiver’s current settings.
+    ///
+    /// Use this method only if you need a string representation of the date that is not ISO 8601.
+    ///
+    /// The return value might be irrelevant if the date formatter uses some time information.
+    ///
+    /// - Parameter alternativeFormatter: The date formatter to use.
+    /// - Returns: A string representation of the date.
+    public func string(with alternativeFormatter: DateFormatter) -> String {
         alternativeFormatter.string(from: date)
     }
 
