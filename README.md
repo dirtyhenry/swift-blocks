@@ -21,7 +21,8 @@ let package = Package(
 
 ## Usage
 
-The package is documented via DocC.
+The package is documented via
+[DocC on Vercel](https://blocks-git-vercel-dirtyhenry.vercel.app/documentation/blocks).
 
 ## License
 

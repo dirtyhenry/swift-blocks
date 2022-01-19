@@ -20,3 +20,11 @@ lint:
 
 clean:
 	rm -rf .build/
+
+docs:
+	xcodebuild docbuild -scheme "Blocks" -derivedDataPath tmp/derivedDataPath -destination platform=macOS
+	rsync -r tmp/derivedDataPath/Build/Products/Debug/Blocks.doccarchive/ .Blocks.doccarchive
+	rm -rf tmp/
+
+serve-docs:
+	serve --single .Blocks.doccarchive
