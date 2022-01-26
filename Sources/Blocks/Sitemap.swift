@@ -30,6 +30,16 @@ public class Sitemap {
         let lastmod: DateString?
         let changeFreq: ChangeFreq?
         let priority: Priority?
+
+        public init(location: URL,
+                    lastmod: DateString?,
+                    changeFreq: ChangeFreq?,
+                    priority: Priority?) {
+            self.location = location
+            self.lastmod = lastmod
+            self.changeFreq = changeFreq
+            self.priority = priority
+        }
     }
 
     public struct Priority {
