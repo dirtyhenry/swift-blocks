@@ -25,6 +25,10 @@ public class Sitemap {
         doc.rootElement()?.addChild(entry.xmlNode)
     }
 
+    public func xmlString(options: XMLNode.Options = []) -> String {
+        doc.xmlString(options: options)
+    }
+
     public struct URLEntry {
         let location: URL
         let lastmod: DateString?
