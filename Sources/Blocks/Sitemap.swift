@@ -44,12 +44,16 @@ public class Sitemap {
 
     public struct Priority {
         let value: Double
+
+        public init(value: Double) {
+            self.value = max(0.0, min(1.0, value))
+        }
     }
 }
 
 extension Sitemap.Priority: ExpressibleByFloatLiteral {
     public init(floatLiteral value: Double) {
-        self.value = max(0.0, min(1.0, value))
+        self.init(value: value)
     }
 }
 
