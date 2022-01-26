@@ -21,7 +21,7 @@ final class SitemapTests: XCTestCase {
                 <loc>http://www.example.com/</loc>
                 <lastmod>2005-01-02</lastmod>
                 <changefreq>monthly</changefreq>
-                <priority>0.8</priority>
+                <priority>0.80</priority>
             </url>
         </urlset>
         """

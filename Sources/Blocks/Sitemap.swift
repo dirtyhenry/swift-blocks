@@ -75,9 +75,21 @@ extension Sitemap.URLEntry {
         }
 
         if let priority = priority {
-            node.addChild(XMLElement(name: "priority", stringValue: priority.value.description))
+            node.addChild(XMLElement(name: "priority", stringValue: priority.description))
         }
 
         return node
+    }
+}
+
+extension Sitemap.Priority: CustomStringConvertible {
+    public var description: String {
+        let formatter = NumberFormatter()
+        formatter.localizesFormat = false
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 2
+        formatter.minimumFractionDigits = 2
+        formatter.roundingMode = .halfUp
+        return formatter.string(for: value)!
     }
 }
