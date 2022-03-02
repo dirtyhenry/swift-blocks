@@ -93,11 +93,23 @@ extension DateString: CustomDebugStringConvertible {
     }
 }
 
-@available(macOS 10.15, *)
 extension DateString: Strideable {
     public func distance(to other: DateString) -> Int {
-        let timeInterval = date.distance(to: other.date)
-        return Int(round(timeInterval / 86400.0))
+        if #available(macOS 10.15, iOS 13.0, *) {
+            // 🐇 A faster working — so far — alternative.
+            let timeInterval = date.distance(to: other.date)
+            return Int(round(timeInterval / 86400.0))
+        } else {
+            // 🐢 Intellectually satisfying but a little slow.
+            let start = calendar.ordinality(of: .day, in: .era, for: date)
+            let end = calendar.ordinality(of: .day, in: .era, for: other.date)
+
+            guard let start = start, let end = end else {
+                fatalError("The distance between 2 dates could not be computed.")
+            }
+
+            return end - start
+        }
     }
 
     public func advanced(by value: Int) -> DateString {

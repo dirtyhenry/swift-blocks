@@ -7,7 +7,8 @@ import PackageDescription
 let package = Package(
     name: "Blocks",
     platforms: [
-        .macOS(.v10_12)
+        .macOS(.v10_12),
+        .iOS(.v11)
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
