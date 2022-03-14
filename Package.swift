@@ -30,7 +30,8 @@ let package = Package(
         ),
         .testTarget(
             name: "BlocksTests",
-            dependencies: ["Blocks"]
+            dependencies: ["Blocks"],
+            resources: [.process("Resources")]
         )
     ]
 )

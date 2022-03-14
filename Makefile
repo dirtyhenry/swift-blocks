@@ -28,3 +28,6 @@ docs:
 
 serve-docs:
 	serve --single .Blocks.doccarchive
+
+fetch-json-feed-sample:
+	curl https://www.jsonfeed.org/feed.json -o Tests/BlocksTests/Resources/sample-feed.json
