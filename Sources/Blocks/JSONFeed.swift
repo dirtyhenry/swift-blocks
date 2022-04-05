@@ -1,8 +1,10 @@
 import Foundation
 
 struct JSONFeed: Codable {
+    static let version1_1: String = "https://jsonfeed.org/version/1.1"
+
     /// The URL of the version of the format the feed uses.
-    let version: String = "https://jsonfeed.org/version/1.1"
+    let version: String
 
     /// The name of the feed, which will often correspond to the the name of the website.
     var title: String
@@ -181,7 +183,8 @@ struct JSONFeed: Codable {
         }
     }
 
-    init(title: String,
+    init(version: String = JSONFeed.version1_1,
+         title: String,
          homePageURL: URL?,
          feedURL: URL?,
          description: String? = nil,
@@ -192,6 +195,7 @@ struct JSONFeed: Codable {
          authors: [Author]? = nil,
          isExpired: Bool? = nil,
          items: [Item] = []) {
+        self.version = version
         self.title = title
         self.homePageURL = homePageURL
         self.feedURL = feedURL
@@ -207,6 +211,7 @@ struct JSONFeed: Codable {
     }
 }
 
+@available(macOS 10.13, *)
 extension JSONFeed {
     static func createEncoder() -> JSONEncoder {
         let result = JSONEncoder()
