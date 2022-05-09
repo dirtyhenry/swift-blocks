@@ -1,13 +1,13 @@
 import Foundation
 
-struct JSONFeed: Codable {
-    static let version1_1: String = "https://jsonfeed.org/version/1.1"
+public struct JSONFeed: Codable {
+    public static let version1_1: String = "https://jsonfeed.org/version/1.1"
 
     /// The URL of the version of the format the feed uses.
-    let version: String
+    public let version: String
 
     /// The name of the feed, which will often correspond to the the name of the website.
-    var title: String
+    public var title: String
 
     /// The URL of the resource that the feed describes.
     ///
@@ -57,7 +57,7 @@ struct JSONFeed: Codable {
     /// The feed items.
     var items: [Item]
 
-    struct Author: Codable {
+    public struct Author: Codable {
         /// The author's name.
         var name: String?
 
@@ -70,12 +70,12 @@ struct JSONFeed: Codable {
         var avatar: URL?
     }
 
-    struct Hub: Codable {
+    public struct Hub: Codable {
         var type: String
         var url: URL
     }
 
-    struct Item: Codable {
+    public struct Item: Codable {
         /// Unique identifier for that item for that feed over time.
         ///
         /// A full URL of the resource described by the item makes a great identifier.
@@ -127,7 +127,7 @@ struct JSONFeed: Codable {
         /// Related resources.
         var attachments: [Attachment]?
 
-        struct Attachment: Codable {
+        public struct Attachment: Codable {
             /// The location of the attachment.
             var url: URL
 
@@ -152,20 +152,20 @@ struct JSONFeed: Codable {
             }
         }
 
-        init(id: String,
-             url: URL?,
-             externalURL: URL? = nil,
-             title: String? = nil,
-             contentHTML: String?,
-             contentText: String?,
-             summary: String? = nil,
-             image: URL? = nil,
-             bannerImage: URL? = nil,
-             datePublished: Date? = nil,
-             dateModified: Date? = nil,
-             authors: [Author]? = nil,
-             tags: [String]? = nil,
-             attachments: [Attachment]? = nil) {
+        public init(id: String,
+                    url: URL?,
+                    externalURL: URL? = nil,
+                    title: String? = nil,
+                    contentHTML: String?,
+                    contentText: String?,
+                    summary: String? = nil,
+                    image: URL? = nil,
+                    bannerImage: URL? = nil,
+                    datePublished: Date? = nil,
+                    dateModified: Date? = nil,
+                    authors: [Author]? = nil,
+                    tags: [String]? = nil,
+                    attachments: [Attachment]? = nil) {
             self.id = id
             self.url = url
             self.externalURL = externalURL
@@ -183,18 +183,18 @@ struct JSONFeed: Codable {
         }
     }
 
-    init(version: String = JSONFeed.version1_1,
-         title: String,
-         homePageURL: URL?,
-         feedURL: URL?,
-         description: String? = nil,
-         userComment: String? = nil,
-         nextURL: URL? = nil,
-         icon: URL? = nil,
-         favicon: URL? = nil,
-         authors: [Author]? = nil,
-         isExpired: Bool? = nil,
-         items: [Item] = []) {
+    public init(version: String = JSONFeed.version1_1,
+                title: String,
+                homePageURL: URL?,
+                feedURL: URL?,
+                description: String? = nil,
+                userComment: String? = nil,
+                nextURL: URL? = nil,
+                icon: URL? = nil,
+                favicon: URL? = nil,
+                authors: [Author]? = nil,
+                isExpired: Bool? = nil,
+                items: [Item] = []) {
         self.version = version
         self.title = title
         self.homePageURL = homePageURL
@@ -212,7 +212,7 @@ struct JSONFeed: Codable {
 }
 
 @available(macOS 10.13, *)
-extension JSONFeed {
+public extension JSONFeed {
     static func createEncoder() -> JSONEncoder {
         let result = JSONEncoder()
         result.dateEncodingStrategy = .javaScriptISO8601()
