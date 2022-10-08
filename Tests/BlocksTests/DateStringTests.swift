@@ -9,39 +9,59 @@ final class DateStringTests: XCTestCase {
         XCTAssertEqual(randomDate.advanced(by: 12).description, "2022-01-31")
         XCTAssertEqual(randomDate.advanced(by: 13).description, "2022-02-01")
     }
-
+    
     func testDaylightSavingTimePeriods() throws {
         // In France, time will change on March 27th in 2022.
         let march26 = DateString(from: "2022-03-26", calendar: .frenchCalendar())!
         XCTAssertEqual(march26.description, "2022-03-26")
         XCTAssertEqual(march26.advanced(by: 1).description, "2022-03-27")
         XCTAssertEqual(march26.advanced(by: 2).description, "2022-03-28")
-
+        
         // In New York, time will change on March 13th in 2022.
         let march12 = DateString(from: "2022-03-12", calendar: .newYorkCalendar())!
         XCTAssertEqual(march12.description, "2022-03-12")
         XCTAssertEqual(march12.advanced(by: 1).description, "2022-03-13")
         XCTAssertEqual(march12.advanced(by: 2).description, "2022-03-14")
     }
-
+    
     func testFormattingRangeOfDates() throws {
         let march1st = DateString(from: "2022-03-01", calendar: .frenchCalendar())!
         let aWeekLater = march1st.advanced(by: 7)
         let range = march1st ..< aWeekLater
-
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyyMMdd"
         let array = Array(range).map { $0.string(with: formatter) }
         XCTAssertEqual(array, ["20220301", "20220302", "20220303", "20220304", "20220305", "20220306", "20220307"])
     }
-
+    
     func testDistanceOfDatesIsConsistent() throws {
         let januaryFirst = DateString(from: "2022-01-01", calendar: .frenchCalendar())!
-
+        
         measure {
             for offset in 1 ... 100_000 {
                 XCTAssertEqual(januaryFirst.advanced(by: offset).distance(to: januaryFirst), -offset)
             }
         }
+    }
+    
+    struct MockCodable: Codable {
+        let dateString: DateString
+    }
+    
+    let mockJSON = """
+    {"dateString":"2022-01-19"}
+    """
+
+    func testEncodable() throws {
+        let mockCodable = MockCodable(dateString: "2022-01-19")
+        let json = try JSONEncoder().encode(mockCodable)
+        let jsonString = String(data: json, encoding: .utf8)
+        XCTAssertEqual(jsonString, mockJSON)
+    }
+    
+    func testDecodable() throws {
+        let mockCodable = try JSONDecoder().decode(MockCodable.self, from:mockJSON.data(using: .utf8)!)
+        XCTAssertEqual("2022-01-19", mockCodable.dateString.description)
     }
 }
