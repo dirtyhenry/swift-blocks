@@ -117,3 +117,16 @@ extension DateString: Strideable {
         return DateString(date: newDate, calendar: calendar, formatter: formatter)
     }
 }
+
+extension DateString: Decodable {
+    public init(from decoder: Decoder) throws {
+        self.init(stringLiteral: try decoder.singleValueContainer().decode(String.self))
+    }
+}
+
+extension DateString: Encodable {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(description)
+    }
+}
