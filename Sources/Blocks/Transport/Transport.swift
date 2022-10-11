@@ -18,7 +18,7 @@ extension URLSession: Transport {
     }
 }
 
-enum TransportError: Error {
+public enum TransportError: Error {
     case unexpectedNotHTTPResponse
     case unmetURLComponentsRequirements
 }

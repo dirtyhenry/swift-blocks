@@ -1,0 +1,15 @@
+name: Build Blocks
+
+# Manual trigger
+# 📜 https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: macos-12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build debug version
+        run: |
+          make build

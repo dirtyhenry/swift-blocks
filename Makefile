@@ -2,7 +2,7 @@ open:
 	open Package.swift
 
 build:
-	swift build
+	swift build --build-tests
 
 test:
 	swift test
