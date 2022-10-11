@@ -1,10 +1,12 @@
 import Foundation
 
+@available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
 public protocol Transport {
     func send(urlRequest: URLRequest, delegate: URLSessionTaskDelegate?) async throws -> (Data, HTTPURLResponse)
 }
 
+@available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
 extension URLSession: Transport {
     public func send(urlRequest: URLRequest, delegate: URLSessionTaskDelegate?) async throws -> (Data, HTTPURLResponse) {
