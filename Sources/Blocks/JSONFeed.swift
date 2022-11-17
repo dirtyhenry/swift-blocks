@@ -1,5 +1,9 @@
 import Foundation
 
+/// A structure that constructs JSON Feed.
+///
+/// [JSON Feed](https://www.jsonfeed.org/) is a format similar to RSS and Atom but in JSON.
+/// The supported version is JSON Feed version 1.1.
 public struct JSONFeed: Codable {
     public static let version1_1: String = "https://jsonfeed.org/version/1.1"
 
@@ -12,62 +16,81 @@ public struct JSONFeed: Codable {
     /// The URL of the resource that the feed describes.
     ///
     /// This should be considered required for feeds on the public web.
-    var homePageURL: URL?
+    public var homePageURL: URL?
 
     /// The URL of the feed.
     ///
     /// It serves as the unique identifier for the feed.
     ///
     /// This should be considered required for feeds on the public web.
-    var feedURL: URL?
+    public var feedURL: URL?
 
     /// Provides more detail, beyond the title, on what the feed is about.
-    var description: String?
+    public var description: String?
 
     /// A description of the purpose of the feed.
     ///
     /// For people looking at the raw JSON, it should be ignored by feed readers.
-    var userComment: String?
+    public var userComment: String?
 
     /// The URL of a feed that provide the next *n* items.
-    var nextURL: URL?
+    public var nextURL: URL?
 
     /// The URL of an image for the feed.
     ///
     /// It should be squared and relatively large — such as 512 × 512.
-    var icon: URL?
+    public var icon: URL?
 
     /// The URL of an image for the feed suitable to be used in a source list.
     ///
     /// It should be squared and relatively small — such as 64 × 64.
-    var favicon: URL?
+    public var favicon: URL?
 
     /// The feed authors.
-    var authors: [Author]?
+    public var authors: [Author]?
 
     /// The primary language for the feed.
-    var language: String?
+    public var language: String?
 
     /// Says whether or not the feed is finished — that is, wheter or not it will ever update again.
-    var isExpired: Bool?
+    public var isExpired: Bool?
 
     /// Endpoints that can be used to subscribe to real-time notifications from the publisher of this feed.
-    var hubs: [Hub]?
+    public var hubs: [Hub]?
 
     /// The feed items.
-    var items: [Item]
+    public var items: [Item]
 
+    /// A structure that constructs a JSON Feed author.
     public struct Author: Codable {
         /// The author's name.
-        var name: String?
+        public var name: String?
 
         /// The URL of a site owned by the author.
-        var url: URL?
+        public var url: URL?
 
-        /// The URL for an image for the author
+        /// The URL for an image for the author.
         ///
         /// It should be squared and relatively large — such as 512 × 512.
-        var avatar: URL?
+        public var avatar: URL?
+
+        /// Initializes with predefined properties.
+        ///
+        /// If each property is optional, at least one is required, otherwise `nil` will be returned.
+        ///
+        /// - Parameters:
+        ///   - name: The author’s name
+        ///   - url: The URL of a site owned by the author
+        ///   - avatar: The URL for an image for the author
+        public init?(name: String?, url: URL?, avatar: URL?) throws {
+            if name == nil, url == nil, avatar == nil {
+                return nil
+            }
+
+            self.name = name
+            self.url = url
+            self.avatar = avatar
+        }
     }
 
     public struct Hub: Codable {
@@ -193,6 +216,7 @@ public struct JSONFeed: Codable {
                 icon: URL? = nil,
                 favicon: URL? = nil,
                 authors: [Author]? = nil,
+                language: String? = nil,
                 isExpired: Bool? = nil,
                 items: [Item] = []) {
         self.version = version
@@ -205,6 +229,7 @@ public struct JSONFeed: Codable {
         self.icon = icon
         self.favicon = favicon
         self.authors = authors
+        self.language = language
         self.isExpired = isExpired
         hubs = nil
         self.items = items
@@ -226,4 +251,8 @@ public extension JSONFeed {
         result.keyDecodingStrategy = .convertFromSnakeCase
         return result
     }
+}
+
+enum JSONFeedError: Error {
+    case missingOneRequiredAmongAuthorProps
 }
