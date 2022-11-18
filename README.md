@@ -19,11 +19,6 @@ let package = Package(
 )
 ```
 
-## Usage
-
-The package is documented via
-[DocC on Vercel](https://blocks-chi.vercel.app/documentation/blocks).
-
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
