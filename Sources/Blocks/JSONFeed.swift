@@ -82,7 +82,7 @@ public struct JSONFeed: Codable {
         ///   - name: The author’s name
         ///   - url: The URL of a site owned by the author
         ///   - avatar: The URL for an image for the author
-        public init?(name: String?, url: URL?, avatar: URL?) throws {
+        public init?(name: String? = nil, url: URL? = nil, avatar: URL? = nil) {
             if name == nil, url == nil, avatar == nil {
                 return nil
             }
@@ -251,8 +251,4 @@ public extension JSONFeed {
         result.keyDecodingStrategy = .convertFromSnakeCase
         return result
     }
-}
-
-enum JSONFeedError: Error {
-    case missingOneRequiredAmongAuthorProps
 }
