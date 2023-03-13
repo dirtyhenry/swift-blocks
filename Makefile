@@ -1,5 +1,5 @@
 open: 
-	open Package.swift
+	open Blocks.xcworkspace
 
 build:
 	swift build --build-tests
