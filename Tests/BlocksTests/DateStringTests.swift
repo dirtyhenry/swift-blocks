@@ -64,4 +64,24 @@ final class DateStringTests: XCTestCase {
         let mockCodable = try JSONDecoder().decode(MockCodable.self, from: mockJSON.data(using: .utf8)!)
         XCTAssertEqual("2022-01-19", mockCodable.dateString.description)
     }
+
+    func testWeekdays() {
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-13").weekday, DateString.Weekday.monday)
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-14").weekday, DateString.Weekday.tuesday)
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-15").weekday, DateString.Weekday.wednesday)
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-16").weekday, DateString.Weekday.thursday)
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-17").weekday, DateString.Weekday.friday)
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-18").weekday, DateString.Weekday.saturday)
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-19").weekday, DateString.Weekday.sunday)
+    }
+
+    func testAdvancedToWeekday() {
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-13").advanced(toNext: .tuesday).description, "2023-03-14")
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-14").advanced(toNext: .tuesday).description, "2023-03-14")
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-15").advanced(toNext: .tuesday).description, "2023-03-21")
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-16").advanced(toNext: .tuesday).description, "2023-03-21")
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-17").advanced(toNext: .tuesday).description, "2023-03-21")
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-18").advanced(toNext: .tuesday).description, "2023-03-21")
+        XCTAssertEqual(DateString(stringLiteral: "2023-03-19").advanced(toNext: .tuesday).description, "2023-03-21")
+    }
 }

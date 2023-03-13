@@ -130,3 +130,34 @@ extension DateString: Encodable {
         try container.encode(description)
     }
 }
+
+public extension DateString {
+    enum Weekday: Int {
+        case sunday = 1
+        case monday = 2
+        case tuesday = 3
+        case wednesday = 4
+        case thursday = 5
+        case friday = 6
+        case saturday = 7
+    }
+
+    var weekday: Weekday {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withFullDate]
+        let components = Calendar.current.dateComponents([.weekday], from: formatter.date(from: description)!)
+        guard let result = Weekday(rawValue: components.weekday!) else {
+            fatalError("No weekday found for \(self)")
+        }
+
+        return result
+    }
+
+    func advanced(toNext outputWeekday: Weekday) -> DateString {
+        var advancingDay = self
+        while advancingDay.weekday != outputWeekday {
+            advancingDay = advancingDay.advanced(by: 1)
+        }
+        return advancingDay
+    }
+}
