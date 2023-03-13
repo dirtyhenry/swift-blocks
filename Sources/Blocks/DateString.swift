@@ -120,7 +120,7 @@ extension DateString: Strideable {
 
 extension DateString: Decodable {
     public init(from decoder: Decoder) throws {
-        self.init(stringLiteral: try decoder.singleValueContainer().decode(String.self))
+        try self.init(stringLiteral: decoder.singleValueContainer().decode(String.self))
     }
 }
 

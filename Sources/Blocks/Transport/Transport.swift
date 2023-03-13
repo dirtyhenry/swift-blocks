@@ -5,8 +5,8 @@ import Foundation
 /// A type that can transport URL requests to a server-like target.
 public protocol Transport {
     func send(
-      urlRequest: URLRequest,
-      delegate: URLSessionTaskDelegate?
+        urlRequest: URLRequest,
+        delegate: URLSessionTaskDelegate?
     ) async throws -> (Data, HTTPURLResponse)
 }
 
@@ -14,8 +14,8 @@ public protocol Transport {
 @available(macOS 12.0, *)
 extension URLSession: Transport {
     public func send(
-      urlRequest: URLRequest,
-      delegate: URLSessionTaskDelegate?
+        urlRequest: URLRequest,
+        delegate: URLSessionTaskDelegate?
     ) async throws -> (Data, HTTPURLResponse) {
         let (data, response) = try await self.data(for: urlRequest, delegate: delegate)
 

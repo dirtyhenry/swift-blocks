@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug BlocksCLI",
+      "program": "${workspaceFolder:BlocksCLI}/.build/debug/BlocksCLI",
+      "args": [],
+      "cwd": "${workspaceFolder:BlocksCLI}",
+      "preLaunchTask": "swift: Build Debug BlocksCLI"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Release BlocksCLI",
+      "program": "${workspaceFolder:BlocksCLI}/.build/release/BlocksCLI",
+      "args": [],
+      "cwd": "${workspaceFolder:BlocksCLI}",
+      "preLaunchTask": "swift: Build Release BlocksCLI"
+    }
+  ]
+}

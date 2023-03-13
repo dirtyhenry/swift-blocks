@@ -1,0 +1,19 @@
+excluded:
+  - ./**/.build
+
+file_length:
+  ignore_comment_only_lines: true
+
+identifier_name:
+  excluded:
+    - id
+
+line_length:
+  ignores_comments: true
+
+type_name:
+  max_length:
+    warning: 45
+
+analyzer_rules:
+  - unused_import
