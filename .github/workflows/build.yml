@@ -1,8 +1,11 @@
 name: Build macOS
 
-# Manual trigger
-# 📜 https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
-on: workflow_dispatch
+# 📜 https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:

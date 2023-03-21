@@ -1,9 +1,8 @@
 name: Build Linux
 
+# 📜 https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
 on:
-  push:
-    branches:
-      - "*"
+  workflow_dispatch:
   pull_request:
     branches:
       - main
