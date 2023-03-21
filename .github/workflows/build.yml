@@ -1,4 +1,4 @@
-name: Build Blocks
+name: Build macOS
 
 # Manual trigger
 # 📜 https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch
