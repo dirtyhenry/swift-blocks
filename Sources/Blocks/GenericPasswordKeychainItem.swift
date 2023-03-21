@@ -1,5 +1,4 @@
 import Foundation
-import Security
 
 private func throwIfNotSuccess(_ status: OSStatus) throws {
     guard status != errSecSuccess else { return }
