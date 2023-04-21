@@ -49,12 +49,12 @@ public enum DataFormatter {
         }
     }
 
-    public static func data(fromHexadecimalString base64String: String) -> Data? {
-        let bytes: UnfoldSequence<UInt8, String.Index> = sequence(state: base64String.startIndex) { startIndex in
-            guard startIndex < base64String.endIndex else { return nil }
-            let endIndex = base64String.index(startIndex, offsetBy: 2, limitedBy: base64String.endIndex) ?? base64String.endIndex
+    public static func data(fromHexadecimalString hexadecimalString: String) -> Data? {
+        let bytes: UnfoldSequence<UInt8, String.Index> = sequence(state: hexadecimalString.startIndex) { startIndex in
+            guard startIndex < hexadecimalString.endIndex else { return nil }
+            let endIndex = hexadecimalString.index(startIndex, offsetBy: 2, limitedBy: hexadecimalString.endIndex) ?? hexadecimalString.endIndex
             defer { startIndex = endIndex }
-            return UInt8(base64String[startIndex ..< endIndex], radix: 16)
+            return UInt8(hexadecimalString[startIndex ..< endIndex], radix: 16)
         }
         return Data(bytes)
     }
