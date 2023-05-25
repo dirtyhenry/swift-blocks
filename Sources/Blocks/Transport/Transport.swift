@@ -27,9 +27,4 @@ import Foundation
             return (data, httpResponse)
         }
     }
-
-    public enum TransportError: Error {
-        case unexpectedNotHTTPResponse
-        case unmetURLComponentsRequirements
-    }
 #endif
