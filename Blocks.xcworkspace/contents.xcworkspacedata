@@ -7,4 +7,7 @@
    <FileRef
       location = "group:Examples/BlocksCLI/">
    </FileRef>
+   <FileRef
+      location = "group:Examples/BlocksApp/BlocksApp.xcodeproj">
+   </FileRef>
 </Workspace>
