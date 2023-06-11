@@ -14,6 +14,7 @@
 		00D1E2592A36327200E8D275 /* BlocksAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D1E2582A36327200E8D275 /* BlocksAppTests.swift */; };
 		00D1E2632A36327200E8D275 /* BlocksAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D1E2622A36327200E8D275 /* BlocksAppUITests.swift */; };
 		00D1E2652A36327200E8D275 /* BlocksAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D1E2642A36327200E8D275 /* BlocksAppUITestsLaunchTests.swift */; };
+		00E4FFCD2A364A8F002341EC /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 00E4FFCC2A364A8F002341EC /* Config.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		00D1E25E2A36327200E8D275 /* BlocksAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlocksAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00D1E2622A36327200E8D275 /* BlocksAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksAppUITests.swift; sourceTree = "<group>"; };
 		00D1E2642A36327200E8D275 /* BlocksAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		00E4FFCC2A364A8F002341EC /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,7 @@
 		00D1E23B2A36327100E8D275 = {
 			isa = PBXGroup;
 			children = (
+				00E4FFCC2A364A8F002341EC /* Config.xcconfig */,
 				00D1E2462A36327100E8D275 /* BlocksApp */,
 				00D1E2572A36327200E8D275 /* BlocksAppTests */,
 				00D1E2612A36327200E8D275 /* BlocksAppUITests */,
@@ -232,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00D1E24F2A36327100E8D275 /* Preview Assets.xcassets in Resources */,
+				00E4FFCD2A364A8F002341EC /* Config.xcconfig in Resources */,
 				00D1E24C2A36327100E8D275 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -297,6 +301,7 @@
 /* Begin XCBuildConfiguration section */
 		00D1E2662A36327200E8D275 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 00E4FFCC2A364A8F002341EC /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -357,6 +362,7 @@
 		};
 		00D1E2672A36327200E8D275 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 00E4FFCC2A364A8F002341EC /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -417,9 +423,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"BlocksApp/Preview Content\"";
-				DEVELOPMENT_TEAM = SWWYZ4DZ7N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -446,9 +452,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"BlocksApp/Preview Content\"";
-				DEVELOPMENT_TEAM = SWWYZ4DZ7N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -474,7 +480,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SWWYZ4DZ7N;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MARKETING_VERSION = 1.0;
@@ -494,7 +499,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SWWYZ4DZ7N;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MARKETING_VERSION = 1.0;
@@ -513,7 +517,6 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SWWYZ4DZ7N;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.mickf.BlocksAppUITests;
@@ -531,7 +534,6 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SWWYZ4DZ7N;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.mickf.BlocksAppUITests;
