@@ -36,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		006E38742A370C0600B4142B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		00D1E2442A36327100E8D275 /* BlocksApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlocksApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00D1E2472A36327100E8D275 /* BlocksAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksAppApp.swift; sourceTree = "<group>"; };
 		00D1E2492A36327100E8D275 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -107,6 +108,7 @@
 		00D1E2462A36327100E8D275 /* BlocksApp */ = {
 			isa = PBXGroup;
 			children = (
+				006E38742A370C0600B4142B /* Info.plist */,
 				00D1E2472A36327100E8D275 /* BlocksAppApp.swift */,
 				00D1E2492A36327100E8D275 /* ContentView.swift */,
 				00D1E24B2A36327100E8D275 /* Assets.xcassets */,
@@ -438,6 +440,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"BlocksApp/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BlocksApp/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -467,6 +470,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"BlocksApp/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BlocksApp/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
