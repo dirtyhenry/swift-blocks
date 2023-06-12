@@ -45,10 +45,15 @@ class WatchPairingTask: NSObject {
         let session = WCSession.default
         session.delegate = self
 
-        return await withCheckedContinuation { continuation in
-            activationContinuation = continuation
-            session.activate()
-        }
+        return await withTaskCancellationHandler(operation: {
+            await withCheckedContinuation { continuation in
+                    activationContinuation = continuation
+                    session.activate()
+            }
+        }, onCancel: {
+            activationContinuation?.resume(returning: false)
+            activationContinuation = nil
+        })
     }
 }
 
@@ -60,7 +65,7 @@ extension WatchPairingTask: WCSessionDelegate {
             logger.error("Session activation did complete with error: \(error.localizedDescription, privacy: .public)")
         }
 
-        activationContinuation?.resume(with: .success(session.isPaired))
+        // activationContinuation?.resume(with: .success(session.isPaired))
     }
 
     func sessionDidBecomeInactive(_: WCSession) {
@@ -78,12 +83,15 @@ class WatchState: ObservableObject {
     func start() {
         Task {
             do {
-                let value = try await WatchPairingTask.shared.isPaired(timeoutAfter: 1)
+                let value = try await WatchPairingTask.shared.isPaired(timeoutAfter: 3)
                 await MainActor.run {
                     isPaired = value
                 }
             } catch {
                 print("WatchState caught an error.")
+                await MainActor.run {
+                    isPaired = false
+                }
             }
         }
     }
