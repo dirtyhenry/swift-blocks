@@ -145,7 +145,7 @@ public extension DateString {
     var weekday: Weekday {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withFullDate]
-        let components = Calendar.current.dateComponents([.weekday], from: formatter.date(from: description)!)
+        let components = calendar.dateComponents([.weekday], from: date)
         guard let result = Weekday(rawValue: components.weekday!) else {
             fatalError("No weekday found for \(self)")
         }
@@ -159,5 +159,11 @@ public extension DateString {
             advancingDay = advancingDay.advanced(by: 1)
         }
         return advancingDay
+    }
+}
+
+public extension DateString {
+    var dateComponents: DateComponents {
+        calendar.dateComponents([.year, .month, .day], from: date)
     }
 }
