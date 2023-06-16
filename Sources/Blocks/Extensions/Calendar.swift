@@ -1,11 +1,17 @@
 import Foundation
 
 extension Calendar {
-    static func frenchCalendar() -> Calendar {
+    // MARK: - Specific calendars
+    
+    /// An instance of a gregorian calendar set with the Paris timezone.
+    /// - Returns: the calendar used in Paris, France.
+    static public func parisCalendar() -> Calendar {
         create(calendarIdentifier: .gregorian, timeZoneIdentifier: "Europe/Paris")
     }
 
-    static func newYorkCalendar() -> Calendar {
+    /// An instance of a gregorian calendar set with the New York timezone.
+    /// - Returns: the calendar used in New York, USA.
+    static public func newYorkCalendar() -> Calendar {
         create(calendarIdentifier: .gregorian, timeZoneIdentifier: "America/New_York")
     }
 

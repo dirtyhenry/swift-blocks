@@ -12,7 +12,7 @@ final class DateStringTests: XCTestCase {
 
     func testDaylightSavingTimePeriods() throws {
         // In France, time will change on March 27th in 2022.
-        let march26 = DateString(from: "2022-03-26", calendar: .frenchCalendar())!
+        let march26 = DateString(from: "2022-03-26", calendar: .parisCalendar())!
         XCTAssertEqual(march26.description, "2022-03-26")
         XCTAssertEqual(march26.advanced(by: 1).description, "2022-03-27")
         XCTAssertEqual(march26.advanced(by: 2).description, "2022-03-28")
@@ -25,7 +25,7 @@ final class DateStringTests: XCTestCase {
     }
 
     func testFormattingRangeOfDates() throws {
-        let march1st = DateString(from: "2022-03-01", calendar: .frenchCalendar())!
+        let march1st = DateString(from: "2022-03-01", calendar: .parisCalendar())!
         let aWeekLater = march1st.advanced(by: 7)
         let range = march1st ..< aWeekLater
 
@@ -36,7 +36,7 @@ final class DateStringTests: XCTestCase {
     }
 
     func testDistanceOfDatesIsConsistent() throws {
-        let januaryFirst = DateString(from: "2022-01-01", calendar: .frenchCalendar())!
+        let januaryFirst = DateString(from: "2022-01-01", calendar: .parisCalendar())!
 
         measure {
             for offset in 1 ... 100_000 {
