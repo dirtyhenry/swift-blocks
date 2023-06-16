@@ -2,6 +2,7 @@
 import XCTest
 
 @available(iOS 15.0.0, *)
+@available(macOS 12.0, *)
 final class StatusCodeCheckingTransportTests: XCTestCase {
     func testPassing() async throws {
         let mockTransport = MockTransport(data: "Hello".data(using: .utf8)!, response: HTTPURLResponse(
