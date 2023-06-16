@@ -31,7 +31,8 @@ let package = Package(
         .testTarget(
             name: "BlocksTests",
             dependencies: ["Blocks"],
-            resources: [.process("Resources")]
+            resources: [.process("Resources")],
+            linkerSettings: [.linkedFramework("XCTest")]
         )
     ]
 )
