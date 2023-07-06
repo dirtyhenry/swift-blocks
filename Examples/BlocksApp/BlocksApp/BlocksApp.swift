@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct BlocksAppApp: App {
+struct BlocksApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView(model: WatchState())
