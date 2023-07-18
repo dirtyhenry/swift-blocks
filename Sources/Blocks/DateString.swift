@@ -77,7 +77,11 @@ public struct DateString {
 
 extension DateString: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
-        self.init(from: value)!
+        if DateString(from: value) != nil {
+            self.init(from: value)!
+        } else {
+            fatalError("Could not turn \(value) into a DateString.")
+        }
     }
 }
 
