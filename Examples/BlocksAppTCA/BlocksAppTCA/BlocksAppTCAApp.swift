@@ -1,17 +1,14 @@
-//
-//  BlocksAppTCAApp.swift
-//  BlocksAppTCA
-//
-//  Created by Mickaël Floc'hlay on 18/07/2023.
-//
-
+import ComposableArchitecture
 import SwiftUI
 
 @main
 struct BlocksAppTCAApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView(store: Store(
+                initialState: RootFeature.State(count: 1),
+                reducer: RootFeature()
+            ))
         }
     }
 }
