@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00323DD82A66F5610061D431 /* ImagePickerFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00323DD72A66F5610061D431 /* ImagePickerFeatureTests.swift */; };
+		0082C6EE2A6818F700041A64 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 0082C6ED2A6818F700041A64 /* ComposableArchitecture */; };
 		00F6F5582A66CBE40088B530 /* BlocksAppTCAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F6F5572A66CBE40088B530 /* BlocksAppTCAApp.swift */; };
 		00F6F55A2A66CBE40088B530 /* RootFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F6F5592A66CBE40088B530 /* RootFeature.swift */; };
 		00F6F55C2A66CBE50088B530 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00F6F55B2A66CBE50088B530 /* Assets.xcassets */; };
@@ -15,7 +16,6 @@
 		00F6F5692A66CBE50088B530 /* BlocksAppTCATests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F6F5682A66CBE50088B530 /* BlocksAppTCATests.swift */; };
 		00F6F5732A66CBE50088B530 /* BlocksAppTCAUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F6F5722A66CBE50088B530 /* BlocksAppTCAUITests.swift */; };
 		00F6F5752A66CBE50088B530 /* BlocksAppTCAUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F6F5742A66CBE50088B530 /* BlocksAppTCAUITestsLaunchTests.swift */; };
-		00F84AF62A66CC3200A7EC95 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 00F84AF52A66CC3200A7EC95 /* ComposableArchitecture */; };
 		00F84AF92A66CD6F00A7EC95 /* ImagePickerFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F84AF82A66CD6F00A7EC95 /* ImagePickerFeature.swift */; };
 		00F84AFB2A66CD8500A7EC95 /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F84AFA2A66CD8500A7EC95 /* ImagePickerView.swift */; };
 		00F84AFE2A66D10A00A7EC95 /* Blocks in Frameworks */ = {isa = PBXBuildFile; productRef = 00F84AFD2A66D10A00A7EC95 /* Blocks */; };
@@ -62,8 +62,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0082C6EE2A6818F700041A64 /* ComposableArchitecture in Frameworks */,
 				00F84AFE2A66D10A00A7EC95 /* Blocks in Frameworks */,
-				00F84AF62A66CC3200A7EC95 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,8 +178,8 @@
 			);
 			name = BlocksAppTCA;
 			packageProductDependencies = (
-				00F84AF52A66CC3200A7EC95 /* ComposableArchitecture */,
 				00F84AFD2A66D10A00A7EC95 /* Blocks */,
+				0082C6ED2A6818F700041A64 /* ComposableArchitecture */,
 			);
 			productName = BlocksAppTCA;
 			productReference = 00F6F5542A66CBE40088B530 /* BlocksAppTCA.app */;
@@ -254,7 +254,7 @@
 			);
 			mainGroup = 00F6F54B2A66CBE40088B530;
 			packageReferences = (
-				00F84AF42A66CC3200A7EC95 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				0082C6EC2A6818F700041A64 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 			);
 			productRefGroup = 00F6F5552A66CBE40088B530 /* Products */;
 			projectDirPath = "";
@@ -638,7 +638,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		00F84AF42A66CC3200A7EC95 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+		0082C6EC2A6818F700041A64 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
@@ -649,9 +649,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		00F84AF52A66CC3200A7EC95 /* ComposableArchitecture */ = {
+		0082C6ED2A6818F700041A64 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 00F84AF42A66CC3200A7EC95 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			package = 0082C6EC2A6818F700041A64 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
 		};
 		00F84AFD2A66D10A00A7EC95 /* Blocks */ = {
