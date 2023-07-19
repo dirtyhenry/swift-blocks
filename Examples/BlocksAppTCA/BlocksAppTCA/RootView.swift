@@ -5,23 +5,29 @@ import UniformTypeIdentifiers
 
 struct RootView: View {
     let store: StoreOf<RootFeature>
+    @ObservedObject var viewStore: ViewStoreOf<RootFeature>
+
+    init(store: StoreOf<RootFeature>) {
+        self.store = store
+        viewStore = ViewStore(self.store, observe: { $0 })
+    }
 
     var body: some View {
         NavigationStack {
-            WithViewStore(store, observe: { $0 }) { viewStore in
-                if viewStore.latestPhoto == nil {
-                    Button("Take Photo \(viewStore.count)") {
+            if viewStore.latestPhoto == nil {
+                VStack(spacing: 32) {
+                    Button("Take Photo") {
                         viewStore.send(.takePhotoButtonTapped)
                     }
-                    Button("Increment \(viewStore.count)") {
-                        viewStore.send(.incrementButtonTapped)
-                    }
-                } else {
-                    VStack {
-                        Image(uiImage: viewStore.latestPhoto!)
-                        Button("Retake Photo") {
-                            viewStore.send(.takePhotoButtonTapped)
-                        }
+                }
+            } else {
+                VStack {
+                    Image(uiImage: viewStore.latestPhoto!)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: 200)
+                    Button("Retake Photo") {
+                        viewStore.send(.takePhotoButtonTapped)
                     }
                 }
             }
@@ -45,7 +51,7 @@ struct RootView: View {
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         RootView(store: Store(
-            initialState: RootFeature.State(count: 1),
+            initialState: RootFeature.State(),
             reducer: RootFeature()
         ))
     }
