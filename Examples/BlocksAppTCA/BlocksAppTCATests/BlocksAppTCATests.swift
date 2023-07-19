@@ -1,10 +1,3 @@
-//
-//  BlocksAppTCATests.swift
-//  BlocksAppTCATests
-//
-//  Created by Mickaël Floc'hlay on 18/07/2023.
-//
-
 @testable import BlocksAppTCA
 import XCTest
 
