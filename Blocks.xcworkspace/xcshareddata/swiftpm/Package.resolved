@@ -92,6 +92,15 @@
         }
       },
       {
+        "package": "swift-snapshot-testing",
+        "repositoryURL": "https://github.com/pointfreeco/swift-snapshot-testing",
+        "state": {
+          "branch": null,
+          "revision": "dc46eeb3928a75390651fac6c1ef7f93ad59a73b",
+          "version": "1.11.1"
+        }
+      },
+      {
         "package": "swiftui-navigation",
         "repositoryURL": "https://github.com/pointfreeco/swiftui-navigation",
         "state": {
