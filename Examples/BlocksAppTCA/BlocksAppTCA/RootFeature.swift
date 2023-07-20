@@ -23,11 +23,6 @@ struct RootFeature: ReducerProtocol {
 
             case let .usePhoto(.presented(.delegate(.usePhoto(newPhoto)))):
                 state.latestPhoto = newPhoto
-                state.takePhoto = nil
-                return .none
-
-            case .usePhoto(.presented(.delegate(.cancel))):
-                state.takePhoto = nil
                 return .none
 
             case .usePhoto:

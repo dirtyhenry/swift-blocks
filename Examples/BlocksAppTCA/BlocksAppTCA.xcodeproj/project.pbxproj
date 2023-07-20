@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		00323DD82A66F5610061D431 /* ImagePickerFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00323DD72A66F5610061D431 /* ImagePickerFeatureTests.swift */; };
 		0082C6EE2A6818F700041A64 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 0082C6ED2A6818F700041A64 /* ComposableArchitecture */; };
+		00E1196A2A6843760075269E /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00E119692A6843760075269E /* Media.xcassets */; };
+		00E1196E2A68477D0075269E /* ImagePickerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00E1196D2A68477D0075269E /* ImagePickerViewTests.swift */; };
+		00E119722A6847D50075269E /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 00E119712A6847D50075269E /* SnapshotTesting */; };
+		00E119742A684CD40075269E /* RootFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00E119732A684CD40075269E /* RootFeatureTests.swift */; };
+		00E119762A684F100075269E /* RootViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00E119752A684F100075269E /* RootViewTests.swift */; };
 		00F6F5582A66CBE40088B530 /* BlocksAppTCAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F6F5572A66CBE40088B530 /* BlocksAppTCAApp.swift */; };
 		00F6F55A2A66CBE40088B530 /* RootFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F6F5592A66CBE40088B530 /* RootFeature.swift */; };
 		00F6F55C2A66CBE50088B530 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00F6F55B2A66CBE50088B530 /* Assets.xcassets */; };
@@ -23,7 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		00F6F5652A66CBE50088B530 /* PBXContainerItemProxy */ = {
+		00E119792A6859610075269E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 00F6F54C2A66CBE40088B530 /* Project object */;
 			proxyType = 1;
@@ -41,6 +46,11 @@
 
 /* Begin PBXFileReference section */
 		00323DD72A66F5610061D431 /* ImagePickerFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerFeatureTests.swift; sourceTree = "<group>"; };
+		00CC6CBA2A68425F0093300A /* DefaultTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = DefaultTestPlan.xctestplan; sourceTree = "<group>"; };
+		00E119692A6843760075269E /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		00E1196D2A68477D0075269E /* ImagePickerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerViewTests.swift; sourceTree = "<group>"; };
+		00E119732A684CD40075269E /* RootFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootFeatureTests.swift; sourceTree = "<group>"; };
+		00E119752A684F100075269E /* RootViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewTests.swift; sourceTree = "<group>"; };
 		00F6F5542A66CBE40088B530 /* BlocksAppTCA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlocksAppTCA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00F6F5572A66CBE40088B530 /* BlocksAppTCAApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksAppTCAApp.swift; sourceTree = "<group>"; };
 		00F6F5592A66CBE40088B530 /* RootFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootFeature.swift; sourceTree = "<group>"; };
@@ -71,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00E119722A6847D50075269E /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +95,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		00E1196F2A6847840075269E /* ImagePicker */ = {
+			isa = PBXGroup;
+			children = (
+				00323DD72A66F5610061D431 /* ImagePickerFeatureTests.swift */,
+				00E1196D2A68477D0075269E /* ImagePickerViewTests.swift */,
+			);
+			path = ImagePicker;
+			sourceTree = "<group>";
+		};
 		00F6F54B2A66CBE40088B530 = {
 			isa = PBXGroup;
 			children = (
@@ -130,8 +150,12 @@
 		00F6F5672A66CBE50088B530 /* BlocksAppTCATests */ = {
 			isa = PBXGroup;
 			children = (
+				00E1196F2A6847840075269E /* ImagePicker */,
 				00F6F5682A66CBE50088B530 /* BlocksAppTCATests.swift */,
-				00323DD72A66F5610061D431 /* ImagePickerFeatureTests.swift */,
+				00E119732A684CD40075269E /* RootFeatureTests.swift */,
+				00E119752A684F100075269E /* RootViewTests.swift */,
+				00CC6CBA2A68425F0093300A /* DefaultTestPlan.xctestplan */,
+				00E119692A6843760075269E /* Media.xcassets */,
 			);
 			path = BlocksAppTCATests;
 			sourceTree = "<group>";
@@ -196,9 +220,12 @@
 			buildRules = (
 			);
 			dependencies = (
-				00F6F5662A66CBE50088B530 /* PBXTargetDependency */,
+				00E1197A2A6859610075269E /* PBXTargetDependency */,
 			);
 			name = BlocksAppTCATests;
+			packageProductDependencies = (
+				00E119712A6847D50075269E /* SnapshotTesting */,
+			);
 			productName = BlocksAppTCATests;
 			productReference = 00F6F5642A66CBE50088B530 /* BlocksAppTCATests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -255,6 +282,7 @@
 			mainGroup = 00F6F54B2A66CBE40088B530;
 			packageReferences = (
 				0082C6EC2A6818F700041A64 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				00E119702A6847D50075269E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 			);
 			productRefGroup = 00F6F5552A66CBE40088B530 /* Products */;
 			projectDirPath = "";
@@ -281,6 +309,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00E1196A2A6843760075269E /* Media.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,6 +339,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00E119742A684CD40075269E /* RootFeatureTests.swift in Sources */,
+				00E1196E2A68477D0075269E /* ImagePickerViewTests.swift in Sources */,
+				00E119762A684F100075269E /* RootViewTests.swift in Sources */,
 				00323DD82A66F5610061D431 /* ImagePickerFeatureTests.swift in Sources */,
 				00F6F5692A66CBE50088B530 /* BlocksAppTCATests.swift in Sources */,
 			);
@@ -327,10 +359,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		00F6F5662A66CBE50088B530 /* PBXTargetDependency */ = {
+		00E1197A2A6859610075269E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 00F6F5532A66CBE40088B530 /* BlocksAppTCA */;
-			targetProxy = 00F6F5652A66CBE50088B530 /* PBXContainerItemProxy */;
+			targetProxy = 00E119792A6859610075269E /* PBXContainerItemProxy */;
 		};
 		00F6F5702A66CBE50088B530 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -646,6 +678,14 @@
 				minimumVersion = 0.56.0;
 			};
 		};
+		00E119702A6847D50075269E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -653,6 +693,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0082C6EC2A6818F700041A64 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
+		};
+		00E119712A6847D50075269E /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 00E119702A6847D50075269E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
 		};
 		00F84AFD2A66D10A00A7EC95 /* Blocks */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "4CA4F007-1434-4A09-804D-F7019D1743F6",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:BlocksAppTCA.xcodeproj",
+        "identifier" : "00F6F5632A66CBE50088B530",
+        "name" : "BlocksAppTCATests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -4,9 +4,7 @@ import Foundation
 import UIKit
 
 struct ImagePickerFeature: ReducerProtocol {
-    struct State {
-        var photo: UIImage?
-    }
+    struct State { }
 
     enum Action {
         // MARK: - UI Interactions
@@ -19,26 +17,22 @@ struct ImagePickerFeature: ReducerProtocol {
         case delegate(Delegate)
 
         enum Delegate: Equatable {
-            case cancel
             case usePhoto(UIImage)
         }
     }
 
-    // @Dependency(\.dismiss) var dismiss
+    @Dependency(\.dismiss) var dismiss
 
     func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
         switch action {
         case .cancelButtonTapped:
-            return .send(.delegate(.cancel))
-//            return .run { _ in await dismiss() }
+            return .run { _ in await dismiss() }
 
         case let .usePhotoButtonTapped(newPhoto):
-            state.photo = newPhoto
-            return .send(.delegate(.usePhoto(newPhoto)))
-//            return .run { send in
-//                await send(.delegate(.usePhoto(newPhoto)))
-//                await dismiss()
-//            }
+            return .run { send in
+                await send(.delegate(.usePhoto(newPhoto)))
+                await dismiss()
+            }
 
         case .delegate:
             return .none

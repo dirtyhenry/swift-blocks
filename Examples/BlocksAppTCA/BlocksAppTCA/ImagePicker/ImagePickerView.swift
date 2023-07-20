@@ -5,24 +5,15 @@ import UniformTypeIdentifiers
 struct ImagePickerView: UIViewControllerRepresentable {
     let viewStore: ViewStoreOf<ImagePickerFeature>
 
-    let sourceType: UIImagePickerController.SourceType
-    let mediaTypes: [String]
-
-    init(
-        store: StoreOf<ImagePickerFeature>,
-        sourceType: UIImagePickerController.SourceType,
-        mediaTypes: [String]
-    ) {
+    init(store: StoreOf<ImagePickerFeature>) {
         viewStore = ViewStore(store, observe: { $0 })
-        self.sourceType = sourceType
-        self.mediaTypes = mediaTypes
     }
 
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
         picker.delegate = context.coordinator
-        picker.sourceType = sourceType
-        picker.mediaTypes = mediaTypes
+        picker.sourceType = .camera
+        picker.mediaTypes = [UTType.image.identifier]
         return picker
     }
 
@@ -60,9 +51,7 @@ struct ImagePickerView_Previews: PreviewProvider {
             store: Store(
                 initialState: ImagePickerFeature.State(),
                 reducer: ImagePickerFeature()
-            ),
-            sourceType: .camera,
-            mediaTypes: [UTType.image.identifier]
+            )
         )
     }
 }
