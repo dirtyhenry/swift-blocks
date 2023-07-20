@@ -38,11 +38,7 @@ struct RootView: View {
                 action: { .usePhoto($0) }
             )) { takePhotoStore in
                 NavigationStack {
-                    ImagePickerView(
-                        store: takePhotoStore,
-                        sourceType: .camera,
-                        mediaTypes: [UTType.image.identifier]
-                    )
+                    ImagePickerView(store: takePhotoStore)
                 }
         }
     }
