@@ -1,3 +1,4 @@
+import AVFoundation
 import Blocks
 import ComposableArchitecture
 import Foundation
@@ -7,6 +8,11 @@ struct RootFeature: ReducerProtocol {
     struct State {
         @PresentationState var takePhoto: ImagePickerFeature.State?
         var latestPhoto: UIImage?
+        var status: AVAuthorizationStatus
+
+        init() {
+            status = AVCaptureDevice.authorizationStatus(for: .video)
+        }
     }
 
     enum Action {

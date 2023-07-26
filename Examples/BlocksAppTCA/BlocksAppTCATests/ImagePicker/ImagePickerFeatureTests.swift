@@ -10,25 +10,25 @@ final class ImagePickerFeatureTests: XCTestCase {
         let store = TestStore(initialState: ImagePickerFeature.State()) {
             ImagePickerFeature()
         } withDependencies: {
-            $0.dismiss = DismissEffect({
+            $0.dismiss = DismissEffect {
                 isDismissInvoked.setValue(true)
-            })
+            }
         }
 
         await store.send(.cancelButtonTapped)
         XCTAssertEqual(isDismissInvoked.value, true)
     }
-    
+
     func testTakePhoto() async {
         let isDismissInvoked = LockIsolated(false)
         let store = TestStore(initialState: ImagePickerFeature.State()) {
             ImagePickerFeature()
         } withDependencies: {
-            $0.dismiss = DismissEffect({
+            $0.dismiss = DismissEffect {
                 isDismissInvoked.setValue(true)
-            })
+            }
         }
-        
+
         guard let image = UIImage(named: "DummyImage", in: Bundle(for: ImagePickerFeatureTests.self), with: nil) else {
             fatalError("Could not load image in bundle.")
         }
