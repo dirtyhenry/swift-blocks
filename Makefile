@@ -1,11 +1,15 @@
 open: 
 	open Blocks.xcworkspace
 
+install:
+	bundle install
+	swift package resolve
+
 build:
-	swift build --build-tests
+	swift build
 
 test:
-	swift test
+	swift test 2>&1 | xcpretty
 
 release:
 	swift build -c release

@@ -7,7 +7,7 @@ import PackageDescription
 let package = Package(
     name: "Blocks",
     platforms: [
-        .macOS(.v10_12),
+        .macOS(.v10_13),
         .iOS(.v13) // Limiting factor: XCTest's fulfillment.
     ],
     products: [
