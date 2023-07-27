@@ -43,7 +43,7 @@ jobs:
           $(xcrun --find docc) process-archive \
             transform-for-static-hosting ../DerivedData/Build/Products/Debug/Blocks.doccarchive \
             --output-path _site \
-            --hosting-base-path /blocks/
+            --hosting-base-path /swift-blocks/
       - name: Create Custom index.html
         run: |
           rm _site/index.html
@@ -51,10 +51,10 @@ jobs:
           <!DOCTYPE html>
           <html>
             <head>
-              <meta http-equiv="refresh" content="0; url='https://dirtyhenry.github.io/blocks/documentation/blocks/'" />
+              <meta http-equiv="refresh" content="0; url='https://dirtyhenry.github.io/swift-blocks/documentation/blocks/'" />
             </head>
            <body>
-              <p>Please follow <a href="https://dirtyhenry.github.io/blocks/documentation/blocks/">this link</a>.</p>
+              <p>Please follow <a href="https://dirtyhenry.github.io/swift-blocks/documentation/blocks/">this link</a>.</p>
             </body>
           </html>
           EOM

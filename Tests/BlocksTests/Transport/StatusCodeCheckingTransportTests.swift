@@ -6,7 +6,7 @@ import XCTest
 final class StatusCodeCheckingTransportTests: XCTestCase {
     func testPassing() async throws {
         let mockTransport = MockTransport(data: "Hello".data(using: .utf8)!, response: HTTPURLResponse(
-            url: URL(string: "https://github.com/dirtyhenry/blocks")!,
+            url: URL(string: "https://github.com/dirtyhenry/swift-blocks")!,
             statusCode: 200,
             httpVersion: nil,
             headerFields: nil)!)
@@ -21,7 +21,7 @@ final class StatusCodeCheckingTransportTests: XCTestCase {
     func testThrowing() async throws {
         let expectation = expectation(description: "Transport will throw")
         let mockTransport = MockTransport(data: "Hello".data(using: .utf8)!, response: HTTPURLResponse(
-            url: URL(string: "https://github.com/dirtyhenry/blocks")!,
+            url: URL(string: "https://github.com/dirtyhenry/swift-blocks")!,
             statusCode: 404,
             httpVersion: nil,
             headerFields: nil)!)

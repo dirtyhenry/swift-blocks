@@ -1,10 +1,10 @@
-// swift-tools-version:5.8
+// swift-tools-version:5.7
 
 // 📜 https://github.com/apple/swift-package-manager/blob/main/Documentation/PackageDescription.md
 import PackageDescription
 
 let package = Package(
-    name: "Blocks",
+    name: "swift-blocks",
     platforms: [
         .macOS(.v10_15), // Limiting factor: XCTest's fulfillment
         .iOS(.v13) // Limiting factor: XCTest's fulfillment
