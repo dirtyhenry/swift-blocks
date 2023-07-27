@@ -4,7 +4,7 @@ import Foundation
 import UIKit
 
 struct ImagePickerFeature: ReducerProtocol {
-    struct State { }
+    struct State {}
 
     enum Action {
         // MARK: - UI Interactions
@@ -23,7 +23,7 @@ struct ImagePickerFeature: ReducerProtocol {
 
     @Dependency(\.dismiss) var dismiss
 
-    func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
+    func reduce(into _: inout State, action: Action) -> EffectTask<Action> {
         switch action {
         case .cancelButtonTapped:
             return .run { _ in await dismiss() }

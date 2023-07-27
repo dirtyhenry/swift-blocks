@@ -70,7 +70,7 @@
         public func session(_ session: WCSession, activationDidCompleteWith _: WCSessionActivationState, error: Error?) {
             logger.debug("Session activation did complete")
 
-            if let error = error {
+            if let error {
                 logger.error("Session activation did complete with error: \(error.localizedDescription, privacy: .public)")
             }
 

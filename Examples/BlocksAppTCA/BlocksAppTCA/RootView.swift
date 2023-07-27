@@ -19,6 +19,19 @@ struct RootView: View {
                     Button("Take Photo") {
                         viewStore.send(.takePhotoButtonTapped)
                     }
+
+                    switch viewStore.status {
+                    case .notDetermined:
+                        Text("Access not determined")
+                    case .authorized:
+                        Text("Access authorized")
+                    case .denied:
+                        Text("Access denied")
+                    case .restricted:
+                        Text("Access restricted")
+                    @unknown default:
+                        Text("Unknown status")
+                    }
                 }
             } else {
                 VStack {

@@ -108,7 +108,7 @@ extension DateString: Strideable {
             let start = calendar.ordinality(of: .day, in: .era, for: date)
             let end = calendar.ordinality(of: .day, in: .era, for: other.date)
 
-            guard let start = start, let end = end else {
+            guard let start, let end else {
                 fatalError("The distance between 2 dates could not be computed.")
             }
 

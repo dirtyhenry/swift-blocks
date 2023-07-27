@@ -5,9 +5,9 @@
 //  Created by Mickaël Floc'hlay on 19/07/2023.
 //
 
-import XCTest
-import SnapshotTesting
 import ComposableArchitecture
+import SnapshotTesting
+import XCTest
 
 @testable import BlocksAppTCA
 

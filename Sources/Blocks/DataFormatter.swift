@@ -18,11 +18,11 @@ public enum DataFormatter {
         data.base64EncodedString(options: options)
     }
 
-    public static func base64String<T: DataProtocol>(from data: T, options: Data.Base64EncodingOptions = []) -> String {
+    public static func base64String(from data: some DataProtocol, options: Data.Base64EncodingOptions = []) -> String {
         Data(data).base64EncodedString(options: options)
     }
 
-    public static func base64String<T: ContiguousBytes>(from bytes: T, options: Data.Base64EncodingOptions = []) -> String {
+    public static func base64String(from bytes: some ContiguousBytes, options: Data.Base64EncodingOptions = []) -> String {
         bytes.withUnsafeBytes { buffer in
             Data(buffer).base64EncodedString(options: options)
         }
@@ -39,11 +39,11 @@ public enum DataFormatter {
         return data.map { String(format: format, $0) }.joined()
     }
 
-    public static func hexadecimalString<T: DataProtocol>(from data: T, options: HexadecimalEncodingOptions = []) -> String {
+    public static func hexadecimalString(from data: some DataProtocol, options: HexadecimalEncodingOptions = []) -> String {
         hexadecimalString(from: Data(data), options: options)
     }
 
-    public static func hexadecimalString<T: ContiguousBytes>(from bytes: T, options: HexadecimalEncodingOptions = []) -> String {
+    public static func hexadecimalString(from bytes: some ContiguousBytes, options: HexadecimalEncodingOptions = []) -> String {
         bytes.withUnsafeBytes { buffer in
             hexadecimalString(from: Data(buffer), options: options)
         }
