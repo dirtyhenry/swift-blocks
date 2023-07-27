@@ -24,6 +24,7 @@ lint:
 
 clean:
 	rm -rf .build/
+	rm -rf Examples/BlocksCLI/.build
 
 docs:
 	xcodebuild docbuild -scheme "Blocks" -derivedDataPath tmp/derivedDataPath -destination platform=macOS
