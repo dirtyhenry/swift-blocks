@@ -1,29 +1,22 @@
 // swift-tools-version:5.8
-// The swift-tools-version declares the minimum version of Swift required to build this package.
 
-import PackageDescription
 // 📜 https://github.com/apple/swift-package-manager/blob/main/Documentation/PackageDescription.md
+import PackageDescription
 
 let package = Package(
     name: "Blocks",
     platforms: [
-        .macOS(.v12),
-        .iOS(.v13) // Limiting factor: XCTest's fulfillment.
+        .macOS(.v10_15), // Limiting factor: XCTest's fulfillment
+        .iOS(.v13) // Limiting factor: XCTest's fulfillment
     ],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "Blocks",
             targets: ["Blocks"]
         )
     ],
-    dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
-    ],
+    dependencies: [],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "Blocks",
             dependencies: []
@@ -31,8 +24,7 @@ let package = Package(
         .testTarget(
             name: "BlocksTests",
             dependencies: ["Blocks"],
-            resources: [.process("Resources")],
-            linkerSettings: [.linkedFramework("XCTest")]
+            resources: [.process("Resources")]
         )
     ]
 )

@@ -67,15 +67,15 @@ import Foundation
             let node = XMLElement(name: "url")
             node.addChild(XMLElement(name: "loc", stringValue: location.absoluteString))
 
-            if let lastmod = lastmod {
+            if let lastmod {
                 node.addChild(XMLElement(name: "lastmod", stringValue: lastmod.description))
             }
 
-            if let changeFreq = changeFreq {
+            if let changeFreq {
                 node.addChild(XMLElement(name: "changefreq", stringValue: changeFreq.rawValue))
             }
 
-            if let priority = priority {
+            if let priority {
                 node.addChild(XMLElement(name: "priority", stringValue: priority.description))
             }
 
