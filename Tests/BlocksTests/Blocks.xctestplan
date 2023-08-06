@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "FE0CC92C-D531-492D-9607-C0624D77C8A1",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "BlocksTests",
+        "name" : "BlocksTests"
+      }
+    }
+  ],
+  "version" : 1
+}
