@@ -19,17 +19,17 @@ final class ICalendarTests: XCTestCase {
         iCalendarObject.add(event: event)
 
         let expectedICAL = """
-        BEGIN:VCALENDAR
-        VERSION:2.0
-        PRODID:-//ABC Corporation//NONSGML My Product//
-        BEGIN:VEVENT
-        UID:19970901T130000Z-123401@example.com
-        DTSTAMP:19970901T130000Z
-        DTSTART:19970903T163000Z
-        DTEND:19970903T190000Z
-        SUMMARY:Annual Employee Review
-        DESCRIPTION:Some more details here.
-        END:VEVENT
+        BEGIN:VCALENDAR\r
+        VERSION:2.0\r
+        PRODID:-//ABC Corporation//NONSGML My Product//\r
+        BEGIN:VEVENT\r
+        UID:19970901T130000Z-123401@example.com\r
+        DTSTAMP:19970901T130000Z\r
+        DTSTART:19970903T163000Z\r
+        DTEND:19970903T190000Z\r
+        SUMMARY:Annual Employee Review\r
+        DESCRIPTION:Some more details here.\r
+        END:VEVENT\r
         END:VCALENDAR
         """
 
