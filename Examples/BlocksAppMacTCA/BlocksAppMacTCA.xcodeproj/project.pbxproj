@@ -1,0 +1,581 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00A75E142A8A983900298C85 /* BlocksAppMacTCAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A75E132A8A983900298C85 /* BlocksAppMacTCAApp.swift */; };
+		00A75E162A8A983900298C85 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A75E152A8A983900298C85 /* ContentView.swift */; };
+		00A75E182A8A983A00298C85 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00A75E172A8A983A00298C85 /* Assets.xcassets */; };
+		00A75E1B2A8A983A00298C85 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00A75E1A2A8A983A00298C85 /* Preview Assets.xcassets */; };
+		00A75E262A8A983A00298C85 /* BlocksAppMacTCATests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A75E252A8A983A00298C85 /* BlocksAppMacTCATests.swift */; };
+		00A75E302A8A983A00298C85 /* BlocksAppMacTCAUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A75E2F2A8A983A00298C85 /* BlocksAppMacTCAUITests.swift */; };
+		00A75E322A8A983A00298C85 /* BlocksAppMacTCAUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A75E312A8A983A00298C85 /* BlocksAppMacTCAUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		00A75E222A8A983A00298C85 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 00A75E082A8A983900298C85 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00A75E0F2A8A983900298C85;
+			remoteInfo = BlocksAppMacTCA;
+		};
+		00A75E2C2A8A983A00298C85 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 00A75E082A8A983900298C85 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00A75E0F2A8A983900298C85;
+			remoteInfo = BlocksAppMacTCA;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		00A75E102A8A983900298C85 /* BlocksAppMacTCA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlocksAppMacTCA.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		00A75E132A8A983900298C85 /* BlocksAppMacTCAApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksAppMacTCAApp.swift; sourceTree = "<group>"; };
+		00A75E152A8A983900298C85 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		00A75E172A8A983A00298C85 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		00A75E1A2A8A983A00298C85 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		00A75E1C2A8A983A00298C85 /* BlocksAppMacTCA.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BlocksAppMacTCA.entitlements; sourceTree = "<group>"; };
+		00A75E212A8A983A00298C85 /* BlocksAppMacTCATests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlocksAppMacTCATests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00A75E252A8A983A00298C85 /* BlocksAppMacTCATests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksAppMacTCATests.swift; sourceTree = "<group>"; };
+		00A75E2B2A8A983A00298C85 /* BlocksAppMacTCAUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlocksAppMacTCAUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00A75E2F2A8A983A00298C85 /* BlocksAppMacTCAUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksAppMacTCAUITests.swift; sourceTree = "<group>"; };
+		00A75E312A8A983A00298C85 /* BlocksAppMacTCAUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksAppMacTCAUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		00A75E0D2A8A983900298C85 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		00A75E1E2A8A983A00298C85 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		00A75E282A8A983A00298C85 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		00A75E072A8A983900298C85 = {
+			isa = PBXGroup;
+			children = (
+				00A75E122A8A983900298C85 /* BlocksAppMacTCA */,
+				00A75E242A8A983A00298C85 /* BlocksAppMacTCATests */,
+				00A75E2E2A8A983A00298C85 /* BlocksAppMacTCAUITests */,
+				00A75E112A8A983900298C85 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		00A75E112A8A983900298C85 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				00A75E102A8A983900298C85 /* BlocksAppMacTCA.app */,
+				00A75E212A8A983A00298C85 /* BlocksAppMacTCATests.xctest */,
+				00A75E2B2A8A983A00298C85 /* BlocksAppMacTCAUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		00A75E122A8A983900298C85 /* BlocksAppMacTCA */ = {
+			isa = PBXGroup;
+			children = (
+				00A75E132A8A983900298C85 /* BlocksAppMacTCAApp.swift */,
+				00A75E152A8A983900298C85 /* ContentView.swift */,
+				00A75E172A8A983A00298C85 /* Assets.xcassets */,
+				00A75E1C2A8A983A00298C85 /* BlocksAppMacTCA.entitlements */,
+				00A75E192A8A983A00298C85 /* Preview Content */,
+			);
+			path = BlocksAppMacTCA;
+			sourceTree = "<group>";
+		};
+		00A75E192A8A983A00298C85 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				00A75E1A2A8A983A00298C85 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		00A75E242A8A983A00298C85 /* BlocksAppMacTCATests */ = {
+			isa = PBXGroup;
+			children = (
+				00A75E252A8A983A00298C85 /* BlocksAppMacTCATests.swift */,
+			);
+			path = BlocksAppMacTCATests;
+			sourceTree = "<group>";
+		};
+		00A75E2E2A8A983A00298C85 /* BlocksAppMacTCAUITests */ = {
+			isa = PBXGroup;
+			children = (
+				00A75E2F2A8A983A00298C85 /* BlocksAppMacTCAUITests.swift */,
+				00A75E312A8A983A00298C85 /* BlocksAppMacTCAUITestsLaunchTests.swift */,
+			);
+			path = BlocksAppMacTCAUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		00A75E0F2A8A983900298C85 /* BlocksAppMacTCA */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00A75E352A8A983A00298C85 /* Build configuration list for PBXNativeTarget "BlocksAppMacTCA" */;
+			buildPhases = (
+				00A75E0C2A8A983900298C85 /* Sources */,
+				00A75E0D2A8A983900298C85 /* Frameworks */,
+				00A75E0E2A8A983900298C85 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BlocksAppMacTCA;
+			productName = BlocksAppMacTCA;
+			productReference = 00A75E102A8A983900298C85 /* BlocksAppMacTCA.app */;
+			productType = "com.apple.product-type.application";
+		};
+		00A75E202A8A983A00298C85 /* BlocksAppMacTCATests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00A75E382A8A983A00298C85 /* Build configuration list for PBXNativeTarget "BlocksAppMacTCATests" */;
+			buildPhases = (
+				00A75E1D2A8A983A00298C85 /* Sources */,
+				00A75E1E2A8A983A00298C85 /* Frameworks */,
+				00A75E1F2A8A983A00298C85 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				00A75E232A8A983A00298C85 /* PBXTargetDependency */,
+			);
+			name = BlocksAppMacTCATests;
+			productName = BlocksAppMacTCATests;
+			productReference = 00A75E212A8A983A00298C85 /* BlocksAppMacTCATests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		00A75E2A2A8A983A00298C85 /* BlocksAppMacTCAUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00A75E3B2A8A983A00298C85 /* Build configuration list for PBXNativeTarget "BlocksAppMacTCAUITests" */;
+			buildPhases = (
+				00A75E272A8A983A00298C85 /* Sources */,
+				00A75E282A8A983A00298C85 /* Frameworks */,
+				00A75E292A8A983A00298C85 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				00A75E2D2A8A983A00298C85 /* PBXTargetDependency */,
+			);
+			name = BlocksAppMacTCAUITests;
+			productName = BlocksAppMacTCAUITests;
+			productReference = 00A75E2B2A8A983A00298C85 /* BlocksAppMacTCAUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		00A75E082A8A983900298C85 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1430;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					00A75E0F2A8A983900298C85 = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
+					00A75E202A8A983A00298C85 = {
+						CreatedOnToolsVersion = 14.3.1;
+						TestTargetID = 00A75E0F2A8A983900298C85;
+					};
+					00A75E2A2A8A983A00298C85 = {
+						CreatedOnToolsVersion = 14.3.1;
+						TestTargetID = 00A75E0F2A8A983900298C85;
+					};
+				};
+			};
+			buildConfigurationList = 00A75E0B2A8A983900298C85 /* Build configuration list for PBXProject "BlocksAppMacTCA" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 00A75E072A8A983900298C85;
+			productRefGroup = 00A75E112A8A983900298C85 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				00A75E0F2A8A983900298C85 /* BlocksAppMacTCA */,
+				00A75E202A8A983A00298C85 /* BlocksAppMacTCATests */,
+				00A75E2A2A8A983A00298C85 /* BlocksAppMacTCAUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		00A75E0E2A8A983900298C85 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00A75E1B2A8A983A00298C85 /* Preview Assets.xcassets in Resources */,
+				00A75E182A8A983A00298C85 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		00A75E1F2A8A983A00298C85 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		00A75E292A8A983A00298C85 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		00A75E0C2A8A983900298C85 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00A75E162A8A983900298C85 /* ContentView.swift in Sources */,
+				00A75E142A8A983900298C85 /* BlocksAppMacTCAApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		00A75E1D2A8A983A00298C85 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00A75E262A8A983A00298C85 /* BlocksAppMacTCATests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		00A75E272A8A983A00298C85 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00A75E302A8A983A00298C85 /* BlocksAppMacTCAUITests.swift in Sources */,
+				00A75E322A8A983A00298C85 /* BlocksAppMacTCAUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		00A75E232A8A983A00298C85 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00A75E0F2A8A983900298C85 /* BlocksAppMacTCA */;
+			targetProxy = 00A75E222A8A983A00298C85 /* PBXContainerItemProxy */;
+		};
+		00A75E2D2A8A983A00298C85 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00A75E0F2A8A983900298C85 /* BlocksAppMacTCA */;
+			targetProxy = 00A75E2C2A8A983A00298C85 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		00A75E332A8A983A00298C85 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		00A75E342A8A983A00298C85 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		00A75E362A8A983A00298C85 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BlocksAppMacTCA/BlocksAppMacTCA.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"BlocksAppMacTCA/Preview Content\"";
+				DEVELOPMENT_TEAM = N77R86QZUG;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.mickf.BlocksAppMacTCA;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		00A75E372A8A983A00298C85 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BlocksAppMacTCA/BlocksAppMacTCA.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"BlocksAppMacTCA/Preview Content\"";
+				DEVELOPMENT_TEAM = N77R86QZUG;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.mickf.BlocksAppMacTCA;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		00A75E392A8A983A00298C85 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N77R86QZUG;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.mickf.BlocksAppMacTCATests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BlocksAppMacTCA.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BlocksAppMacTCA";
+			};
+			name = Debug;
+		};
+		00A75E3A2A8A983A00298C85 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N77R86QZUG;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.mickf.BlocksAppMacTCATests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BlocksAppMacTCA.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BlocksAppMacTCA";
+			};
+			name = Release;
+		};
+		00A75E3C2A8A983A00298C85 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N77R86QZUG;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.mickf.BlocksAppMacTCAUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = BlocksAppMacTCA;
+			};
+			name = Debug;
+		};
+		00A75E3D2A8A983A00298C85 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N77R86QZUG;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.mickf.BlocksAppMacTCAUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = BlocksAppMacTCA;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		00A75E0B2A8A983900298C85 /* Build configuration list for PBXProject "BlocksAppMacTCA" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00A75E332A8A983A00298C85 /* Debug */,
+				00A75E342A8A983A00298C85 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		00A75E352A8A983A00298C85 /* Build configuration list for PBXNativeTarget "BlocksAppMacTCA" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00A75E362A8A983A00298C85 /* Debug */,
+				00A75E372A8A983A00298C85 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		00A75E382A8A983A00298C85 /* Build configuration list for PBXNativeTarget "BlocksAppMacTCATests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00A75E392A8A983A00298C85 /* Debug */,
+				00A75E3A2A8A983A00298C85 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		00A75E3B2A8A983A00298C85 /* Build configuration list for PBXNativeTarget "BlocksAppMacTCAUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00A75E3C2A8A983A00298C85 /* Debug */,
+				00A75E3D2A8A983A00298C85 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 00A75E082A8A983900298C85 /* Project object */;
+}
