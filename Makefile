@@ -13,7 +13,7 @@ test-debug:
 	swift test --verbose --very-verbose
 
 test:
-	swift test
+	set -o pipefail && swift test | xcpretty
 
 release:
 	swift build -c release
