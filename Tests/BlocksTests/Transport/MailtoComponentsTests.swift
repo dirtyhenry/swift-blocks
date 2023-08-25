@@ -1,4 +1,4 @@
-@testable import BlocksApp
+import Blocks
 import XCTest
 
 final class MailtoComponentsTests: XCTestCase {
@@ -43,11 +43,5 @@ final class MailtoComponentsTests: XCTestCase {
 
         let mailToURL = sut.url
         XCTAssertEqual(mailToURL?.absoluteString, "mailto:foo@bar.tld?subject=My%20Subject&body=A%20dummy%20text%0D%0Awith%20paragraphs.")
-    }
-}
-
-extension URLComponents {
-    func queryItemValue(forName name: String) -> String? {
-        queryItems?.first(where: { $0.name == name })?.value
     }
 }

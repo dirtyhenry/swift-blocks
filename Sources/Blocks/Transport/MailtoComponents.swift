@@ -1,13 +1,13 @@
 import Foundation
 
-struct MailtoComponents {
-    var recipient: String?
-    var subject: String?
-    var body: String?
+public struct MailtoComponents {
+    public var recipient: String?
+    public var subject: String?
+    public var body: String?
 
-    init() {}
+    public init() {}
 
-    var url: URL? {
+    public var url: URL? {
         var components = URLComponents()
         components.scheme = "mailto"
         if let recipient {
@@ -25,15 +25,15 @@ struct MailtoComponents {
 
     // MARK: MFMailComposeViewController-like API
 
-    mutating func setToRecipient(_ recipient: String) {
+    public mutating func setToRecipient(_ recipient: String) {
         self.recipient = recipient
     }
 
-    mutating func setSubject(_ subject: String) {
+    public mutating func setSubject(_ subject: String) {
         self.subject = subject
     }
 
-    mutating func setMessageBody(_ body: String) {
+    public mutating func setMessageBody(_ body: String) {
         self.body = body
     }
 }
