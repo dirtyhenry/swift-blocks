@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		001E3A702A37081800C90416 /* Blocks in Frameworks */ = {isa = PBXBuildFile; productRef = 001E3A6F2A37081800C90416 /* Blocks */; };
+		0030C2522A99047F00AB2087 /* WatchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0030C2512A99047F00AB2087 /* WatchState.swift */; };
+		0030C2542A99077400AB2087 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0030C2532A99077400AB2087 /* Settings.bundle */; };
 		008D62CC2A56C35800254FD9 /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008D62CB2A56C35800254FD9 /* ImagePickerView.swift */; };
 		008D62CE2A56C96E00254FD9 /* MailComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008D62CD2A56C96E00254FD9 /* MailComposeView.swift */; };
 		008D62D02A56EA1500254FD9 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 008D62CF2A56EA1500254FD9 /* UniformTypeIdentifiers.framework */; };
@@ -39,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0030C2512A99047F00AB2087 /* WatchState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchState.swift; sourceTree = "<group>"; };
+		0030C2532A99077400AB2087 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		006E38742A370C0600B4142B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		008D62CB2A56C35800254FD9 /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		008D62CD2A56C96E00254FD9 /* MailComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposeView.swift; sourceTree = "<group>"; };
@@ -96,6 +100,7 @@
 			children = (
 				008D62CB2A56C35800254FD9 /* ImagePickerView.swift */,
 				008D62CD2A56C96E00254FD9 /* MailComposeView.swift */,
+				0030C2512A99047F00AB2087 /* WatchState.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -103,6 +108,7 @@
 		00D1E23B2A36327100E8D275 = {
 			isa = PBXGroup;
 			children = (
+				0030C2532A99077400AB2087 /* Settings.bundle */,
 				00E4FFCC2A364A8F002341EC /* Config.xcconfig */,
 				00D1E2462A36327100E8D275 /* BlocksApp */,
 				00D1E2572A36327200E8D275 /* BlocksAppTests */,
@@ -267,6 +273,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0030C2542A99077400AB2087 /* Settings.bundle in Resources */,
 				00D1E24F2A36327100E8D275 /* Preview Assets.xcassets in Resources */,
 				00E4FFCD2A364A8F002341EC /* Config.xcconfig in Resources */,
 				00D1E24C2A36327100E8D275 /* Assets.xcassets in Resources */,
@@ -297,6 +304,7 @@
 				008D62CC2A56C35800254FD9 /* ImagePickerView.swift in Sources */,
 				008D62CE2A56C96E00254FD9 /* MailComposeView.swift in Sources */,
 				00D1E24A2A36327100E8D275 /* ContentView.swift in Sources */,
+				0030C2522A99047F00AB2087 /* WatchState.swift in Sources */,
 				00D1E2482A36327100E8D275 /* BlocksApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

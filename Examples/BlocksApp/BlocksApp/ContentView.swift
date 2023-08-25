@@ -2,34 +2,6 @@ import Blocks
 import SwiftUI
 import UniformTypeIdentifiers
 
-class WatchState: ObservableObject {
-    enum State: String {
-        case pending = "⏳ Pending"
-        case paired = "✔ Paired"
-        case unpaired = "✘ Unpaired"
-        case unknown = "🤷‍♂️ Unknown"
-    }
-
-    @Published var state: State = .pending
-
-    func start() {
-        Task {
-            let value = try? await UIDevice.current.isPairedWithWatch(timeoutAfter: 3)
-
-            await MainActor.run {
-                switch value {
-                case .none:
-                    state = .unknown
-                case .some(true):
-                    state = .paired
-                case .some(false):
-                    state = .unpaired
-                }
-            }
-        }
-    }
-}
-
 struct ContentView: View {
     @ObservedObject var model: WatchState
 
@@ -53,17 +25,41 @@ struct ContentView: View {
                     .edgesIgnoringSafeArea(.all)
             }
             Spacer().frame(height: 16)
-            Button("Mail", role: nil) {
-                isShowingComposer = true
-            }.fullScreenCover(isPresented: $isShowingComposer) {
-                MailComposeView()
-                    .edgesIgnoringSafeArea(.all)
+
+            if MailComposeView.canSendMail() {
+                Button("Mail", role: nil) {
+                    isShowingComposer = true
+                }.fullScreenCover(isPresented: $isShowingComposer) {
+                    MailComposeView()
+                        .edgesIgnoringSafeArea(.all)
+                }
+            } else {
+                Text("Can not send mail in-app.")
             }
+
+            Link("Alternative mailto", destination: mailtoURL())
         }
         .padding()
         .onAppear {
             model.start()
         }
+    }
+
+    func mailtoURL() -> URL {
+        var res = MailtoComponents()
+        res.recipient = "foo@bar.tld"
+        res.subject = "Test Subject"
+        res.body = """
+        Dear Mr. Doe,
+
+        Wouldn't you agree this library is awesome?
+        """
+
+        guard let resultURL = res.url else {
+            fatalError("Invalid mailto URL")
+        }
+
+        return resultURL
     }
 }
 
