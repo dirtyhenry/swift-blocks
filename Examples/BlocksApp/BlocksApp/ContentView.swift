@@ -24,7 +24,7 @@ struct ContentView: View {
                     .edgesIgnoringSafeArea(.all)
             }
             Spacer().frame(height: 16)
-            
+
             if MailComposeView.canSendMail() {
                 Button("Mail", role: nil) {
                     isShowingComposer = true

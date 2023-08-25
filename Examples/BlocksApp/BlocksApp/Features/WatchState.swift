@@ -1,5 +1,5 @@
-import SwiftUI
 import Blocks
+import SwiftUI
 
 class WatchState: ObservableObject {
     enum State: String {

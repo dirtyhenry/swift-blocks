@@ -30,8 +30,8 @@ struct MailComposeView: UIViewControllerRepresentable {
             controller.dismiss(animated: true)
         }
     }
-    
+
     static func canSendMail() -> Bool {
-        return MFMailComposeViewController.canSendMail()
+        MFMailComposeViewController.canSendMail()
     }
 }
