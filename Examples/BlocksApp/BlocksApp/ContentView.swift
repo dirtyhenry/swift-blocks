@@ -35,11 +35,30 @@ struct ContentView: View {
             } else {
                 Text("Can not send mail in-app.")
             }
+
+            Link("Alternative mailto", destination: mailtoURL())
         }
         .padding()
         .onAppear {
             model.start()
         }
+    }
+
+    func mailtoURL() -> URL {
+        var res = MailtoComponents()
+        res.recipient = "foo@bar.tld"
+        res.subject = "Test Subject"
+        res.body = """
+        Dear Mr. Doe,
+
+        Wouldn't you agree this library is awesome?
+        """
+
+        guard let resultURL = res.url else {
+            fatalError("Invalid mailto URL")
+        }
+
+        return resultURL
     }
 }
 
