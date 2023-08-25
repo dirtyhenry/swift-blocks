@@ -24,11 +24,16 @@ struct ContentView: View {
                     .edgesIgnoringSafeArea(.all)
             }
             Spacer().frame(height: 16)
-            Button("Mail", role: nil) {
-                isShowingComposer = true
-            }.fullScreenCover(isPresented: $isShowingComposer) {
-                MailComposeView()
-                    .edgesIgnoringSafeArea(.all)
+            
+            if MailComposeView.canSendMail() {
+                Button("Mail", role: nil) {
+                    isShowingComposer = true
+                }.fullScreenCover(isPresented: $isShowingComposer) {
+                    MailComposeView()
+                        .edgesIgnoringSafeArea(.all)
+                }
+            } else {
+                Text("Can not send mail in-app.")
             }
         }
         .padding()

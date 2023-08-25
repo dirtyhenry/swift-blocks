@@ -2,6 +2,9 @@ import MessageUI
 import SwiftUI
 
 /// A basic SwiftUI wrapper for UIKit's `MFMailComposeViewController`.
+///
+/// Before presenting the mail compose view, always call the `canSendMail()` method to see
+/// if the person configured the current device to send email.
 struct MailComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> MFMailComposeViewController {
         let composer = MFMailComposeViewController()
@@ -26,5 +29,9 @@ struct MailComposeView: UIViewControllerRepresentable {
         func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith _: MFMailComposeResult, error _: Error?) {
             controller.dismiss(animated: true)
         }
+    }
+    
+    static func canSendMail() -> Bool {
+        return MFMailComposeViewController.canSendMail()
     }
 }
