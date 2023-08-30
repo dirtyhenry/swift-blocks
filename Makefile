@@ -40,3 +40,6 @@ fetch-json-feed-sample:
 dump-packages:
 	swift package dump-package > Tests/BlocksTests/Resources/dump-package.json 
 	prettier -w Tests/BlocksTests/Resources/dump-package.json
+
+build-cli:
+	swift build --package-path Examples/BlocksCLI/
