@@ -1,0 +1,66 @@
+{
+  "cLanguageStandard": null,
+  "cxxLanguageStandard": null,
+  "dependencies": [],
+  "name": "swift-blocks",
+  "packageKind": {
+    "root": ["/Users/mick/Developer/Private/swift-blocks"]
+  },
+  "pkgConfig": null,
+  "platforms": [
+    {
+      "options": [],
+      "platformName": "macos",
+      "version": "10.15"
+    },
+    {
+      "options": [],
+      "platformName": "ios",
+      "version": "13.0"
+    }
+  ],
+  "products": [
+    {
+      "name": "Blocks",
+      "settings": [],
+      "targets": ["Blocks"],
+      "type": {
+        "library": ["automatic"]
+      }
+    }
+  ],
+  "providers": null,
+  "swiftLanguageVersions": null,
+  "targets": [
+    {
+      "dependencies": [],
+      "exclude": [],
+      "name": "Blocks",
+      "resources": [],
+      "settings": [],
+      "type": "regular"
+    },
+    {
+      "dependencies": [
+        {
+          "byName": ["Blocks", null]
+        }
+      ],
+      "exclude": [],
+      "name": "BlocksTests",
+      "resources": [
+        {
+          "path": "Resources",
+          "rule": {
+            "process": {}
+          }
+        }
+      ],
+      "settings": [],
+      "type": "test"
+    }
+  ],
+  "toolsVersion": {
+    "_version": "5.7.0"
+  }
+}

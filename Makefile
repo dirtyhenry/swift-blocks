@@ -36,3 +36,7 @@ serve-docs:
 
 fetch-json-feed-sample:
 	curl https://www.jsonfeed.org/feed.json -o Tests/BlocksTests/Resources/sample-feed.json
+
+dump-packages:
+	swift package dump-package > Tests/BlocksTests/Resources/dump-package.json 
+	prettier -w Tests/BlocksTests/Resources/dump-package.json
