@@ -42,4 +42,5 @@ dump-packages:
 	prettier -w Tests/BlocksTests/Resources/dump-package.json
 
 build-cli:
+	swift package update --package-path Examples/BlocksCLI/
 	swift build --package-path Examples/BlocksCLI/
