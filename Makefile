@@ -8,6 +8,10 @@ install:
 build:
 	swift build
 
+test-debug:
+	swift package clean
+	swift test --verbose --very-verbose
+
 test:
 	swift test 2>&1 | xcpretty
 
