@@ -37,10 +37,8 @@ final class SwiftJSONFeedTests: XCTestCase {
     }
 
     func testDecoding() throws {
-        let sampleURL = Bundle.module.url(forResource: "sample-feed", withExtension: "json")
-        let data = try Data(contentsOf: sampleURL!)
         let decoder = JSONFeed.createDecoder()
-        let feed = try decoder.decode(JSONFeed.self, from: data)
+        let feed = try decoder.decode(JSONFeed.self, fromResource: "sample-feed", in: Bundle.module)
         XCTAssertEqual(feed.version, "https://jsonfeed.org/version/1")
         XCTAssertEqual(feed.title, "JSON Feed")
         XCTAssertEqual(feed.items.first!.datePublished, Date(timeIntervalSince1970: 1_596_818_676))

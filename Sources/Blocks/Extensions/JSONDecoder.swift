@@ -15,3 +15,19 @@ public extension JSONDecoder {
         return res
     }
 }
+
+public extension JSONDecoder {
+    func decode<T>(
+        _: T.Type,
+        fromResource resource: String,
+        withExtension fileExtension: String = "json",
+        in bundle: Bundle
+    ) throws -> T where T: Decodable {
+        guard let bundledResourceURL = bundle.url(forResource: resource, withExtension: fileExtension) else {
+            throw BlocksError.couldNotLocateFile("\(resource).\(fileExtension)")
+        }
+
+        let data = try Data(contentsOf: bundledResourceURL)
+        return try decode(T.self, from: data)
+    }
+}
