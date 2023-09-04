@@ -31,6 +31,7 @@ final class DateStringTests: XCTestCase {
 
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyyMMdd"
+        formatter.timeZone = Calendar.parisCalendar().timeZone
         let array = Array(range).map { $0.string(with: formatter) }
         XCTAssertEqual(array, ["20220301", "20220302", "20220303", "20220304", "20220305", "20220306", "20220307"])
     }
