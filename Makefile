@@ -13,7 +13,7 @@ test-debug:
 	swift test --verbose --very-verbose
 
 test:
-	swift test 2>&1 | xcpretty
+	swift test
 
 release:
 	swift build -c release
