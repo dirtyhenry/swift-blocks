@@ -8,8 +8,12 @@ install:
 build:
 	swift build
 
+test-debug:
+	swift package clean
+	swift test --verbose --very-verbose
+
 test:
-	swift test 2>&1 | xcpretty
+	swift test
 
 release:
 	swift build -c release
@@ -36,3 +40,11 @@ serve-docs:
 
 fetch-json-feed-sample:
 	curl https://www.jsonfeed.org/feed.json -o Tests/BlocksTests/Resources/sample-feed.json
+
+dump-packages:
+	swift package dump-package > Tests/BlocksTests/Resources/dump-package.json 
+	prettier -w Tests/BlocksTests/Resources/dump-package.json
+
+build-cli:
+	swift package update --package-path Examples/BlocksCLI/
+	swift build --package-path Examples/BlocksCLI/

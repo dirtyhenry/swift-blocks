@@ -3,8 +3,7 @@ import Blocks
 import Foundation
 
 @available(macOS 10.15.0, *)
-@main
-struct BlocksCLI: AsyncParsableCommand {
+struct CurlLikeCommand: AsyncParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "curl",
         abstract: "A curl-like command, implemented with Blocks."
