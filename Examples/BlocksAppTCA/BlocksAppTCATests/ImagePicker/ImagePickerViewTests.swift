@@ -1,10 +1,3 @@
-//
-//  ImagePickerViewTests.swift
-//  BlocksAppTCATests
-//
-//  Created by Mickaël Floc'hlay on 19/07/2023.
-//
-
 import ComposableArchitecture
 import SnapshotTesting
 import XCTest

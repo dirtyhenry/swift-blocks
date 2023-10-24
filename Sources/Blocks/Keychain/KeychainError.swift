@@ -4,7 +4,7 @@ import Foundation
 public enum KeychainError: Error {
     /// Properties of a keychain item could not be accessed.
     case unexpectedData
-    
+
     /// A wrapper around a keychain error code that was not handled.
     case unhandledError(status: OSStatus)
 }
