@@ -10,8 +10,9 @@ struct RootFeature: ReducerProtocol {
         var latestPhoto: UIImage?
         var status: AVAuthorizationStatus
 
-        init() {
-            status = AVCaptureDevice.authorizationStatus(for: .video)
+        init(latestPhoto: UIImage? = nil, status: AVAuthorizationStatus? = nil) {
+            self.latestPhoto = latestPhoto
+            self.status = status ?? AVCaptureDevice.authorizationStatus(for: .video)
         }
     }
 
