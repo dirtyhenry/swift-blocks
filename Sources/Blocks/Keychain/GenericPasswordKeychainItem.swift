@@ -3,12 +3,7 @@ import Foundation
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
     private func throwIfNotSuccess(_ status: OSStatus) throws {
         guard status != errSecSuccess else { return }
-        throw KeychainError.keychainError(status: status)
-    }
-
-    public enum KeychainError: Error {
-        case invalidData
-        case keychainError(status: OSStatus)
+        throw KeychainError.unhandledError(status: status)
     }
 
     extension Dictionary {
@@ -19,6 +14,7 @@ import Foundation
         }
     }
 
+    /// A convenience class to manage _generic password_ keychain items.
     public final class GenericPasswordKeychainItem {
         private let label: String
         private let account: String
@@ -53,7 +49,7 @@ import Foundation
             guard status != errSecItemNotFound else { return nil }
             try throwIfNotSuccess(status)
             guard let data = result as? Data, let string = String(data: data, encoding: .utf8) else {
-                throw KeychainError.invalidData
+                throw KeychainError.unexpectedData
             }
             return string
         }

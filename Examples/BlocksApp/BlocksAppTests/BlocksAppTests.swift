@@ -1,10 +1,3 @@
-//
-//  BlocksAppTests.swift
-//  BlocksAppTests
-//
-//  Created by Mickaël Floc'hlay on 11/06/2023.
-//
-
 @testable import BlocksApp
 import XCTest
 

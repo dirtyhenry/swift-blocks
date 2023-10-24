@@ -1,10 +1,3 @@
-//
-//  BlocksAppUITestsLaunchTests.swift
-//  BlocksAppUITests
-//
-//  Created by Mickaël Floc'hlay on 11/06/2023.
-//
-
 import XCTest
 
 final class BlocksAppUITestsLaunchTests: XCTestCase {

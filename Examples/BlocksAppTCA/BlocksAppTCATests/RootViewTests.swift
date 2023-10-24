@@ -1,10 +1,3 @@
-//
-//  ImagePickerViewTests.swift
-//  BlocksAppTCATests
-//
-//  Created by Mickaël Floc'hlay on 19/07/2023.
-//
-
 import ComposableArchitecture
 import SnapshotTesting
 import SwiftUI
@@ -15,7 +8,7 @@ import XCTest
 @MainActor
 final class RootViewTests: XCTestCase {
     func testView() throws {
-        let store = Store(initialState: RootFeature.State()) {
+        let store = Store(initialState: RootFeature.State(status: .authorized)) {
             RootFeature()
         }
 
@@ -27,7 +20,7 @@ final class RootViewTests: XCTestCase {
         guard let image = UIImage(named: "DummyImage", in: Bundle(for: ImagePickerFeatureTests.self), with: nil) else {
             fatalError("Could not load image in bundle.")
         }
-        let store = Store(initialState: RootFeature.State(latestPhoto: image)) {
+        let store = Store(initialState: RootFeature.State(latestPhoto: image, status: .authorized)) {
             RootFeature()
         }
 
