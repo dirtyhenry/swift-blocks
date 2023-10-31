@@ -3,43 +3,71 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
+    enum Section: String, Identifiable, CaseIterable {
+        case misc = "Misc"
+        case fonts = "Fonts"
+
+        var id: String {
+            rawValue
+        }
+    }
+
     @ObservedObject var model: WatchState
 
     @State var isShowingCamera: Bool = false
     @State var isShowingComposer: Bool = false
+
+    @State var selectedSectionId: Section.ID?
 
     init(model: WatchState) {
         self.model = model
     }
 
     var body: some View {
-        VStack {
-            Text("Is a watch paired with this iPhone?")
-            Text(model.state.rawValue)
-            Spacer().frame(height: 16)
-            Button("Photo", role: nil) {
-                isShowingCamera = true
-            }.fullScreenCover(isPresented: $isShowingCamera) {
-                // In order to use this, `NSCameraUsageDescription` must be set.
-                ImagePickerView(sourceType: .camera, mediaTypes: [UTType.image.identifier])
-                    .edgesIgnoringSafeArea(.all)
+        NavigationSplitView {
+            Text("🧱 Welcome to Blocks!")
+            List(Section.allCases, selection: $selectedSectionId) { section in
+                Text(section.id)
             }
-            Spacer().frame(height: 16)
+        } detail: {
+            if let selectedSectionId,
+               let section = Section(rawValue: selectedSectionId) {
+                switch section {
+                case .misc:
+                    VStack {
+                        Text("Is a watch paired with this iPhone?")
+                        Text(model.state.rawValue)
+                        Spacer().frame(height: 16)
+                        Button("Photo", role: nil) {
+                            isShowingCamera = true
+                        }.fullScreenCover(isPresented: $isShowingCamera) {
+                            // In order to use this, `NSCameraUsageDescription` must be set.
+                            ImagePickerView(sourceType: .camera, mediaTypes: [UTType.image.identifier])
+                                .edgesIgnoringSafeArea(.all)
+                        }
+                        Spacer().frame(height: 16)
 
-            if MailComposeView.canSendMail() {
-                Button("Mail", role: nil) {
-                    isShowingComposer = true
-                }.fullScreenCover(isPresented: $isShowingComposer) {
-                    MailComposeView()
-                        .edgesIgnoringSafeArea(.all)
+                        if MailComposeView.canSendMail() {
+                            Button("Mail", role: nil) {
+                                isShowingComposer = true
+                            }.fullScreenCover(isPresented: $isShowingComposer) {
+                                MailComposeView()
+                                    .edgesIgnoringSafeArea(.all)
+                            }
+                        } else {
+                            Text("Can not send mail in-app.")
+                        }
+
+                        Link("Alternative mailto", destination: mailtoURL())
+                    }
+                    .padding()
+                case .fonts:
+                    FontsView()
                 }
             } else {
-                Text("Can not send mail in-app.")
+                Text("Select a section")
             }
-
-            Link("Alternative mailto", destination: mailtoURL())
         }
-        .padding()
         .onAppear {
             model.start()
         }
