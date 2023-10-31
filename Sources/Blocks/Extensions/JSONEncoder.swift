@@ -14,4 +14,10 @@ public extension JSONEncoder {
         res.dateEncodingStrategy = .javaScriptISO8601()
         return res
     }
+
+    static func prettyEncoder() -> JSONEncoder {
+        let result = JSONEncoder.javaScriptISO8601()
+        result.outputFormatting = [.prettyPrinted, .sortedKeys]
+        return result
+    }
 }
