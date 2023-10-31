@@ -1,6 +1,6 @@
 import Foundation
 
-public struct SimpleError: Error {
+public struct SimpleMessageError: Error {
     let message: String
 
     public init(message: String) {
@@ -8,7 +8,7 @@ public struct SimpleError: Error {
     }
 }
 
-extension SimpleError: LocalizedError {
+extension SimpleMessageError: LocalizedError {
     public var errorDescription: String? {
         message
     }

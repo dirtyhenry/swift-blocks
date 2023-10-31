@@ -14,8 +14,8 @@ import Foundation
 
    The naming is inspired by JavaScript's [`JSON.stringify()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify).
  */
-enum JSON {
-    private static let defautErrorOutput = "💥 JSON Encoding did not work"
+public enum JSON {
+    public static let defautErrorOutput = "💥 JSON Encoding did not work"
 
     /**
        Encodes a Codable object into a JSON string.
@@ -54,8 +54,8 @@ enum JSON {
     public static func print(
         _ codable: Codable,
         encoder: JSONEncoder = .prettyEncoder(),
-        defaultErrorOutput _: String = defautErrorOutput
+        defaultErrorOutput: String = defautErrorOutput
     ) {
-        Swift.print(stringify(codable, encoder: encoder))
+        Swift.print(stringify(codable, encoder: encoder, defaultErrorOutput: defaultErrorOutput))
     }
 }
