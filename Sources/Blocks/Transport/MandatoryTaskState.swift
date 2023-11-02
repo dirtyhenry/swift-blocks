@@ -5,7 +5,7 @@ public enum MandatoryTaskState: Equatable {
     case failure(error: String)
 }
 
-extension MandatoryTaskState {
+public extension MandatoryTaskState {
     var systemImage: String {
         switch self {
         case .pending:
