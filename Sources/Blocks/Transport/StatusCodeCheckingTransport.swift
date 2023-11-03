@@ -16,7 +16,11 @@ import Foundation
             let (data, httpResponse) = try await wrapped.send(urlRequest: urlRequest, delegate: delegate)
 
             guard expectedStatusCode(httpResponse.statusCode) else {
-                throw TransportError.unexpectedHTTPStatusCode(httpResponse.statusCode)
+                throw WrongStatusCodeError(
+                    statusCode: httpResponse.statusCode,
+                    response: httpResponse,
+                    responseBody: data
+                )
             }
 
             return (data, httpResponse)
@@ -24,6 +28,18 @@ import Foundation
 
         public static func expected200to300(_ code: Int) -> Bool {
             code >= 200 && code < 300
+        }
+    }
+
+    /// Signals that a response's status code was wrong.
+    public struct WrongStatusCodeError: Error {
+        public let statusCode: Int
+        public let response: HTTPURLResponse?
+        public let responseBody: Data?
+        public init(statusCode: Int, response: HTTPURLResponse?, responseBody: Data?) {
+            self.statusCode = statusCode
+            self.response = response
+            self.responseBody = responseBody
         }
     }
 #endif
