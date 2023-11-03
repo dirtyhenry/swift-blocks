@@ -32,8 +32,8 @@ final class StatusCodeCheckingTransportTests: XCTestCase {
         var caughtStatusCode = 0
         do {
             _ = try await sut.send(urlRequest: dummyURLRequest, delegate: nil)
-        } catch let TransportError.unexpectedHTTPStatusCode(statusCode) {
-            caughtStatusCode = statusCode
+        } catch let error as WrongStatusCodeError {
+            caughtStatusCode = error.statusCode
             expectation.fulfill()
         }
 
