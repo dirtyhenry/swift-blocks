@@ -5,8 +5,11 @@ code sending HTTP requests easily testable and composable.
 
 It builds on two major influences:
 
-1. The tiny networking library by Chris Eidhof and Florian Zigler;
-1. The talk _You deserve nice things_ by Soroush Kanlou.
+1. The [tiny-networking](https://github.com/objcio/tiny-networking) library by
+   [objc.io](https://www.objc.io/);
+1. The talk
+   [_You deserve nice things_](https://www.youtube.com/watch?v=CTZOjl6_NuY) by
+   [Soroush Khanlou](https://www.khanlou.com/).
 
 ## Overview
 
