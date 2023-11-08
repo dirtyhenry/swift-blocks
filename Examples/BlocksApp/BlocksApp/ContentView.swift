@@ -6,6 +6,7 @@ struct ContentView: View {
     enum Section: String, Identifiable, CaseIterable {
         case misc = "Misc"
         case fonts = "Fonts"
+        case bg = "Background test"
 
         var id: String {
             rawValue
@@ -63,6 +64,8 @@ struct ContentView: View {
                     .padding()
                 case .fonts:
                     FontsView()
+                case .bg:
+                    BackgroundTaskView()
                 }
             } else {
                 Text("Select a section")

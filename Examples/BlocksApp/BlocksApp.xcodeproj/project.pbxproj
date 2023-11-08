@@ -10,6 +10,7 @@
 		001E3A702A37081800C90416 /* Blocks in Frameworks */ = {isa = PBXBuildFile; productRef = 001E3A6F2A37081800C90416 /* Blocks */; };
 		0030C2522A99047F00AB2087 /* WatchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0030C2512A99047F00AB2087 /* WatchState.swift */; };
 		0030C2542A99077400AB2087 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0030C2532A99077400AB2087 /* Settings.bundle */; };
+		003995752AFBF4680051BFCE /* BackgroundTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 003995742AFBF4680051BFCE /* BackgroundTaskView.swift */; };
 		007314A72AF00BFC0092F234 /* FontsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007314A62AF00BFC0092F234 /* FontsView.swift */; };
 		008D62CC2A56C35800254FD9 /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008D62CB2A56C35800254FD9 /* ImagePickerView.swift */; };
 		008D62CE2A56C96E00254FD9 /* MailComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008D62CD2A56C96E00254FD9 /* MailComposeView.swift */; };
@@ -44,6 +45,7 @@
 /* Begin PBXFileReference section */
 		0030C2512A99047F00AB2087 /* WatchState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchState.swift; sourceTree = "<group>"; };
 		0030C2532A99077400AB2087 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		003995742AFBF4680051BFCE /* BackgroundTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskView.swift; sourceTree = "<group>"; };
 		006E38742A370C0600B4142B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		007314A62AF00BFC0092F234 /* FontsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontsView.swift; sourceTree = "<group>"; };
 		008D62CB2A56C35800254FD9 /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				008D62CD2A56C96E00254FD9 /* MailComposeView.swift */,
 				007314A62AF00BFC0092F234 /* FontsView.swift */,
 				0030C2512A99047F00AB2087 /* WatchState.swift */,
+				003995742AFBF4680051BFCE /* BackgroundTaskView.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -305,6 +308,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				008D62CC2A56C35800254FD9 /* ImagePickerView.swift in Sources */,
+				003995752AFBF4680051BFCE /* BackgroundTaskView.swift in Sources */,
 				008D62CE2A56C96E00254FD9 /* MailComposeView.swift in Sources */,
 				00D1E24A2A36327100E8D275 /* ContentView.swift in Sources */,
 				007314A72AF00BFC0092F234 /* FontsView.swift in Sources */,
