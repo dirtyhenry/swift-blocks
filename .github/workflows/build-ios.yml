@@ -1,0 +1,24 @@
+name: Build iOS
+
+# 📜 https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: macos-13
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Output XCode version
+        run: |
+          xcodebuild -version
+      - name: Build debug version
+        run: |
+          make build-ios
+      - name: Test debug version
+        run: |
+          make test-ios
