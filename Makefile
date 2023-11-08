@@ -19,7 +19,7 @@ test:
 	set -o pipefail && swift test | xcpretty
 
 test-ios:
-	xcodebuild -scheme Blocks -destination "platform=iOS Simulator,OS=17.0.1" -derivedDataPath "/tmp/" clean test
+	xcodebuild -scheme Blocks -destination "platform=iOS Simulator,OS=17.0.1" -derivedDataPath "/tmp/" clean build test
 
 release:
 	swift build -c release
