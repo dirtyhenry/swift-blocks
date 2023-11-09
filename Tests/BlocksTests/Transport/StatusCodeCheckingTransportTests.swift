@@ -41,4 +41,9 @@ final class StatusCodeCheckingTransportTests: XCTestCase {
 
         XCTAssertEqual(caughtStatusCode, 404)
     }
+
+    func testErrorDescription() {
+        let sut = WrongStatusCodeError(statusCode: 200, response: nil, responseBody: nil)
+        XCTAssertEqual(sut.localizedDescription, "Unexpected HTTP status code: 200")
+    }
 }
