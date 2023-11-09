@@ -1,15 +1,15 @@
 import os
 import SwiftUI
 
-struct BackgroundTaskView: View {
-    var body: some View {
-        Button("Start background activity") {
-            Task {
-                startNormalTask()
-                startBackgroundTask()
-            }
-        }
-    }
+class BackgroundRunnerSingleton {
+    static let shared = BackgroundRunnerSingleton()
+
+    private let pollingInterval: Int = 5
+    
+    private var backgroundTaskIdentifier: UIBackgroundTaskIdentifier?
+    private var cancellableTask: Task<Bool, Never>?
+
+    private init() {}
 
     func startNormalTask() {
         Task {
@@ -18,15 +18,21 @@ struct BackgroundTaskView: View {
     }
 
     func startBackgroundTask() {
-        Task {
-            let identifier = await UIApplication.shared.beginBackgroundTask {
-                let logger = Logger(subsystem: "net.mickf.blocks", category: "DemoApp")
-                logger.info("Background task expired.")
+        cancellableTask = Task {
+            self.backgroundTaskIdentifier = await UIApplication.shared.beginBackgroundTask {
+                self.cancelBackgroundTask()
             }
-
             await countTo(id: "background", limit: 1000)
+            return true
+        }
+    }
 
-            await UIApplication.shared.endBackgroundTask(identifier)
+    func cancelBackgroundTask() {
+        let logger = Logger(subsystem: "net.mickf.blocks", category: "DemoApp")
+        logger.info("Background task expired.")
+        cancellableTask?.cancel()
+        if let identifier = self.backgroundTaskIdentifier {
+            UIApplication.shared.endBackgroundTask(identifier)
         }
     }
 
@@ -36,11 +42,50 @@ struct BackgroundTaskView: View {
             for index in 0 ... limit {
                 try Task.checkCancellation()
                 logger.info("ID \(id) Index \(index)")
-                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                for _ in 1 ... pollingInterval {
+                    try? await Task.sleep(nanoseconds: 1_000_000_000)
+                    try Task.checkCancellation()                }
             }
-            logger.info("ID \(id) completed")
+            logger.info("ID \(id, privacy: .public) completed")
         } catch {
-            logger.info("ID \(id) was cancelled")
+            logger.info("ID \(id, privacy: .public) was cancelled")
+        }
+    }
+
+    func pollDummyAPI() {
+        let logger = Logger(subsystem: "net.mickf.blocks", category: "DemoApp")
+        let url = URL(string: "https://jsonplaceholder.typicode.com/todos/1")!
+
+        let task = URLSession.shared.dataTask(with: url) { data, _, error in
+            if let error {
+                print("Error: \(error.localizedDescription)")
+            } else if let data {
+                do {
+                    _ = try JSONSerialization.jsonObject(with: data, options: [])
+                    logger.info("Polling received data.")
+                } catch {
+                    print("Error parsing JSON: \(error.localizedDescription)")
+                }
+            }
+
+            // Poll again after 1 second
+            DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(self.pollingInterval)) {
+                self.pollDummyAPI()
+            }
+        }
+        logger.info("Polling \(url)")
+        task.resume()
+    }
+}
+
+struct BackgroundTaskView: View {
+    var body: some View {
+        Button("Start background activity") {
+            Task {
+                BackgroundRunnerSingleton.shared.startNormalTask()
+                BackgroundRunnerSingleton.shared.startBackgroundTask()
+                BackgroundRunnerSingleton.shared.pollDummyAPI()
+            }
         }
     }
 }
