@@ -8,12 +8,18 @@ install:
 build:
 	swift build
 
+build-ios:
+	xcodebuild -scheme Blocks -destination "platform=iOS Simulator,OS=17.0.1" -derivedDataPath "/tmp/" clean build
+
 test-debug:
 	swift package clean
 	swift test --verbose --very-verbose
 
 test:
 	set -o pipefail && swift test | xcpretty
+
+test-ios:
+	xcodebuild -scheme Blocks -destination "platform=iOS Simulator,OS=17.0.1" -derivedDataPath "/tmp/" clean build test
 
 release:
 	swift build -c release
