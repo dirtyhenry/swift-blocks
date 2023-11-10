@@ -7,7 +7,8 @@ struct BlocksCLI: AsyncParsableCommand {
         version: "0.1.0",
         subcommands: [
             CurlLikeCommand.self,
-            GenerateTestCommand.self
+            GenerateTestCommand.self,
+            ReadBarcodeCommand.self
         ]
     )
 }
