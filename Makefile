@@ -8,6 +8,10 @@ install:
 build:
 	swift build
 
+cli:
+	swift package update --package-path Examples/BlocksCLI/
+	swift build --package-path Examples/BlocksCLI/
+
 build-ios:
 	xcodebuild -verbose -scheme Blocks -destination "platform=iOS Simulator,OS=17.0.1" -derivedDataPath "/tmp/" clean build
 
@@ -50,7 +54,3 @@ fetch-json-feed-sample:
 dump-packages:
 	swift package dump-package > Tests/BlocksTests/Resources/dump-package.json 
 	prettier -w Tests/BlocksTests/Resources/dump-package.json
-
-build-cli:
-	swift package update --package-path Examples/BlocksCLI/
-	swift build --package-path Examples/BlocksCLI/
