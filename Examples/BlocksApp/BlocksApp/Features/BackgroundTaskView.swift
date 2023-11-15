@@ -1,7 +1,16 @@
+import Blocks
 import os
 import SwiftUI
 
 class BackgroundRunnerSingleton {
+    static let readMe = """
+    When clicking this button, 3 tasks are created:
+
+    1. A *normal* task: a timer that will repeat 1000 times with a pause of 5 seconds;
+    2. A *background*: same as the *normal* task but wrapped up in `beginBackgroundTask`;
+    3. A *network* task that will poll a dummy API at the same interval.
+    """
+
     static let shared = BackgroundRunnerSingleton()
 
     private let logger = Logger(subsystem: "net.mickf.blocks", category: "BackgroundXP")
@@ -95,11 +104,18 @@ class BackgroundRunnerSingleton {
 }
 
 struct BackgroundTaskView: View {
+    @State var state: TaskState = .notStarted
+
     var body: some View {
-        Button("Start background activity") {
-            Task {
-                BackgroundRunnerSingleton.shared.start()
-            }
+        VStack {
+            Text(BackgroundRunnerSingleton.readMe)
+            TaskStateButton("Start background activity", action: {
+                state = .running
+                Task {
+                    BackgroundRunnerSingleton.shared.start()
+                }
+            }, state: $state)
+                .buttonStyle(.borderedProminent)
         }
     }
 }
