@@ -15,8 +15,13 @@ extension Dictionary {
 
 /// A convenience class to manage _generic password_ keychain items.
 public final class GenericPasswordKeychainItem {
-    private let label: String
-    private let account: String
+    /// The label of the keychain item.
+    ///
+    /// On macOS, as of version 14.1, the Keychain Access app calls this *Name*.
+    public let label: String
+
+    /// The account of the keychain item.
+    public let account: String
 
     public init(label: String, account: String) {
         self.label = label
