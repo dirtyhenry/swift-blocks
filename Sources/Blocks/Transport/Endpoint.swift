@@ -64,7 +64,7 @@ public struct Endpoint<A> {
         contentType: ContentType? = nil,
         body: Data? = nil,
         headers: [String: String] = [:],
-        query: [String: String] = [:],
+        query: [URLQueryItem] = [],
         parse: @escaping (Data?, URLResponse?) -> Result<A, Error>
     ) {
         var requestUrl: URL
@@ -73,7 +73,7 @@ public struct Endpoint<A> {
         } else {
             var comps = URLComponents(url: url, resolvingAgainstBaseURL: true)!
             comps.queryItems = comps.queryItems ?? []
-            comps.queryItems!.append(contentsOf: query.map { URLQueryItem(name: $0.0, value: $0.1) })
+            comps.queryItems!.append(contentsOf: query)
             requestUrl = comps.url!
         }
         request = URLRequest(url: requestUrl)
@@ -128,7 +128,7 @@ public extension Endpoint where A == () {
     ///   - body: the body of the request.
     ///   - headers: additional headers for the request
     ///   - query: query parameters to append to the url
-    init(_ method: Method, url: URL, accept: ContentType? = nil, contentType: ContentType? = nil, body: Data? = nil, headers: [String: String] = [:], query: [String: String] = [:]) {
+    init(_ method: Method, url: URL, accept: ContentType? = nil, contentType: ContentType? = nil, body: Data? = nil, headers: [String: String] = [:], query: [URLQueryItem] = []) {
         self.init(method, url: url, accept: accept, contentType: contentType, body: body, headers: headers, query: query, parse: { _, _ in .success(()) })
     }
 
@@ -144,7 +144,15 @@ public extension Endpoint where A == () {
     ///   - expectedStatusCode: the status code that's expected. If this returns false for a given status code, parsing fails.
     ///   - query: query parameters to append to the url
     ///   - encoder: the encoder that's used for encoding `A`s.
-    init(json method: Method, url: URL, accept: ContentType? = .json, body: some Encodable, headers: [String: String] = [:], query: [String: String] = [:], encoder: JSONEncoder = JSONEncoder.javaScriptISO8601()) {
+    init(
+        json method: Method,
+        url: URL,
+        accept: ContentType? = .json,
+        body: some Encodable,
+        headers: [String: String] = [:],
+        query: [URLQueryItem] = [],
+        encoder: JSONEncoder = JSONEncoder.javaScriptISO8601()
+    ) {
         let b = try! encoder.encode(body)
         self.init(method, url: url, accept: accept, contentType: .json, body: b, headers: headers, query: query, parse: { _, _ in .success(()) })
     }
@@ -162,7 +170,14 @@ public extension Endpoint where A: Decodable {
     ///   - headers: additional headers for the request
     ///   - query: query parameters to append to the url
     ///   - decoder: the decoder that's used for decoding `A`s.
-    init(json method: Method, url: URL, accept: ContentType = .json, headers: [String: String] = [:], query: [String: String] = [:], decoder: JSONDecoder = JSONDecoder.javaScriptISO8601()) {
+    init(
+        json method: Method,
+        url: URL,
+        accept: ContentType = .json,
+        headers: [String: String] = [:],
+        query: [URLQueryItem] = [],
+        decoder: JSONDecoder = JSONDecoder.javaScriptISO8601()
+    ) {
         self.init(method, url: url, accept: accept, body: nil, headers: headers, query: query) { data, _ in
             Result {
                 guard let dat = data else { throw NoDataError() }
@@ -182,7 +197,16 @@ public extension Endpoint where A: Decodable {
     ///   - query: query parameters to append to the url
     ///   - decoder: the decoder that's used for decoding `A`s.
     ///   - encoder: the encoder that's used for encoding `A`s.
-    init(json method: Method, url: URL, accept: ContentType = .json, body: (some Encodable)? = nil, headers: [String: String] = [:], query: [String: String] = [:], decoder: JSONDecoder = JSONDecoder.javaScriptISO8601(), encoder: JSONEncoder = JSONEncoder.javaScriptISO8601()) {
+    init(
+        json method: Method,
+        url: URL,
+        accept: ContentType = .json,
+        body: (some Encodable)? = nil,
+        headers: [String: String] = [:],
+        query: [URLQueryItem] = [],
+        decoder: JSONDecoder = JSONDecoder.javaScriptISO8601(),
+        encoder: JSONEncoder = JSONEncoder.javaScriptISO8601()
+    ) {
         let b = body.map { try! encoder.encode($0) }
         self.init(method, url: url, accept: accept, contentType: .json, body: b, headers: headers, query: query) { data, _ in
             Result {
