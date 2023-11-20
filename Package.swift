@@ -8,7 +8,8 @@ let package = Package(
     platforms: [
         .macOS(.v10_15), // Limiting factor: XCTest's fulfillment
         .iOS(.v13), // Limiting factor: XCTest's fulfillment
-        .tvOS(.v15)
+        .tvOS(.v15),
+        .watchOS(.v8)
     ],
     products: [
         .library(
