@@ -5,11 +5,11 @@ public struct URLRequestHeaderItem {
     /// The name of the header.
     let name: String
 
-    /// The value associated with the header. 
+    /// The value associated with the header.
     ///
     /// It can be nil if the header has no value.
     let value: String?
-    
+
     /// Initializes a URLRequestHeaderItem with the specified name and value.
     ///
     /// - Parameters:
@@ -32,7 +32,7 @@ public extension URLRequestHeaderItem {
     static func basicAuthentication(username: String, password: String) -> Self {
         let credentials = Data("\(username):\(password)".utf8)
             .base64EncodedString()
-        
+
         return Self(name: "Authorization", value: "Basic \(credentials)")
     }
 }

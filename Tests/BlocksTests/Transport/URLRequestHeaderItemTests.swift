@@ -12,7 +12,7 @@ final class URLRequestHeaderItemTests: XCTestCase {
         // >    Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
         request.setHTTPHeaderField(.basicAuthentication(username: "Aladdin", password: "open sesame"))
         request.setHTTPHeaderField(.init(name: "Foo", value: "Bar"))
-        
+
         XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==")
         XCTAssertEqual(request.value(forHTTPHeaderField: "Foo"), "Bar")
     }
