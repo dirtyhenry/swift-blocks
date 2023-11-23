@@ -71,3 +71,5 @@ code more easily and make tests easy to write.
 - ``StatusCodeCheckingTransport``
 - ``MultipartRequest``
 - ``TransportError``
+- ``WrongStatusCodeError``
+- ``URLRequestHeaderItem``
