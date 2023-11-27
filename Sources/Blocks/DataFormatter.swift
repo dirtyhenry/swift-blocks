@@ -58,4 +58,46 @@ public enum DataFormatter {
         }
         return Data(bytes)
     }
+
+    // MARK: - Base64-URL Support
+
+    public static func base64URLString(from data: Data, options: Data.Base64EncodingOptions = []) -> String {
+        data
+            .base64EncodedString(options: options) // Regular base64 encoder
+            .replacingOccurrences(of: "=", with: "") // Remove any trailing '='s
+            .replacingOccurrences(of: "+", with: "-") // 62nd char of encoding
+            .replacingOccurrences(of: "/", with: "_") // 63rd char of encoding
+            .trimmingCharacters(in: .whitespaces)
+    }
+
+    public static func base64URLString(from data: some DataProtocol, options: Data.Base64EncodingOptions = []) -> String {
+        base64URLString(from: Data(data), options: options)
+    }
+
+    public static func base64URLString(from bytes: some ContiguousBytes, options: Data.Base64EncodingOptions = []) -> String {
+        bytes.withUnsafeBytes { buffer in
+            base64URLString(from: Data(buffer), options: options)
+        }
+    }
+
+    public static func data(fromBase64URLString base64URLString: String) -> Data? {
+        let modifiedString = base64URLString
+            .replacingOccurrences(of: "_", with: "/")
+            .replacingOccurrences(of: "-", with: "+")
+
+        let nbOfPaddedCharacters = modifiedString.count % 4
+        let padding: String
+        switch nbOfPaddedCharacters {
+        case 1:
+            padding = "==="
+        case 2:
+            padding = "=="
+        case 3:
+            padding = "="
+        default: // Including 0
+            padding = ""
+        }
+
+        return Data(base64Encoded: "\(modifiedString)\(padding)")
+    }
 }
