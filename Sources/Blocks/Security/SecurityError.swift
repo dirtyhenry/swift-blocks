@@ -1,7 +1,7 @@
 import Foundation
 
 /// An error met when dealing with keychain items.
-public enum KeychainError: Error {
+public enum SecurityError: Error {
     /// Properties of a keychain item could not be accessed.
     case unexpectedData
 
@@ -9,7 +9,7 @@ public enum KeychainError: Error {
     case unhandledError(status: OSStatus)
 }
 
-extension KeychainError: LocalizedError {
+extension SecurityError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .unexpectedData:

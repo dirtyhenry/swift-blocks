@@ -2,7 +2,7 @@ import Foundation
 
 private func throwIfNotSuccess(_ status: OSStatus) throws {
     guard status != errSecSuccess else { return }
-    throw KeychainError.unhandledError(status: status)
+    throw SecurityError.unhandledError(status: status)
 }
 
 extension Dictionary {
@@ -53,7 +53,7 @@ public final class GenericPasswordKeychainItem {
         guard status != errSecItemNotFound else { return nil }
         try throwIfNotSuccess(status)
         guard let data = result as? Data, let string = String(data: data, encoding: .utf8) else {
-            throw KeychainError.unexpectedData
+            throw SecurityError.unexpectedData
         }
         return string
     }

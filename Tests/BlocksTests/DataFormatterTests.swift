@@ -12,4 +12,13 @@ final class DataFormatterTests: XCTestCase {
         XCTAssertEqual(sampleData, DataFormatter.data(fromBase64String: DataFormatter.base64String(from: sampleData)))
         XCTAssertEqual(sampleData, DataFormatter.data(fromHexadecimalString: DataFormatter.hexadecimalString(from: sampleData)))
     }
+
+    func testBase64URLFormatting() throws {
+        let originData = Data([3, 236, 255, 224, 193])
+        let base64URLEncodedString = DataFormatter.base64URLString(from: originData)
+        XCTAssertEqual(base64URLEncodedString, "A-z_4ME")
+
+        let destinationData = try XCTUnwrap(DataFormatter.data(fromBase64URLString: "A-z_4ME"))
+        XCTAssertEqual(destinationData, originData)
+    }
 }
