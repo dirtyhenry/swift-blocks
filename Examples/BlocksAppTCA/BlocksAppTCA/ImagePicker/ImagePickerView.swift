@@ -49,9 +49,9 @@ struct ImagePickerView_Previews: PreviewProvider {
     static var previews: some View {
         ImagePickerView(
             store: Store(
-                initialState: ImagePickerFeature.State(),
-                reducer: ImagePickerFeature()
-            )
+                initialState: ImagePickerFeature.State()) {
+                ImagePickerFeature()
+            }
         )
     }
 }

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00323DD82A66F5610061D431 /* ImagePickerFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00323DD72A66F5610061D431 /* ImagePickerFeatureTests.swift */; };
-		0082C6EE2A6818F700041A64 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 0082C6ED2A6818F700041A64 /* ComposableArchitecture */; };
+		0063D4812A8A9C7F008A4D05 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 0063D4802A8A9C7F008A4D05 /* ComposableArchitecture */; };
 		00E1196A2A6843760075269E /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00E119692A6843760075269E /* Media.xcassets */; };
 		00E1196E2A68477D0075269E /* ImagePickerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00E1196D2A68477D0075269E /* ImagePickerViewTests.swift */; };
 		00E119722A6847D50075269E /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 00E119712A6847D50075269E /* SnapshotTesting */; };
@@ -72,7 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0082C6EE2A6818F700041A64 /* ComposableArchitecture in Frameworks */,
+				0063D4812A8A9C7F008A4D05 /* ComposableArchitecture in Frameworks */,
 				00F84AFE2A66D10A00A7EC95 /* Blocks in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -203,7 +203,7 @@
 			name = BlocksAppTCA;
 			packageProductDependencies = (
 				00F84AFD2A66D10A00A7EC95 /* Blocks */,
-				0082C6ED2A6818F700041A64 /* ComposableArchitecture */,
+				0063D4802A8A9C7F008A4D05 /* ComposableArchitecture */,
 			);
 			productName = BlocksAppTCA;
 			productReference = 00F6F5542A66CBE40088B530 /* BlocksAppTCA.app */;
@@ -675,7 +675,7 @@
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.56.0;
+				minimumVersion = 1.0.0;
 			};
 		};
 		00E119702A6847D50075269E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
@@ -689,7 +689,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0082C6ED2A6818F700041A64 /* ComposableArchitecture */ = {
+		0063D4802A8A9C7F008A4D05 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0082C6EC2A6818F700041A64 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
