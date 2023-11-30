@@ -14,6 +14,10 @@
 		00A75E262A8A983A00298C85 /* BlocksAppMacTCATests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A75E252A8A983A00298C85 /* BlocksAppMacTCATests.swift */; };
 		00A75E302A8A983A00298C85 /* BlocksAppMacTCAUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A75E2F2A8A983A00298C85 /* BlocksAppMacTCAUITests.swift */; };
 		00A75E322A8A983A00298C85 /* BlocksAppMacTCAUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A75E312A8A983A00298C85 /* BlocksAppMacTCAUITestsLaunchTests.swift */; };
+		00AB95102A8A9B6200220B42 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 00AB950F2A8A9B6200220B42 /* ComposableArchitecture */; };
+		00F2A9462A8A9969009426A2 /* HashFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F2A9452A8A9969009426A2 /* HashFeature.swift */; };
+		00F2A9482A8A9983009426A2 /* HashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F2A9472A8A9983009426A2 /* HashView.swift */; };
+		00F2A94C2A8A9AB3009426A2 /* Blocks in Frameworks */ = {isa = PBXBuildFile; productRef = 00F2A94B2A8A9AB3009426A2 /* Blocks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +49,8 @@
 		00A75E2B2A8A983A00298C85 /* BlocksAppMacTCAUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlocksAppMacTCAUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00A75E2F2A8A983A00298C85 /* BlocksAppMacTCAUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksAppMacTCAUITests.swift; sourceTree = "<group>"; };
 		00A75E312A8A983A00298C85 /* BlocksAppMacTCAUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksAppMacTCAUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		00F2A9452A8A9969009426A2 /* HashFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HashFeature.swift; path = CryptoFeatures/HashFeature.swift; sourceTree = "<group>"; };
+		00F2A9472A8A9983009426A2 /* HashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HashView.swift; path = CryptoFeatures/HashView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00AB95102A8A9B6200220B42 /* ComposableArchitecture in Frameworks */,
+				00F2A94C2A8A9AB3009426A2 /* Blocks in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +80,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		007320C22A8A992A00B85584 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				00F2A9452A8A9969009426A2 /* HashFeature.swift */,
+				00F2A9472A8A9983009426A2 /* HashView.swift */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
 		00A75E072A8A983900298C85 = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +96,7 @@
 				00A75E242A8A983A00298C85 /* BlocksAppMacTCATests */,
 				00A75E2E2A8A983A00298C85 /* BlocksAppMacTCAUITests */,
 				00A75E112A8A983900298C85 /* Products */,
+				00F2A94A2A8A9AAA009426A2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -95,6 +113,7 @@
 		00A75E122A8A983900298C85 /* BlocksAppMacTCA */ = {
 			isa = PBXGroup;
 			children = (
+				007320C22A8A992A00B85584 /* Features */,
 				00A75E132A8A983900298C85 /* BlocksAppMacTCAApp.swift */,
 				00A75E152A8A983900298C85 /* ContentView.swift */,
 				00A75E172A8A983A00298C85 /* Assets.xcassets */,
@@ -129,6 +148,13 @@
 			path = BlocksAppMacTCAUITests;
 			sourceTree = "<group>";
 		};
+		00F2A94A2A8A9AAA009426A2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -145,6 +171,10 @@
 			dependencies = (
 			);
 			name = BlocksAppMacTCA;
+			packageProductDependencies = (
+				00F2A94B2A8A9AB3009426A2 /* Blocks */,
+				00AB950F2A8A9B6200220B42 /* ComposableArchitecture */,
+			);
 			productName = BlocksAppMacTCA;
 			productReference = 00A75E102A8A983900298C85 /* BlocksAppMacTCA.app */;
 			productType = "com.apple.product-type.application";
@@ -217,6 +247,9 @@
 				Base,
 			);
 			mainGroup = 00A75E072A8A983900298C85;
+			packageReferences = (
+				00AB950E2A8A9B6200220B42 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+			);
 			productRefGroup = 00A75E112A8A983900298C85 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -259,8 +292,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00F2A9482A8A9983009426A2 /* HashView.swift in Sources */,
 				00A75E162A8A983900298C85 /* ContentView.swift in Sources */,
 				00A75E142A8A983900298C85 /* BlocksAppMacTCAApp.swift in Sources */,
+				00F2A9462A8A9969009426A2 /* HashFeature.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,6 +611,29 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		00AB950E2A8A9B6200220B42 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		00AB950F2A8A9B6200220B42 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 00AB950E2A8A9B6200220B42 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		00F2A94B2A8A9AB3009426A2 /* Blocks */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Blocks;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 00A75E082A8A983900298C85 /* Project object */;
 }
