@@ -60,8 +60,9 @@ struct RootView: View {
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         RootView(store: Store(
-            initialState: RootFeature.State(),
-            reducer: RootFeature()
-        ))
+            initialState: RootFeature.State()) {
+            RootFeature()
+        }
+        )
     }
 }

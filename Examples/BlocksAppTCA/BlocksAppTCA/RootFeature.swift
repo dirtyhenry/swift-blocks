@@ -4,7 +4,7 @@ import ComposableArchitecture
 import Foundation
 import UIKit
 
-struct RootFeature: ReducerProtocol {
+struct RootFeature: Reducer {
     struct State {
         @PresentationState var takePhoto: ImagePickerFeature.State?
         var latestPhoto: UIImage?
@@ -21,7 +21,7 @@ struct RootFeature: ReducerProtocol {
         case usePhoto(PresentationAction<ImagePickerFeature.Action>)
     }
 
-    var body: some ReducerProtocolOf<Self> {
+    var body: some ReducerOf<Self> {
         Reduce<State, Action> { state, action in
             switch action {
             case .takePhotoButtonTapped:

@@ -6,9 +6,10 @@ struct BlocksAppTCAApp: App {
     var body: some Scene {
         WindowGroup {
             RootView(store: Store(
-                initialState: RootFeature.State(),
-                reducer: RootFeature()
-            ))
+                initialState: RootFeature.State()) {
+                RootFeature()
+            }
+            )
         }
     }
 }

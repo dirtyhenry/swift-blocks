@@ -1,6 +1,8 @@
 import Foundation
 
 /// 📜 https://theswiftdev.com/easy-multipart-file-upload-for-swift/
+///
+/// https://github.com/vapor/multipart-kit seems to be a more complete alternative.
 public struct MultipartRequest {
     public let boundary: String
 

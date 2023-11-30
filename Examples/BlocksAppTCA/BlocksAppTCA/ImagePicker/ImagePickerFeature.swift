@@ -3,7 +3,7 @@ import ComposableArchitecture
 import Foundation
 import UIKit
 
-struct ImagePickerFeature: ReducerProtocol {
+struct ImagePickerFeature: Reducer {
     struct State {}
 
     enum Action {
@@ -23,7 +23,7 @@ struct ImagePickerFeature: ReducerProtocol {
 
     @Dependency(\.dismiss) var dismiss
 
-    func reduce(into _: inout State, action: Action) -> EffectTask<Action> {
+    func reduce(into _: inout State, action: Action) -> Effect<Action> {
         switch action {
         case .cancelButtonTapped:
             return .run { _ in await dismiss() }

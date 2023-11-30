@@ -13,4 +13,7 @@
    <FileRef
       location = "group:Examples/BlocksAppTCA/BlocksAppTCA.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Examples/BlocksAppMacTCA/BlocksAppMacTCA.xcodeproj">
+   </FileRef>
 </Workspace>
