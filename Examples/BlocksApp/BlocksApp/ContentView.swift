@@ -7,6 +7,7 @@ struct ContentView: View {
         case misc = "Misc"
         case fonts = "Fonts"
         case bg = "Background test"
+        case fileSystemExplorer = "FileSystem Explorer"
 
         var id: String {
             rawValue
@@ -66,6 +67,10 @@ struct ContentView: View {
                     FontsView()
                 case .bg:
                     BackgroundTaskView()
+                case .fileSystemExplorer:
+                    Button("Explore") {
+                        explore()
+                    }
                 }
             } else {
                 Text("Select a section")

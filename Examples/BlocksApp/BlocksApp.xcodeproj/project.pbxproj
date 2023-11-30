@@ -15,6 +15,8 @@
 		008D62CC2A56C35800254FD9 /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008D62CB2A56C35800254FD9 /* ImagePickerView.swift */; };
 		008D62CE2A56C96E00254FD9 /* MailComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008D62CD2A56C96E00254FD9 /* MailComposeView.swift */; };
 		008D62D02A56EA1500254FD9 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 008D62CF2A56EA1500254FD9 /* UniformTypeIdentifiers.framework */; };
+		00A37E302B1911A800FA4B5F /* FileSystemExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */; };
+		00A37E322B19135400FA4B5F /* ObjectiveBlocks in Frameworks */ = {isa = PBXBuildFile; productRef = 00A37E312B19135400FA4B5F /* ObjectiveBlocks */; };
 		00D1E2482A36327100E8D275 /* BlocksApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D1E2472A36327100E8D275 /* BlocksApp.swift */; };
 		00D1E24A2A36327100E8D275 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D1E2492A36327100E8D275 /* ContentView.swift */; };
 		00D1E24C2A36327100E8D275 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00D1E24B2A36327100E8D275 /* Assets.xcassets */; };
@@ -51,6 +53,7 @@
 		008D62CB2A56C35800254FD9 /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		008D62CD2A56C96E00254FD9 /* MailComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposeView.swift; sourceTree = "<group>"; };
 		008D62CF2A56EA1500254FD9 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
+		00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSystemExplorerView.swift; sourceTree = "<group>"; };
 		00D1E2442A36327100E8D275 /* BlocksApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlocksApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00D1E2472A36327100E8D275 /* BlocksApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksApp.swift; sourceTree = "<group>"; };
 		00D1E2492A36327100E8D275 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -69,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00A37E322B19135400FA4B5F /* ObjectiveBlocks in Frameworks */,
 				008D62D02A56EA1500254FD9 /* UniformTypeIdentifiers.framework in Frameworks */,
 				001E3A702A37081800C90416 /* Blocks in Frameworks */,
 			);
@@ -107,6 +111,7 @@
 				007314A62AF00BFC0092F234 /* FontsView.swift */,
 				0030C2512A99047F00AB2087 /* WatchState.swift */,
 				003995742AFBF4680051BFCE /* BackgroundTaskView.swift */,
+				00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -190,6 +195,7 @@
 			name = BlocksApp;
 			packageProductDependencies = (
 				001E3A6F2A37081800C90416 /* Blocks */,
+				00A37E312B19135400FA4B5F /* ObjectiveBlocks */,
 			);
 			productName = BlocksApp;
 			productReference = 00D1E2442A36327100E8D275 /* BlocksApp.app */;
@@ -307,6 +313,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00A37E302B1911A800FA4B5F /* FileSystemExplorerView.swift in Sources */,
 				008D62CC2A56C35800254FD9 /* ImagePickerView.swift in Sources */,
 				003995752AFBF4680051BFCE /* BackgroundTaskView.swift in Sources */,
 				008D62CE2A56C96E00254FD9 /* MailComposeView.swift in Sources */,
@@ -645,6 +652,10 @@
 		001E3A6F2A37081800C90416 /* Blocks */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Blocks;
+		};
+		00A37E312B19135400FA4B5F /* ObjectiveBlocks */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ObjectiveBlocks;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

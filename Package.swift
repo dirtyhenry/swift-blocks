@@ -15,6 +15,10 @@ let package = Package(
         .library(
             name: "Blocks",
             targets: ["Blocks"]
+        ),
+        .library(
+            name: "ObjectiveBlocks",
+            targets: ["ObjectiveBlocks"]
         )
     ],
     dependencies: [],
@@ -27,6 +31,11 @@ let package = Package(
             name: "BlocksTests",
             dependencies: ["Blocks"],
             resources: [.process("Resources")]
+        ),
+        .target(
+            name: "ObjectiveBlocks",
+            dependencies: [],
+            publicHeadersPath: "public"
         )
     ]
 )
