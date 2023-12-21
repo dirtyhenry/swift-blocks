@@ -16,7 +16,7 @@ import Foundation
 ///   print(day)
 /// }
 /// ```
-public struct DateString {
+public struct PlainDate {
     // MARK: - Creating an instance
 
     /// Returns a date string initialized using their ISO 8601 representation.
@@ -75,9 +75,9 @@ public struct DateString {
     }
 }
 
-extension DateString: ExpressibleByStringLiteral {
+extension PlainDate: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
-        if DateString(from: value) != nil {
+        if PlainDate(from: value) != nil {
             self.init(from: value)!
         } else {
             fatalError("Could not turn \(value) into a DateString.")
@@ -85,20 +85,20 @@ extension DateString: ExpressibleByStringLiteral {
     }
 }
 
-extension DateString: CustomStringConvertible {
+extension PlainDate: CustomStringConvertible {
     public var description: String {
         formatter.string(from: date)
     }
 }
 
-extension DateString: CustomDebugStringConvertible {
+extension PlainDate: CustomDebugStringConvertible {
     public var debugDescription: String {
         "\(formatter.string(from: date)) (\(calendar) \(calendar.timeZone) \(date))"
     }
 }
 
-extension DateString: Strideable {
-    public func distance(to other: DateString) -> Int {
+extension PlainDate: Strideable {
+    public func distance(to other: PlainDate) -> Int {
         if #available(macOS 10.15, iOS 13.0, *) {
             // 🐇 A faster working — so far — alternative.
             let timeInterval = date.distance(to: other.date)
@@ -116,26 +116,26 @@ extension DateString: Strideable {
         }
     }
 
-    public func advanced(by value: Int) -> DateString {
+    public func advanced(by value: Int) -> PlainDate {
         let newDate = calendar.date(byAdding: .day, value: value, to: date)!
-        return DateString(date: newDate, calendar: calendar, formatter: formatter)
+        return PlainDate(date: newDate, calendar: calendar, formatter: formatter)
     }
 }
 
-extension DateString: Decodable {
+extension PlainDate: Decodable {
     public init(from decoder: Decoder) throws {
         try self.init(stringLiteral: decoder.singleValueContainer().decode(String.self))
     }
 }
 
-extension DateString: Encodable {
+extension PlainDate: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(description)
     }
 }
 
-public extension DateString {
+public extension PlainDate {
     enum Weekday: Int {
         case sunday = 1
         case monday = 2
@@ -157,7 +157,7 @@ public extension DateString {
         return result
     }
 
-    func advanced(toNext outputWeekday: Weekday) -> DateString {
+    func advanced(toNext outputWeekday: Weekday) -> PlainDate {
         var advancingDay = self
         while advancingDay.weekday != outputWeekday {
             advancingDay = advancingDay.advanced(by: 1)
@@ -166,8 +166,11 @@ public extension DateString {
     }
 }
 
-public extension DateString {
+public extension PlainDate {
     var dateComponents: DateComponents {
         calendar.dateComponents([.year, .month, .day], from: date)
     }
 }
+
+@available(*, deprecated, renamed: "PlainDate", message: "Cf. Temporal effort in JS.")
+public typealias DateString = PlainDate
