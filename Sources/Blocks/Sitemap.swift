@@ -32,12 +32,12 @@ import Foundation
 
         public struct URLEntry {
             let location: URL
-            let lastmod: DateString?
+            let lastmod: PlainDate?
             let changeFreq: ChangeFreq?
             let priority: Priority?
 
             public init(location: URL,
-                        lastmod: DateString?,
+                        lastmod: PlainDate?,
                         changeFreq: ChangeFreq?,
                         priority: Priority?) {
                 self.location = location
