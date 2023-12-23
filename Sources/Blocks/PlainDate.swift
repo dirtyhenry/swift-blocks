@@ -2,16 +2,16 @@ import Foundation
 
 /// A string that represents dates using their ISO 8601 representations.
 ///
-/// `DateString` is a way to handle dates with no time — such as `2022-03-02` for March 2nd of 2022 — to
+/// `PlainDate` is a way to handle dates with no time — such as `2022-03-02` for March 2nd of 2022 — to
 /// perform operations with convenience including adding days, dealing with ranges, etc.
 ///
 /// ## Usage Overview
 ///
-/// A date string can be initiated from a string literal, and can be used to create ranges.
+/// A plain date can be initiated from a string literal, and can be used to create ranges.
 ///
 /// ```swift
-/// let dateString: DateString = "2022-03-01"
-/// let aWeekLater = dateString.advanced(by: 7)
+/// let march1st: PlainDate = "2022-03-01"
+/// let aWeekLater = march1st.advanced(by: 7)
 /// for day in march1st ..< aWeekLater {
 ///   print(day)
 /// }
@@ -19,11 +19,11 @@ import Foundation
 public struct PlainDate {
     // MARK: - Creating an instance
 
-    /// Returns a date string initialized using their ISO 8601 representation.
+    /// Returns a plain date initialized using their ISO 8601 representation.
     /// - Parameters:
     ///   - dateAsString: The ISO 8601 representation of the date. For instance, `2022-03-02`for March 2nd of 2022.
     ///   - calendar: The calendar — including the time zone — to use. The default is the current calendar.
-    /// - Returns:A date string, or `nil` if a valid date could not be created from `dateAsString`.
+    /// - Returns: A plain date, or `nil` if a valid date could not be created from `dateAsString`.
     public init?(from dateAsString: String, calendar: Calendar = .current) {
         let formatter = Self.createFormatter(timeZone: calendar.timeZone)
         guard let date = formatter.date(from: dateAsString) else {
@@ -33,7 +33,7 @@ public struct PlainDate {
         self.init(date: date, calendar: calendar, formatter: formatter)
     }
 
-    /// Returns a date string initialized using their ISO 8601 representation.
+    /// Returns a plain date initialized using their ISO 8601 representation.
     /// - Parameters:
     ///   - date: The date to represent.
     ///   - calendar: The calendar — including the time zone — to use. The default is the current calendar.

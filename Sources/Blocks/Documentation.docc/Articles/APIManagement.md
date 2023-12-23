@@ -2,5 +2,5 @@
 
 ## Topics
 
-- ``DateString``
+- ``PlainDate``
 - ``JavaScriptISO8601DateFormatter``
