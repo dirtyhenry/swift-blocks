@@ -63,7 +63,7 @@ public struct Endpoint<A> {
         accept: ContentType? = nil,
         contentType: ContentType? = nil,
         body: Data? = nil,
-        headers: [String: String] = [:],
+        headers: [URLRequestHeaderItem] = [],
         query: [URLQueryItem] = [],
         parse: @escaping (Data?, URLResponse?) -> Result<A, Error>
     ) {
@@ -83,8 +83,8 @@ public struct Endpoint<A> {
         if let ct = contentType {
             request.setValue(ct.rawValue, forHTTPHeaderField: "Content-Type")
         }
-        for (key, value) in headers {
-            request.setValue(value, forHTTPHeaderField: key)
+        for header in headers {
+            request.setHTTPHeaderField(header)
         }
         request.httpMethod = method.rawValue
 
@@ -128,7 +128,7 @@ public extension Endpoint where A == () {
     ///   - body: the body of the request.
     ///   - headers: additional headers for the request
     ///   - query: query parameters to append to the url
-    init(_ method: Method, url: URL, accept: ContentType? = nil, contentType: ContentType? = nil, body: Data? = nil, headers: [String: String] = [:], query: [URLQueryItem] = []) {
+    init(_ method: Method, url: URL, accept: ContentType? = nil, contentType: ContentType? = nil, body: Data? = nil, headers: [URLRequestHeaderItem] = [], query: [URLQueryItem] = []) {
         self.init(method, url: url, accept: accept, contentType: contentType, body: body, headers: headers, query: query, parse: { _, _ in .success(()) })
     }
 
@@ -149,7 +149,7 @@ public extension Endpoint where A == () {
         url: URL,
         accept: ContentType? = .json,
         body: some Encodable,
-        headers: [String: String] = [:],
+        headers: [URLRequestHeaderItem] = [],
         query: [URLQueryItem] = [],
         encoder: JSONEncoder = JSONEncoder.javaScriptISO8601()
     ) {
@@ -174,7 +174,7 @@ public extension Endpoint where A: Decodable {
         json method: Method,
         url: URL,
         accept: ContentType = .json,
-        headers: [String: String] = [:],
+        headers: [URLRequestHeaderItem] = [],
         query: [URLQueryItem] = [],
         decoder: JSONDecoder = JSONDecoder.javaScriptISO8601()
     ) {
@@ -202,7 +202,7 @@ public extension Endpoint where A: Decodable {
         url: URL,
         accept: ContentType = .json,
         body: (some Encodable)? = nil,
-        headers: [String: String] = [:],
+        headers: [URLRequestHeaderItem] = [],
         query: [URLQueryItem] = [],
         decoder: JSONDecoder = JSONDecoder.javaScriptISO8601(),
         encoder: JSONEncoder = JSONEncoder.javaScriptISO8601()
