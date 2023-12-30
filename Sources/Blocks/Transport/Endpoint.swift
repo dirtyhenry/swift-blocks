@@ -111,7 +111,16 @@ public struct Endpoint<A> {
 extension Endpoint: CustomStringConvertible {
     public var description: String {
         let data = request.httpBody ?? Data()
-        return "\(request.httpMethod ?? "GET") \(request.url?.absoluteString ?? "<no url>") \(String(data: data, encoding: .utf8) ?? "")"
+
+        let components: [String] = [
+            request.httpMethod ?? "GET",
+            request.url?.absoluteString ?? "<no url>",
+            String(data: data, encoding: .utf8)
+        ]
+        .compactMap { $0 }
+        .filter { !$0.isEmpty }
+
+        return components.joined(separator: " ")
     }
 }
 
