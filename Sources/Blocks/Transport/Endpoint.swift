@@ -231,11 +231,6 @@ public struct NoDataError: Error {
     public init() {}
 }
 
-/// An unknown error
-public struct UnknownError: Error {
-    public init() {}
-}
-
 @available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
 public extension Transport {
