@@ -11,8 +11,7 @@
 
 ## Overview
 
-- **Networking**. Some very simple wrappers around `URLSession` to make testing
-  and mocking easier.
+- **🌐 Transport.** A set of tools and techniques to write simple and low-footprint networking code, that makes  composition and tests easy to write.
 - **API Management**. Some helpers to deal with common pitfalls of the native
   support of JSON API via Swift's `Codable`.
 - **Web tooling**. Create JSON Feeds, sitemaps.
@@ -23,7 +22,7 @@
 
 ### Essentials
 
-- <doc:Networking>
+- <doc:Transport>
 - <doc:APIManagement>
 - <doc:WebTooling>
 - <doc:DataManagement>
