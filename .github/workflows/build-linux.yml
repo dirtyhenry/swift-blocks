@@ -1,4 +1,4 @@
-name: Build iOS
+name: Build Linux
 
 # 📜 https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
 on:
@@ -9,16 +9,13 @@ on:
 
 jobs:
   build:
-    runs-on: macos-13
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Output XCode version
-        run: |
-          xcodebuild -version
       - name: Build debug version
         run: |
-          make build-ios
+          swift build --target Blocks
       - name: Test debug version
         run: |
-          make test-ios
+          make test
