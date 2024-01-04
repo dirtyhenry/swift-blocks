@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 @available(iOS 15.0.0, *)
 @available(macOS 12.0, *)

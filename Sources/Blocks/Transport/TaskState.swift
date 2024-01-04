@@ -7,18 +7,18 @@ public enum TaskState: Equatable {
 }
 
 #if DEBUG
-    extension TaskState {
-        func debugLoopNextState() -> TaskState {
-            switch self {
-            case .notStarted:
-                return .running
-            case .running:
-                return .completed
-            case .completed:
-                return .failed(errorDescription: "Dummy error")
-            case .failed:
-                return .notStarted
-            }
+extension TaskState {
+    func debugLoopNextState() -> TaskState {
+        switch self {
+        case .notStarted:
+            return .running
+        case .running:
+            return .completed
+        case .completed:
+            return .failed(errorDescription: "Dummy error")
+        case .failed:
+            return .notStarted
         }
     }
+}
 #endif

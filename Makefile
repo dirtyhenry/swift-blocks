@@ -54,3 +54,6 @@ fetch-json-feed-sample:
 dump-packages:
 	swift package dump-package > Tests/BlocksTests/Resources/dump-package.json 
 	prettier -w Tests/BlocksTests/Resources/dump-package.json
+
+build-linux-dev:
+	docker build -t swift-blocks .

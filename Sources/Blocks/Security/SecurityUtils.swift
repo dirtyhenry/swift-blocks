@@ -1,3 +1,4 @@
+#if canImport(Security)
 import Foundation
 
 public enum SecurityUtils {
@@ -11,3 +12,4 @@ public enum SecurityUtils {
         }
     }
 }
+#endif

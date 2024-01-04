@@ -1,3 +1,4 @@
+#if canImport(os)
 import Foundation
 import os
 
@@ -34,3 +35,4 @@ public final class LoggingTransport: Transport {
         return (data, httpResponse)
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if canImport(CryptoKit)
 import CryptoKit
 import Foundation
 
@@ -37,3 +38,4 @@ public enum PKCE {
         }
     }
 }
+#endif
