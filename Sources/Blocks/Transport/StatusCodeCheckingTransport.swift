@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 /// A transport that checks the status code of the HTTP response and throws an error if it does not match the expected
 /// range.

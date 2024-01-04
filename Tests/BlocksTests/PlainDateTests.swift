@@ -40,7 +40,7 @@ final class PlainDateTests: XCTestCase {
         let januaryFirst = PlainDate(from: "2022-01-01", calendar: .parisCalendar())!
 
         measure {
-            for offset in 1 ... 10_000 {
+            for offset in 1 ... 10000 {
                 XCTAssertEqual(januaryFirst.advanced(by: offset).distance(to: januaryFirst), -offset)
             }
         }

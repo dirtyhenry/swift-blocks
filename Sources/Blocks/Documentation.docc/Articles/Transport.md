@@ -1,15 +1,12 @@
-# Networking
+# 🌐 Transport
 
 This package contains powerful abstractions with a very small footprint to make
 code sending HTTP requests easily testable and composable.
 
 It builds on two major influences:
 
-1. The [tiny-networking](https://github.com/objcio/tiny-networking) library by
-   [objc.io](https://www.objc.io/);
-1. The talk
-   [_You deserve nice things_](https://www.youtube.com/watch?v=CTZOjl6_NuY) by
-   [Soroush Khanlou](https://www.khanlou.com/).
+1. The [tiny-networking][1] library by [objc.io][2];
+1. The talk [_You deserve nice things_][3] by [Soroush Khanlou][4].
 
 ## Overview
 
@@ -39,7 +36,7 @@ struct MyGreatAPI {
 }
 ```
 
-### Transports
+### Transports Toolbox
 
 Endpoints are then carried over the network by some `Transport` instance, which
 is an instance that deals with sending a `URLRequest` somewhere that will return
@@ -67,9 +64,17 @@ code more easily and make tests easy to write.
 
 ## Topics
 
-- ``Transport``
-- ``StatusCodeCheckingTransport``
-- ``MultipartRequest``
-- ``TransportError``
-- ``WrongStatusCodeError``
-- ``URLRequestHeaderItem``
+- `Endpoint`
+- `Transport`
+- `LoggingTransport`
+- `MockTransport`
+- `StatusCodeCheckingTransport`
+- `MultipartRequest`
+- `TransportError`
+- `WrongStatusCodeError`
+- `URLRequestHeaderItem`
+
+[1]: https://github.com/objcio/tiny-networking
+[2]: https://www.objc.io/
+[3]: https://www.youtube.com/watch?v=CTZOjl6_NuY
+[4]: https://www.khanlou.com/

@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 /// A structure representing an individual header item for a `URLRequest`.
 public struct URLRequestHeaderItem {

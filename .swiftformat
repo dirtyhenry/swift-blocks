@@ -1,2 +1,3 @@
 --disable trailingCommas
 --exclude **/.build
+--ifdef no-indent

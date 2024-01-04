@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import SwiftUI
 
 @available(macOS 12.0, *)
@@ -45,7 +46,7 @@ public struct TaskStateButton: View {
                     case .running:
                         HStack(spacing: 8) {
                             #if os(iOS)
-                                ProgressView()
+                            ProgressView()
                             #endif
                             Text(runningTitleKey ?? defaultTitleKey)
                         }
@@ -101,48 +102,49 @@ public struct TaskStateButton: View {
 }
 
 #if DEBUG
-    @available(macOS 12.0, *)
-    @available(iOS 14.0, *)
-    struct TaskStateButtonPreviews: PreviewProvider {
-        struct PreviewWrapper: View {
-            @State var task1State: TaskState = .notStarted
-            @State var task2State: TaskState = .notStarted
+@available(macOS 12.0, *)
+@available(iOS 14.0, *)
+struct TaskStateButtonPreviews: PreviewProvider {
+    struct PreviewWrapper: View {
+        @State var task1State: TaskState = .notStarted
+        @State var task2State: TaskState = .notStarted
 
-            var body: some View {
-                VStack {
-                    Text("Buttons")
-                    if #available(iOS 15.0, *) {
-                        TaskStateButton(
-                            "Do this",
-                            runningTitleKey: "Doing this…",
-                            systemImage: "play",
-                            action: {
-                                task1State = task1State.debugLoopNextState()
-                            },
-                            state: $task1State
-                        )
-                        .buttonStyle(.bordered)
-                    }
+        var body: some View {
+            VStack {
+                Text("Buttons")
+                if #available(iOS 15.0, *) {
+                    TaskStateButton(
+                        "Do this",
+                        runningTitleKey: "Doing this…",
+                        systemImage: "play",
+                        action: {
+                            task1State = task1State.debugLoopNextState()
+                        },
+                        state: $task1State
+                    )
+                    .buttonStyle(.bordered)
+                }
 
-                    if #available(iOS 15.0, *) {
-                        TaskStateButton(
-                            "Do that",
-                            isPrimary: true,
-                            action: {
-                                task2State = task2State.debugLoopNextState()
-                            },
-                            disabledWhenCompleted: false,
-                            state: $task2State
-                        )
-                        .buttonStyle(.borderedProminent)
-                    }
+                if #available(iOS 15.0, *) {
+                    TaskStateButton(
+                        "Do that",
+                        isPrimary: true,
+                        action: {
+                            task2State = task2State.debugLoopNextState()
+                        },
+                        disabledWhenCompleted: false,
+                        state: $task2State
+                    )
+                    .buttonStyle(.borderedProminent)
                 }
             }
         }
-
-        static var previews: some View {
-            PreviewWrapper()
-                .padding(32)
-        }
     }
+
+    static var previews: some View {
+        PreviewWrapper()
+            .padding(32)
+    }
+}
+#endif
 #endif

@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 @available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
@@ -10,6 +13,13 @@ public protocol Transport {
     ) async throws -> (Data, HTTPURLResponse)
 }
 
+#if os(Linux)
+// 📜 Last time I checked, async/await data on `URLSession` was not available.
+//
+// ```sh
+// error: value of type 'URLSession' has no member 'data'
+// ```
+#else
 @available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
 extension URLSession: Transport {
@@ -26,3 +36,4 @@ extension URLSession: Transport {
         return (data, httpResponse)
     }
 }
+#endif

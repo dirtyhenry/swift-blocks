@@ -1,4 +1,6 @@
+#if canImport(Security)
 import Foundation
+import Security
 
 /// An error met when dealing with keychain items.
 public enum SecurityError: Error {
@@ -23,3 +25,4 @@ extension SecurityError: LocalizedError {
         }
     }
 }
+#endif

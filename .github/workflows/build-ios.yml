@@ -1,3 +1,4 @@
+---
 name: Build iOS
 
 # 📜 https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
@@ -12,13 +13,16 @@ jobs:
     runs-on: macos-13
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Output XCode version
         run: |
           xcodebuild -version
       - name: Build debug version
         run: |
           make build-ios
-      - name: Test debug version
-        run: |
-          make test-ios
+
+# TODO: Find a way for tests without the following error:
+#
+# ```
+# Error Domain=com.apple.dt.IDEContainerErrorDomain Code=6 "Cannot open "Documentation.docc" as a "Folder" because it is already open as a "Swift User Managed Package Folder"." UserInfo={NSLocalizedDescription=Cannot open "Documentation.docc" as a "Folder" because it is already open as a "Swift User Managed Package Folder".}
+# ```

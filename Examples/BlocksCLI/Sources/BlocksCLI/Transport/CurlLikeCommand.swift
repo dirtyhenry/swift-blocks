@@ -33,22 +33,22 @@ struct CurlLikeCommand: AsyncParsableCommand {
             urlRequest.addValue(subheaders[1], forHTTPHeaderField: subheaders[0])
         }
         #if os(macOS)
-            if #available(macOS 12.0, *) {
-                let transport: Transport = URLSession.shared
-                dump(urlRequest)
-                let (data, response) = try await transport.send(urlRequest: urlRequest, delegate: nil)
+        if #available(macOS 12.0, *) {
+            let transport: Transport = URLSession.shared
+            dump(urlRequest)
+            let (data, response) = try await transport.send(urlRequest: urlRequest, delegate: nil)
 
-                guard response.textEncodingName == "utf-8" else {
-                    fatalError("Only UTF8 is supported for HTTP responses encoding")
-                }
-
-                guard let string = String(data: data, encoding: .utf8) else {
-                    fatalError("No printable data sent")
-                }
-                print(string)
-            } else {
-                fatalError("macOS 12 is required to run this command.")
+            guard response.textEncodingName == "utf-8" else {
+                fatalError("Only UTF8 is supported for HTTP responses encoding")
             }
+
+            guard let string = String(data: data, encoding: .utf8) else {
+                fatalError("No printable data sent")
+            }
+            print(string)
+        } else {
+            fatalError("macOS 12 is required to run this command.")
+        }
         #endif
     }
 }

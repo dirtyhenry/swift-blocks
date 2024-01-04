@@ -1,4 +1,6 @@
+#if canImport(Security)
 import Foundation
+import Security
 
 private func throwIfNotSuccess(_ status: OSStatus) throws {
     guard status != errSecSuccess else { return }
@@ -82,3 +84,4 @@ public final class GenericPasswordKeychainItem {
         try throwIfNotSuccess(SecItemAdd(dictionary as CFDictionary, nil))
     }
 }
+#endif
