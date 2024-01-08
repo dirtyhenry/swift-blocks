@@ -16,6 +16,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Build debug version
         run: |
-          swift build --target Blocks
+          swift build
 
 # TODO: Find a way for tests to work in spite of `ObjectiveBlocks`

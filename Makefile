@@ -13,7 +13,8 @@ cli:
 	swift build --package-path Examples/BlocksCLI/
 
 build-ios:
-	xcodebuild -verbose -scheme Blocks -destination "platform=iOS Simulator,OS=17.0.1" -derivedDataPath "/tmp/" clean build
+	xcrun xcodebuild clean build -scheme Blocks -destination generic/platform=ios
+	xcrun xcodebuild clean build -scheme ObjectiveBlocks -destination generic/platform=ios
 
 test-debug:
 	swift package clean
