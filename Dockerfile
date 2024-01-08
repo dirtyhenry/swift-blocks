@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Build the Swift project
-RUN swift build --target Blocks
+RUN swift build
 
 # Run the tests
 CMD ["swift", "test"]

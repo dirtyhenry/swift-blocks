@@ -1,3 +1,4 @@
+#if canImport(CryptoKit)
 @testable import Blocks
 import XCTest
 
@@ -12,3 +13,4 @@ final class PKCETests: XCTestCase {
         XCTAssertEqual(try pkceSeeds.codeChallenge(), "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM")
     }
 }
+#endif

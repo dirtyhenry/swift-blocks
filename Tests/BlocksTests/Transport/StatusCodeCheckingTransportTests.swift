@@ -1,6 +1,9 @@
 @testable import Blocks
 import XCTest
 
+#if os(Linux)
+// Cannot use this test as `HTTPURLResponse` has no accessible initializers
+#else
 @available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
 final class StatusCodeCheckingTransportTests: XCTestCase {
@@ -47,3 +50,4 @@ final class StatusCodeCheckingTransportTests: XCTestCase {
         XCTAssertEqual(sut.localizedDescription, "Unexpected HTTP status code: 200")
     }
 }
+#endif

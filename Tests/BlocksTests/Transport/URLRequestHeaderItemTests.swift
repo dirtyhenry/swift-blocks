@@ -1,4 +1,7 @@
 import Blocks
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 import XCTest
 
 final class URLRequestHeaderItemTests: XCTestCase {

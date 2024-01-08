@@ -1,5 +1,5 @@
 ---
-name: Build macOS
+name: Build Blocks
 
 # 📜 https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
 on:
@@ -9,7 +9,8 @@ on:
       - main
 
 jobs:
-  build:
+  build_macOS:
+    name: Build macOS
     runs-on: macos-13
     steps:
       - name: Checkout
@@ -23,3 +24,36 @@ jobs:
       - name: Test debug version
         run: |
           make test
+
+  build_iOS:
+    name: Build iOS
+    runs-on: macos-13
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Output XCode version
+        run: |
+          xcodebuild -version
+      - name: Show destinations
+        run: xcrun xcodebuild -showdestinations -scheme Blocks
+      - name: Build debug version
+        run: |
+          make build-ios
+      # TODO: Find a way for tests without the following error:
+      #
+      # ```
+      # Error Domain=com.apple.dt.IDEContainerErrorDomain Code=6 "Cannot open "Documentation.docc" as a "Folder" because it is already open as a "Swift User Managed Package Folder"." UserInfo={NSLocalizedDescription=Cannot open "Documentation.docc" as a "Folder" because it is already open as a "Swift User Managed Package Folder".}
+      # ```
+
+  build_linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build debug version
+        run: |
+          swift build
+      - name: Test debug version
+        run: |
+          swift test

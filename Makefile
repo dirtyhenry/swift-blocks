@@ -13,7 +13,8 @@ cli:
 	swift build --package-path Examples/BlocksCLI/
 
 build-ios:
-	xcodebuild -verbose -scheme Blocks -destination "platform=iOS Simulator,OS=17.0.1" -derivedDataPath "/tmp/" clean build
+	xcrun xcodebuild clean build -scheme Blocks -destination generic/platform=ios
+	xcrun xcodebuild clean build -scheme ObjectiveBlocks -destination generic/platform=ios
 
 test-debug:
 	swift package clean
@@ -23,7 +24,7 @@ test:
 	set -o pipefail && swift test | xcpretty
 
 test-ios:
-	xcodebuild -verbose -scheme Blocks -destination "platform=iOS Simulator,OS=17.0.1" -derivedDataPath "/tmp/" clean build test
+	xcrun xcodebuild clean test -scheme Blocks -destination "platform=iOS Simulator,OS=17.0.1"
 
 release:
 	swift build -c release
@@ -57,3 +58,6 @@ dump-packages:
 
 build-linux-dev:
 	docker build -t swift-blocks .
+
+test-linux-dev:
+	docker run swift-blocks

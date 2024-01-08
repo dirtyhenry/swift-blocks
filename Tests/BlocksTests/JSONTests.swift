@@ -1,5 +1,4 @@
 @testable import Blocks
-import os
 import XCTest
 
 final class JSONTests: XCTestCase {
@@ -44,15 +43,5 @@ final class JSONTests: XCTestCase {
           ]
         }
         """)
-
-        // Test how things look with print and logger
-        JSON.print(sampleCodable)
-
-        if #available(iOS 14.0, *) {
-            let logger = Logger(subsystem: "swift-blocks", category: "JSON")
-            logger.info("JSON public: \(JSON.stringify(sampleCodable), privacy: .public)")
-            logger.info("JSON private: \(JSON.stringify(sampleCodable), privacy: .private)")
-            logger.info("JSON auto/hash: \(JSON.stringify(sampleCodable), privacy: .auto(mask: .hash))")
-        }
     }
 }

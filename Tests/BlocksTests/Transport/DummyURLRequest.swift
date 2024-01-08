@@ -1,5 +1,8 @@
 @testable import Blocks
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 struct DummyURLRequest {
     func create() throws -> URLRequest {

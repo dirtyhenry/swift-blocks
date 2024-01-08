@@ -1,7 +1,8 @@
+#if canImport(Security)
 import Blocks
 import XCTest
 
-final class PKCEUtilsTests: XCTestCase {
+final class SecurityUtilsTests: XCTestCase {
     func testGenerateCryptographicallySecureRandomOctets() {
         measure {
             do {
@@ -17,3 +18,4 @@ final class PKCEUtilsTests: XCTestCase {
         }
     }
 }
+#endif
