@@ -58,3 +58,6 @@ dump-packages:
 
 build-linux-dev:
 	docker build -t swift-blocks .
+
+test-linux-dev:
+	docker run swift-blocks

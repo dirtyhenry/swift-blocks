@@ -1,3 +1,4 @@
+#if canImport(os)
 @testable import Blocks
 import XCTest
 
@@ -18,3 +19,4 @@ final class LoggingTransportTests: XCTestCase {
         XCTAssertEqual(data, "Hello".data(using: .utf8)!)
     }
 }
+#endif
