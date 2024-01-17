@@ -23,7 +23,7 @@ struct CurlLikeCommand: AsyncParsableCommand {
         }
 
         var urlRequest = URLRequest(url: url)
-        headers.forEach { rawHeader in
+        for rawHeader in headers {
             let subheaders = rawHeader.split(separator: ":", maxSplits: 1)
                 .map { String($0).trimmingCharacters(in: .whitespacesAndNewlines)
                 }

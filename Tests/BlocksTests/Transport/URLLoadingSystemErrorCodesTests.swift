@@ -5,6 +5,9 @@ import FoundationNetworking
 import XCTest
 
 final class URLLoadingSystemErrorCodesTests: XCTestCase {
+    // TODO: Explore how to benefit from these extra error info keys
+    // 🔗 https://developer.apple.com/documentation/foundation/url_loading_system/url_loading_system_error_info_keys
+
     func testErrorCodes() {
         XCTAssertEqual(NSURLErrorUnknown, -1)
 
