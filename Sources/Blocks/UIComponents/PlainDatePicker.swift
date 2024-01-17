@@ -26,6 +26,10 @@ public struct PlainDatePicker: View {
     }
 }
 
+// This Swift checks is to prevent the following on GitHub Actions:
+// use of unknown directive '#Preview'
+#if swift(>=5.9)
+
 #Preview {
     @State var plainDate: PlainDate = "2024-01-17"
     return PlainDatePicker("Date", selection: $plainDate)
@@ -53,4 +57,6 @@ public struct PlainDatePicker: View {
     @State var plainDate: PlainDate = "2024-01-17"
     return PlainDatePicker("Date", selection: $plainDate).datePickerStyle(.wheel)
 }
+
+#endif
 #endif
