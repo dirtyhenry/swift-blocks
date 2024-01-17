@@ -15,12 +15,9 @@ struct PlainDateDemoView: View {
         VStack {
             Text("The current date is:")
             Text(plainDate.description)
-
+            PlainDatePicker("Change the date", selection: $plainDate)
             LabeledContent("Formatted", value: plainDate.string(with: customDateFormatter))
 
-            Divider()
-
-            PlainDatePicker("Change the date", selection: $plainDate)
         }.padding()
     }
 }

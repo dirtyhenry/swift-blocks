@@ -114,7 +114,7 @@ struct BackgroundTaskView: View {
                 Task {
                     BackgroundRunnerSingleton.shared.start()
                 }
-            }, state: $state)
+            }, state: state)
                 .buttonStyle(.borderedProminent)
         }
     }

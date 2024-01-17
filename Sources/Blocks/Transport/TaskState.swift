@@ -22,3 +22,18 @@ extension TaskState {
     }
 }
 #endif
+
+extension TaskState: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .notStarted:
+            return "Not started"
+        case .running:
+            return "Running"
+        case .completed:
+            return "Completed"
+        case .failed:
+            return "Failed"
+        }
+    }
+}

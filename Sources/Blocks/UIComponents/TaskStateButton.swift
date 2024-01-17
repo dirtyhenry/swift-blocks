@@ -9,28 +9,25 @@ public struct TaskStateButton: View {
     private var defaultTitleKey: LocalizedStringKey
     private var runningTitleKey: LocalizedStringKey?
     private var systemImage: String?
-    private var isPrimary: Bool
 
     // MARK: - Behavior
 
     private var action: () -> Void
     private var disabledWhenCompleted: Bool
 
-    private var state: Binding<TaskState>
+    private var state: TaskState
 
     public init(
         _ defaultTitleKey: LocalizedStringKey,
         runningTitleKey: LocalizedStringKey? = nil,
         systemImage: String? = nil,
-        isPrimary: Bool = false,
         action: @escaping () -> Void,
         disabledWhenCompleted: Bool = true,
-        state: Binding<TaskState>
+        state: TaskState
     ) {
         self.defaultTitleKey = defaultTitleKey
         self.runningTitleKey = runningTitleKey
         self.systemImage = systemImage
-        self.isPrimary = isPrimary
         self.action = action
         self.disabledWhenCompleted = disabledWhenCompleted
         self.state = state
@@ -40,7 +37,7 @@ public struct TaskStateButton: View {
         VStack {
             HStack {
                 Button(action: action, label: {
-                    switch state.wrappedValue {
+                    switch state {
                     case .notStarted:
                         defaultState()
                     case .running:
@@ -50,7 +47,6 @@ public struct TaskStateButton: View {
                             #endif
                             Text(runningTitleKey ?? defaultTitleKey)
                         }
-
                     case .completed:
                         if disabledWhenCompleted {
                             Label(defaultTitleKey, systemImage: "checkmark")
@@ -65,7 +61,7 @@ public struct TaskStateButton: View {
                 }).disabled(isDisabled())
             }
 
-            if case let .failed(errorDescription: errorDescription) = state.wrappedValue {
+            if case let .failed(errorDescription: errorDescription) = state {
                 if #available(iOS 17.0, *) {
                     Text(errorDescription)
                         .font(.caption)
@@ -90,7 +86,7 @@ public struct TaskStateButton: View {
     }
 
     private func isDisabled() -> Bool {
-        switch state.wrappedValue {
+        switch state {
         case .notStarted, .failed:
             return false
         case .running:
@@ -120,7 +116,7 @@ struct TaskStateButtonPreviews: PreviewProvider {
                         action: {
                             task1State = task1State.debugLoopNextState()
                         },
-                        state: $task1State
+                        state: task1State
                     )
                     .buttonStyle(.bordered)
                 }
@@ -128,12 +124,11 @@ struct TaskStateButtonPreviews: PreviewProvider {
                 if #available(iOS 15.0, *) {
                     TaskStateButton(
                         "Do that",
-                        isPrimary: true,
                         action: {
                             task2State = task2State.debugLoopNextState()
                         },
                         disabledWhenCompleted: false,
-                        state: $task2State
+                        state: task2State
                     )
                     .buttonStyle(.borderedProminent)
                 }
