@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		001E3A702A37081800C90416 /* Blocks in Frameworks */ = {isa = PBXBuildFile; productRef = 001E3A6F2A37081800C90416 /* Blocks */; };
 		002136DD2B57C2570031AE9A /* PlainDateDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002136DC2B57C2570031AE9A /* PlainDateDemoView.swift */; };
+		002136DF2B57DDD40031AE9A /* TaskStateDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002136DE2B57DDD40031AE9A /* TaskStateDemoView.swift */; };
 		0030C2522A99047F00AB2087 /* WatchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0030C2512A99047F00AB2087 /* WatchState.swift */; };
 		0030C2542A99077400AB2087 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0030C2532A99077400AB2087 /* Settings.bundle */; };
 		003995752AFBF4680051BFCE /* BackgroundTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 003995742AFBF4680051BFCE /* BackgroundTaskView.swift */; };
@@ -47,6 +48,7 @@
 
 /* Begin PBXFileReference section */
 		002136DC2B57C2570031AE9A /* PlainDateDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainDateDemoView.swift; sourceTree = "<group>"; };
+		002136DE2B57DDD40031AE9A /* TaskStateDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStateDemoView.swift; sourceTree = "<group>"; };
 		0030C2512A99047F00AB2087 /* WatchState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchState.swift; sourceTree = "<group>"; };
 		0030C2532A99077400AB2087 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		003995742AFBF4680051BFCE /* BackgroundTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskView.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				003995742AFBF4680051BFCE /* BackgroundTaskView.swift */,
 				00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */,
 				002136DC2B57C2570031AE9A /* PlainDateDemoView.swift */,
+				002136DE2B57DDD40031AE9A /* TaskStateDemoView.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 			files = (
 				00A37E302B1911A800FA4B5F /* FileSystemExplorerView.swift in Sources */,
 				008D62CC2A56C35800254FD9 /* ImagePickerView.swift in Sources */,
+				002136DF2B57DDD40031AE9A /* TaskStateDemoView.swift in Sources */,
 				003995752AFBF4680051BFCE /* BackgroundTaskView.swift in Sources */,
 				008D62CE2A56C96E00254FD9 /* MailComposeView.swift in Sources */,
 				002136DD2B57C2570031AE9A /* PlainDateDemoView.swift in Sources */,
