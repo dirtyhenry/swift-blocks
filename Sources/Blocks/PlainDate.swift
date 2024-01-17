@@ -64,7 +64,12 @@ public struct PlainDate {
     /// - Parameter alternativeFormatter: The date formatter to use.
     /// - Returns: A string representation of the date.
     public func string(with alternativeFormatter: DateFormatter) -> String {
-        alternativeFormatter.string(from: date)
+        #if DEBUG
+        if alternativeFormatter.timeStyle != .none {
+            fatalError("Runtime issue: please do not use timeStyle in an alternative formatter.")
+        }
+        #endif
+        return alternativeFormatter.string(from: date)
     }
 
     private static func createFormatter(timeZone: TimeZone) -> ISO8601DateFormatter {
