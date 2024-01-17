@@ -50,8 +50,8 @@ public struct PlainDate {
     // MARK: - Properties
 
     private let formatter: ISO8601DateFormatter
-    private let date: Date
-    private let calendar: Calendar
+    let date: Date
+    let calendar: Calendar
 
     // MARK: - Converting to other formats
 

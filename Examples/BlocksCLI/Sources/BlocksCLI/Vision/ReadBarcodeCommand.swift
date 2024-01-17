@@ -18,7 +18,7 @@ struct ReadBarcodeCommand: ParsableCommand {
             let barcodeDescriptions = try detectBarcodes(in: fileURL)
             print("🎉 Success (count: \(barcodeDescriptions.count))")
 
-            barcodeDescriptions.forEach { item in
+            for item in barcodeDescriptions {
                 print("[\(item.payload ?? "n/a")] — \(item.symbology.rawValue.description)")
             }
 
