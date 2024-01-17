@@ -36,7 +36,7 @@ public struct PlainDatePicker: View {
 }
 
 #Preview("Compact") {
-    if #available(iOS 14.0, *) {
+    if #available(iOS 14.0, macOS 10.15.4, *) {
         @State var plainDate: PlainDate = "2024-01-17"
         return PlainDatePicker("Date", selection: $plainDate).datePickerStyle(.compact)
     } else {
@@ -53,10 +53,11 @@ public struct PlainDatePicker: View {
     }
 }
 
+#if os(iOS)
 #Preview("Wheel") {
     @State var plainDate: PlainDate = "2024-01-17"
     return PlainDatePicker("Date", selection: $plainDate).datePickerStyle(.wheel)
 }
-
+#endif
 #endif
 #endif
