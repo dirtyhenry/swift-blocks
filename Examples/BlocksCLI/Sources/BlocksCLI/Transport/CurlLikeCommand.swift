@@ -13,7 +13,7 @@ struct CurlLikeCommand: AsyncParsableCommand {
     var inputURL: String
 
     @Option(help: "HTTP Headers.")
-    var headers: [String]
+    var headers: [String] = []
 
     mutating func run() async throws {
         guard let urlComponents = URLComponents(string: inputURL),
@@ -25,8 +25,7 @@ struct CurlLikeCommand: AsyncParsableCommand {
         var urlRequest = URLRequest(url: url)
         for rawHeader in headers {
             let subheaders = rawHeader.split(separator: ":", maxSplits: 1)
-                .map { String($0).trimmingCharacters(in: .whitespacesAndNewlines)
-                }
+                .map { String($0).trimmingCharacters(in: .whitespacesAndNewlines) }
             guard subheaders.count == 2 else {
                 fatalError("Unsupported header \(rawHeader)")
             }

@@ -1,4 +1,7 @@
-open: 
+help: ## Display this help
+	@awk 'BEGIN {FS = ":.*##"; printf "Usage: make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
+open: ## Open the Xcode workspace
 	open Blocks.xcworkspace
 
 install:
@@ -8,9 +11,10 @@ install:
 build:
 	swift build
 
-cli:
+cli: ## Build the CLI example
 	swift package update --package-path Examples/BlocksCLI/
 	swift build --package-path Examples/BlocksCLI/
+	@echo "Run the CLI with: ./Examples/BlocksCLI/.build/debug/BlocksCLI --help"
 
 build-ios:
 	xcrun xcodebuild clean build -scheme Blocks -destination generic/platform=ios
