@@ -1,3 +1,4 @@
+#if canImport(MessageUI)
 import MessageUI
 import SwiftUI
 
@@ -35,3 +36,4 @@ struct MailComposeView: UIViewControllerRepresentable {
         MFMailComposeViewController.canSendMail()
     }
 }
+#endif
