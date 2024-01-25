@@ -9,3 +9,13 @@ public extension UIFont {
     }
 }
 #endif
+
+#if canImport(AppKit)
+import AppKit
+
+public extension NSFont {
+    static func allFontNames() -> [String] {
+        NSFontManager.shared.availableFonts.sorted()
+    }
+}
+#endif
