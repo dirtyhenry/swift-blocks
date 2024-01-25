@@ -13,6 +13,7 @@ class WatchState: ObservableObject {
 
     func start() {
         Task {
+            #if os(iOS)
             let value = try? await UIDevice.current.isPairedWithWatch(timeoutAfter: 3)
 
             await MainActor.run {
@@ -25,6 +26,7 @@ class WatchState: ObservableObject {
                     state = .unpaired
                 }
             }
+            #endif
         }
     }
 }

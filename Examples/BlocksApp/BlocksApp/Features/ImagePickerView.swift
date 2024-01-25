@@ -1,3 +1,4 @@
+#if os(iOS) || os(tvOS)
 import SwiftUI
 
 /// A basic SwiftUI wrapper for UIKit's `UIImagePickerController`.
@@ -35,3 +36,4 @@ struct ImagePickerView: UIViewControllerRepresentable {
         }
     }
 }
+#endif

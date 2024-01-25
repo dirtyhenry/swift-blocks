@@ -6,7 +6,9 @@ struct ContentView: View {
     enum Section: String, Identifiable, CaseIterable {
         case misc = "Misc"
         case fonts = "Fonts"
+        #if os(iOS)
         case bg = "Background test"
+        #endif
         case fileSystemExplorer = "FileSystem Explorer"
         case plainDateDemo = "PlainDate demo"
         case taskStateDemo = "TaskState demo"
@@ -33,6 +35,21 @@ struct ContentView: View {
             List(Section.allCases, selection: $selectedSectionId) { section in
                 Text(section.id)
             }
+            #if os(macOS)
+            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
+            #endif
+            .toolbar {
+                #if os(iOS)
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    EditButton()
+                }
+                #endif
+                ToolbarItem {
+                    Button("Hey") {
+                        print("Hey")
+                    }
+                }
+            }
         } detail: {
             if let selectedSectionId,
                let section = Section(rawValue: selectedSectionId) {
@@ -42,6 +59,7 @@ struct ContentView: View {
                         Text("Is a watch paired with this iPhone?")
                         Text(model.state.rawValue)
                         Spacer().frame(height: 16)
+                        #if os(iOS) || os(tvOS)
                         Button("Photo", role: nil) {
                             isShowingCamera = true
                         }.fullScreenCover(isPresented: $isShowingCamera) {
@@ -50,7 +68,9 @@ struct ContentView: View {
                                 .edgesIgnoringSafeArea(.all)
                         }
                         Spacer().frame(height: 16)
+                        #endif
 
+                        #if canImport(MessageUI)
                         if MailComposeView.canSendMail() {
                             Button("Mail", role: nil) {
                                 isShowingComposer = true
@@ -61,14 +81,17 @@ struct ContentView: View {
                         } else {
                             Text("Can not send mail in-app.")
                         }
+                        #endif
 
                         Link("Alternative mailto", destination: mailtoURL())
                     }
                     .padding()
                 case .fonts:
                     FontsView()
+                #if os(iOS)
                 case .bg:
                     BackgroundTaskView()
+                #endif
                 case .fileSystemExplorer:
                     Button("Explore") {
                         explore()

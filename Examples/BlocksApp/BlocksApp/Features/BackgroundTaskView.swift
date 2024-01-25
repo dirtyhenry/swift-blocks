@@ -1,3 +1,4 @@
+#if os(iOS)
 import Blocks
 import os
 import SwiftUI
@@ -125,3 +126,4 @@ struct BackgroundTaskView_Previews: PreviewProvider {
         BackgroundTaskView()
     }
 }
+#endif
