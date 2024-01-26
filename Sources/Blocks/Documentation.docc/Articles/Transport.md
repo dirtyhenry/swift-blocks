@@ -73,6 +73,7 @@ code more easily and make tests easy to write.
 - `TransportError`
 - `WrongStatusCodeError`
 - `URLRequestHeaderItem`
+- `MailtoComponents`
 
 [1]: https://github.com/objcio/tiny-networking
 [2]: https://www.objc.io/
