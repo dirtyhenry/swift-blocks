@@ -1,6 +1,6 @@
 import ArgumentParser
-import Foundation
 import Blocks
+import Foundation
 
 struct PrintColorsCommand: ParsableCommand {
     static var configuration = CommandConfiguration(
@@ -28,7 +28,7 @@ struct PrintColorsCommand: ParsableCommand {
         CLIUtils.write(message: "💜 This should be magenta.", background: .magenta)
         CLIUtils.write(message: "🩵 This should be cyan.", background: .cyan)
         CLIUtils.write(message: "🤍 This should be white.", background: .white)
-        
+
         print("\u{001B}[38;2;255;82;197;48;2;155;106;0mHello")
     }
 }

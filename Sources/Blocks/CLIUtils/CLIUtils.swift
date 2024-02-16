@@ -18,14 +18,14 @@ public enum CLIUtils {
             return Swift.readLine()
         }
     }
-    
+
     public static func write(message: String, foreground: CLIColor = .none, background: CLIColor = .none) {
         print("\(foreground.foreground)\(background.background)\(message)\(CLIColor.reset)")
     }
-    
+
     public enum CLIColor {
         case none
-        
+
         case black
         case red
         case green
@@ -34,7 +34,7 @@ public enum CLIUtils {
         case magenta
         case cyan
         case white
-        
+
         var foreground: String {
             switch self {
             case .none:
