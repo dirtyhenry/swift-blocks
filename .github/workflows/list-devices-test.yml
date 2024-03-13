@@ -1,5 +1,5 @@
 ---
-name: Greet (Test)
+name: List Devices Test
 
 # 📜 https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
 on:
@@ -13,12 +13,15 @@ jobs:
     name: Find Device ID
     runs-on: macos-13
     steps:
-      - name: Say hello
+      - name: Find iOS 17.2, iPhone 15
         run: |
-          echo "CURL version of the greet"
-          curl --silent --show-error --location https://raw.githubusercontent.com/dirtyhenry/swift-blocks/fix/Scripts/ListDevices.swift -o listDevices
+          curl \
+            --silent \
+            --show-error \
+            --location https://raw.githubusercontent.com/dirtyhenry/swift-blocks/fix/Scripts/ListDevices.swift \
+            -o listDevices
           chmod +x listDevices
           DEVICE_ID=$(./listDevices "iOS 17.2" "iPhone 15")
           echo "The output of the script was $DEVICE_ID"
-          echo "Available devices are:"
+          echo "All available devices are:"
           xcrun simctl list devices available
