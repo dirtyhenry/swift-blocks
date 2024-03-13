@@ -87,6 +87,7 @@ public enum CLIUtils {
     }
 }
 
+#if os(macOS)
 public extension CLIUtils {
     /// Executes a shell command and returns the output.
     ///
@@ -111,3 +112,4 @@ public extension CLIUtils {
         return output
     }
 }
+#endif
