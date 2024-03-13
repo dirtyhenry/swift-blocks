@@ -20,7 +20,8 @@ let package = Package(
         ]),
         .testTarget(
             name: "BlocksCLITests",
-            dependencies: ["BlocksCLI"]
+            dependencies: ["BlocksCLI"],
+            resources: [.process("Resources")]
         )
     ]
 )
