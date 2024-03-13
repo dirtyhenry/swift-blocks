@@ -18,7 +18,7 @@ jobs:
           curl \
             --silent \
             --show-error \
-            --location https://raw.githubusercontent.com/dirtyhenry/swift-blocks/fix/Scripts/ListDevices.swift \
+            --location https://raw.githubusercontent.com/dirtyhenry/swift-blocks/main/Scripts/ListDevices.swift \
             -o listDevices
           chmod +x listDevices
           DEVICE_ID=$(./listDevices "iOS 17.2" "iPhone 15")
