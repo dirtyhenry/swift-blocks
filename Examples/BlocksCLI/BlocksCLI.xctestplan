@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "CB799EAE-2D68-4671-A995-ED20F7784350",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "BlocksCLITests",
+        "name" : "BlocksCLITests"
+      }
+    }
+  ],
+  "version" : 1
+}

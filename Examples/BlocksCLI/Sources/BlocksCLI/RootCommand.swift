@@ -11,7 +11,8 @@ struct BlocksCLI: AsyncParsableCommand {
             ReadBarcodeCommand.self,
             ReadPasswordCommand.self,
             PrintColorsCommand.self,
-            LintCopyCommand.self
+            LintCopyCommand.self,
+            ListDevicesCommand.self
         ]
     )
 }
