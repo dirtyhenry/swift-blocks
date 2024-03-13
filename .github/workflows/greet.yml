@@ -1,0 +1,18 @@
+---
+name: Greet (Test)
+
+# 📜 https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  greet:
+    name: Hello World
+    runs-on: macos-13
+    steps:
+      - name: Say hello
+        run: |
+          ./Scripts/HelloWorld.swift
