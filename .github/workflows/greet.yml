@@ -13,8 +13,12 @@ jobs:
     name: Hello World
     runs-on: macos-13
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
       - name: Say hello
         run: |
-          ./Scripts/HelloWorld.swift
+          echo "CURL version of the greet"
+          curl --silent --show-error --location https://raw.githubusercontent.com/dirtyhenry/swift-blocks/fix/Scripts/HelloWorld.swift -o greet
+          chmod +x greet
+          GREETING=$(./greet "GitHub Action Script")
+          echo "The output of the script was $GREETING"
+          echo "Available devices are:"
+          xcrun simctl list devices available
