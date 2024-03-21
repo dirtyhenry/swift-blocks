@@ -2,38 +2,20 @@
 
 ### Feat
 
-- **ci**: use list device script
-- **ci**: enhance CI scripting test
-- **ci**: add hello world script
-- **spm**: add cli product to manifest
-- **cli**: add super version of 'xcrun simctl list devices'
-- **design**: update icon
-- 🎸 Add Bundle extension to load contents
-- 🎸 Add CopyUtils to lint copy text
-- 🎸 Start handling colors in CLI utils
-- 🎸 MailtoComponents now conforms to Equatable
-- 🎸 proper macOS app with font search
-- 🎸 Add allFontNames extension for AppKit
-- 🎸 Create Pasteboard utility struct
-- 🎸 Iterate on TaskStateButton
-- 🎸 Add demo of PlainDatePicker
-- 🎸 Add new PlainDatePicker SwiftUI component
-- 🎸 Globally exclude ObjC product and targets for Linux
-- 🎸 Reinstate Linux as a target
-- 🎸 Improve usability of MockTransport
-- 🎸 Use URLRequestHeaderItem in Endpoint
-
-### Fix
-
-- use main branch for CI scripts
-- **ci**: checkout before running scripts
-- **blocks**: only macOS can provide shell extension
-- 🐛 Build for watchOS and tvOS
-- 🐛 Refactor to prevent empty space suffix
-
-### Refactor
-
-- 💡 Cleanup unused class
+- Add ways to list XCode devices as a CLI command and a CI script;
+- New project icon
+- Add `Bundle` extension syntactic sugar to load `Data` and `String` contents
+- Add `CopyUtils` to lint copy text
+- Start handling colors in CLI utils
+- `MailtoComponents` now conforms to `Equatable` (for TCA usage)
+- Improve the macOS app layout
+- Add `allFontNames` extension for `AppKit`
+- Add `Pasteboard` utility struct
+- Iterate on `TaskStateButton`
+- Add new `PlainDatePicker` SwiftUI component (with demo)
+- Fix Linux support
+- Improve usability of `MockTransport`
+- Use `URLRequestHeaderItem` in Endpoint
 
 ## 0.2.0 (2023-12-23)
 
