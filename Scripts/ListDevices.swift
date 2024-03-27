@@ -2,6 +2,13 @@
 
 import Foundation
 
+extension FileHandle: TextOutputStream {
+  public func write(_ string: String) {
+    let data = Data(string.utf8)
+    self.write(data)
+  }
+}
+
 public struct SimpleMessageError: Error {
     let message: String
 
@@ -119,11 +126,13 @@ if CommandLine.argc != 3 {
     if filteredZippedResults.count == 1 {
         print(filteredZippedResults.first!.simulator.udid)
     } else {
-        print("Could not find unique requeted set. Consider updating to one of:")
+        print("Could not find unique requested set. Consider updating to one of:")
         let alternatives = try find(osName: nil, deviceName: nil, in: rawAvailableDevicesJSON)
             .sorted()
+            .reversed()
             .map(\.description)
-        print(alternatives.joined(separator: "\n"))
+        var standardError = FileHandle.standardError
+        print(alternatives.joined(separator: "\n"), to: &standardError)
         exit(1)
     }
 }
