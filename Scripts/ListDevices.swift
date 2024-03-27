@@ -115,6 +115,15 @@ if CommandLine.argc != 3 {
 } else {
     let rawAvailableDevicesJSON = shell("xcrun simctl list --json devices available")
     let filteredZippedResults = try find(osName: CommandLine.arguments[1], deviceName: CommandLine.arguments[2], in: rawAvailableDevicesJSON)
-    precondition(filteredZippedResults.count == 1)
-    print(filteredZippedResults.first!.simulator.udid)
+
+    if filteredZippedResults.count == 1 {
+        print(filteredZippedResults.first!.simulator.udid)
+    } else {
+        print("Could not find unique requeted set. Consider updating to one of:")
+        let alternatives = try find(osName: nil, deviceName: nil, in: rawAvailableDevicesJSON)
+            .sorted()
+            .map(\.description)
+        print(alternatives.joined(separator: "\n"))
+        exit(1)
+    }
 }
