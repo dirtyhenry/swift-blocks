@@ -1,3 +1,5 @@
+![swift-blocks logo](https://raw.githubusercontent.com/dirtyhenry/swift-blocks/main/swift-blocks.jpg)
+
 # 🧱 Blocks
 
 [![Build macOS](https://github.com/dirtyhenry/swift-blocks/workflows/Build%20macOS/badge.svg)](https://github.com/dirtyhenry/swift-blocks/actions?query=workflow:%22Build+macOS%22++)
