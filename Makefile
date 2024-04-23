@@ -38,8 +38,8 @@ lint:
 	swiftlint lint .
 
 clean:
-	rm -rf .build/
-	rm -rf Examples/BlocksCLI/.build
+	find . -type d -name '.build' -exec rm -rfv {} +
+	find . -type d -name '.swiftpm' -exec rm -rfv {} +
 
 docs:
 	xcodebuild docbuild -scheme "Blocks" -derivedDataPath tmp/derivedDataPath -destination platform=macOS

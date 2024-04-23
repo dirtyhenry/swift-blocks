@@ -43,7 +43,7 @@ struct ListDevicesCommand: ParsableCommand {
         try JSONDecoder()
             .decode(DeviceContainer.self, from: Data(rawOutput.utf8))
             .devices
-            .reduce(into: [ZipOSSimulator].init()) { partialResult, newItem in
+            .reduce(into: [ZipOSSimulator]()) { partialResult, newItem in
                 partialResult.append(contentsOf: newItem.value.map {
                     ZipOSSimulator(osIdentifier: newItem.key,
                                    simulator: $0)
