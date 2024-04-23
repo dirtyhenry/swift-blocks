@@ -16,6 +16,8 @@ import FoundationNetworking
 /// )
 /// ```
 ///
+/// ## Catching errors
+///
 /// Then, dealing with the error can be achieved like this:
 ///
 /// ```swift
@@ -25,7 +27,22 @@ import FoundationNetworking
 ///     print(error.localizedDescription)
 ///     …
 /// }
+/// ```
 ///
+/// ## Specific error codes
+///
+/// By default, `expectedStatusCode` will pass every status code in the [200;300[ range. In order to be more specific,
+//// you can provide a custom implementaion of `expectedStatusCode`. It it also a good escape hatch in order to
+/// explicitely access the status code.
+///
+/// ```swift
+/// let transport = StatusCodeCheckingTransport(
+///     wrapping: URLSession.shared,
+///     expectedStatusCode: { statusCode in
+///         print("Status code: \(statusCode)")
+///         return statusCode == 200
+///     }
+/// )
 /// ```
 ///
 /// - Note: This class conforms to the `Transport` protocol.
