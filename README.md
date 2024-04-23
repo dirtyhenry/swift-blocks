@@ -17,9 +17,12 @@ And the following examples executables/apps:
 
 - `BlocksCLI`: a command-line interface for basic proof-of-concepts;
 - `BlocksApp`: a basic App with no other dependencies than `Blocks` and
-  Apple-provided 1st-party frameworks;
-- `BlocksAppTCA`: a basic App using `Blocks` within an app designed using
-  [The Composable Architecture](https://github.com/dirtyhenry/swift-composable-architecture).
+  Apple-provided 1st-party frameworks.
+
+> [!TIP]
+>
+> 🏘️ For a similar package that builds on a curated set of dependencies (such as
+> TCA, Yams, or Swift Argument Parser), watch out my [Hoods][hoods] package.
 
 ## Usage
 
@@ -35,7 +38,7 @@ Swift Package Manager is recommended:
 dependencies: [
     .package(
         url: "https://github.com/dirtyhenry/swift-blocks",
-        from: "0.1.0"
+        from: "0.3.0"
     ),
 ]
 ```
@@ -53,3 +56,5 @@ targets: [
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+[hoods]: https://github.com/dirtyhenry/swift-hoods
