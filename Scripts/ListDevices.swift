@@ -3,10 +3,10 @@
 import Foundation
 
 extension FileHandle: TextOutputStream {
-  public func write(_ string: String) {
-    let data = Data(string.utf8)
-    self.write(data)
-  }
+    public func write(_ string: String) {
+        let data = Data(string.utf8)
+        write(data)
+    }
 }
 
 public struct SimpleMessageError: Error {
@@ -107,7 +107,7 @@ func find(osName: String?, deviceName: String?, in rawOutput: String) throws -> 
     try JSONDecoder()
         .decode(DeviceContainer.self, from: Data(rawOutput.utf8))
         .devices
-        .reduce(into: [ZipOSSimulator].init()) { partialResult, newItem in
+        .reduce(into: [ZipOSSimulator]()) { partialResult, newItem in
             partialResult.append(contentsOf: newItem.value.map {
                 ZipOSSimulator(osIdentifier: newItem.key,
                                simulator: $0)
