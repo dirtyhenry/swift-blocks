@@ -1,10 +1,14 @@
-![swift-blocks logo](https://raw.githubusercontent.com/dirtyhenry/swift-blocks/main/swift-blocks.jpg)
+<h1 align="center">
+    <img 
+        src="https://raw.githubusercontent.com/dirtyhenry/swift-blocks/main/swift-blocks.jpg"
+        alt="swift-blocks logo">
+</h1>
 
 # 🧱 Blocks
 
-[![Build macOS](https://github.com/dirtyhenry/swift-blocks/workflows/Build%20macOS/badge.svg)](https://github.com/dirtyhenry/swift-blocks/actions?query=workflow:%22Build+macOS%22++)
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fdirtyhenry%2Fswift-blocks%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/dirtyhenry/swift-blocks)
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fdirtyhenry%2Fswift-blocks%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/dirtyhenry/swift-blocks)
+[![Build macOS CI state badge](https://github.com/dirtyhenry/swift-blocks/workflows/Build%20macOS/badge.svg)](https://github.com/dirtyhenry/swift-blocks/actions?query=workflow:%22Build+macOS%22++)
+[![Swift versions compatibility badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fdirtyhenry%2Fswift-blocks%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/dirtyhenry/swift-blocks)
+[![Platforms compatibility badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fdirtyhenry%2Fswift-blocks%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/dirtyhenry/swift-blocks)
 
 A collection of my Swift building blocks.
 
