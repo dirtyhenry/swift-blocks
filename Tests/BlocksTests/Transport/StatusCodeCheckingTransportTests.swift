@@ -9,9 +9,8 @@ import XCTest
 final class StatusCodeCheckingTransportTests: XCTestCase {
     func testPassing() async throws {
         let mockTransport = MockTransport()
-        let dummyURLRequest = try DummyURLRequest().create()
         let sut = StatusCodeCheckingTransport(wrapping: mockTransport)
-        let (data, response) = try await sut.send(urlRequest: dummyURLRequest, delegate: nil)
+        let (data, response) = try await sut.send(urlRequest: DummyURLRequest.create(), delegate: nil)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(data, mockTransport.data)
     }
@@ -25,12 +24,11 @@ final class StatusCodeCheckingTransportTests: XCTestCase {
             headerFields: nil
         )!)
 
-        let dummyURLRequest = try DummyURLRequest().create()
         let sut = StatusCodeCheckingTransport(wrapping: mockTransport)
 
         var caughtStatusCode = 0
         do {
-            _ = try await sut.send(urlRequest: dummyURLRequest, delegate: nil)
+            _ = try await sut.send(urlRequest: DummyURLRequest.create(), delegate: nil)
         } catch let error as WrongStatusCodeError {
             caughtStatusCode = error.statusCode
             expectation.fulfill()

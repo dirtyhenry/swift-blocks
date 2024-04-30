@@ -10,9 +10,8 @@ final class RetryTransportTests: XCTestCase {
     func testPassing() async throws {
         let mockData = Data("Hello MockTransport".utf8)
         let mockTransport = MockTransport(data: mockData)
-        let dummyURLRequest = try DummyURLRequest().create()
         let sut = RetryTransport(wrapping: mockTransport)
-        let (data, response) = try await sut.send(urlRequest: dummyURLRequest, delegate: nil)
+        let (data, response) = try await sut.send(urlRequest: DummyURLRequest.create(), delegate: nil)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(data, mockData)
     }
@@ -20,12 +19,11 @@ final class RetryTransportTests: XCTestCase {
     func testThrowing() async throws {
         let expectation = expectation(description: "Transport will throw")
         let mockTransport = ThrowingTransport()
-        let dummyURLRequest = try DummyURLRequest().create()
         let sut = RetryTransport(wrapping: mockTransport)
 
         var nbErrors = 0
         do {
-            _ = try await sut.send(urlRequest: dummyURLRequest, delegate: nil)
+            _ = try await sut.send(urlRequest: DummyURLRequest.create(), delegate: nil)
         } catch let error as RetryTransportError {
             nbErrors = error.transportErrors.count
             expectation.fulfill()
@@ -36,31 +34,31 @@ final class RetryTransportTests: XCTestCase {
     }
 
     func testRecovering() async throws {
-        let mockTransport = RecoveringTransport()
-        let dummyURLRequest = try DummyURLRequest().create()
-        let sut = RetryTransport(wrapping: mockTransport)
-
-        let (data, response) = try await sut.send(urlRequest: dummyURLRequest, delegate: nil)
+        let recoveringTransport = RecoveringTransport()
+        let sut = RetryTransport(wrapping: recoveringTransport)
+        let (data, response) = try await sut.send(urlRequest: DummyURLRequest.create(), delegate: nil)
         XCTAssertEqual(response.statusCode, 200)
-        XCTAssertEqual(data, mockTransport.mockTransport.data)
-        XCTAssertEqual(mockTransport.nbOfCalls, 3)
+        XCTAssertEqual(data, recoveringTransport.mockTransport.data)
+        XCTAssertEqual(recoveringTransport.nbOfCalls, 3)
     }
 
     func testRecoveringWithShortDelay() async throws {
         let mockTransport = RecoveringTransport()
-        let dummyURLRequest = try DummyURLRequest().create()
         let sut = RetryTransport(wrapping: mockTransport, delay: { _ in
             try! await Task.sleep(nanoseconds: 200_000_000) // 200ms
         })
 
         let before = Date()
-        let (data, response) = try await sut.send(urlRequest: dummyURLRequest, delegate: nil)
+        let (data, response) = try await sut.send(urlRequest: DummyURLRequest.create(), delegate: nil)
         let after = Date()
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(data, mockTransport.mockTransport.data)
         XCTAssertEqual(mockTransport.nbOfCalls, 3)
         let duration = after.timeIntervalSinceReferenceDate - before.timeIntervalSinceReferenceDate
-        XCTAssertEqual(duration, 0.4, accuracy: 0.05, "Duration of \(duration) should be close to 400ms.")
+        XCTAssert(duration > 0.4)
+        if isRunningOnDeveloperMachine() {
+            XCTAssertEqual(duration, 0.4, accuracy: 0.05, "Duration of \(duration) should be close to 400ms.")
+        }
     }
 
     func testErrorDescription() {
@@ -73,7 +71,10 @@ final class RetryTransportTests: XCTestCase {
 }
 
 struct ThrowingTransport: Transport {
-    func send(urlRequest _: URLRequest, delegate _: (any URLSessionTaskDelegate)?) async throws -> (Data, HTTPURLResponse) {
+    func send(
+        urlRequest _: URLRequest,
+        delegate _: (any URLSessionTaskDelegate)?
+    ) async throws -> (Data, HTTPURLResponse) {
         throw SimpleMessageError(message: "ThrowingTransport just throws.")
     }
 }

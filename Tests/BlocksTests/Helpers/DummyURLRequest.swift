@@ -4,8 +4,8 @@ import Foundation
 import FoundationNetworking
 #endif
 
-struct DummyURLRequest {
-    func create() throws -> URLRequest {
+enum DummyURLRequest {
+    static func create() throws -> URLRequest {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "foo.tld"
