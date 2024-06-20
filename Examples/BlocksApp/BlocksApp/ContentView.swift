@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     enum Section: String, Identifiable, CaseIterable {
+        case taskStateDemo = "TaskState demo"
         case misc = "Misc"
         case fonts = "Fonts"
         #if os(iOS)
@@ -11,7 +12,6 @@ struct ContentView: View {
         #endif
         case fileSystemExplorer = "FileSystem Explorer"
         case plainDateDemo = "PlainDate demo"
-        case taskStateDemo = "TaskState demo"
 
         var id: String {
             rawValue
