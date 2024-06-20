@@ -71,16 +71,12 @@ public class JavaScriptISO8601DateFormatter {
         let container = try decoder.singleValueContainer()
         let dateAsString = try container.decode(String.self)
 
-        for formatter in [fractionalSecondsFormatter, defaultFormatter] {
-            if let res = formatter.date(from: dateAsString) {
-                return res
-            }
-        }
-
-        throw DecodingError.dataCorrupted(DecodingError.Context(
-            codingPath: decoder.codingPath,
-            debugDescription: "Expected date string to be JavaScript-ISO8601-formatted."
-        ))
+        return try date(from: dateAsString) ?? {
+            throw DecodingError.dataCorrupted(DecodingError.Context(
+                codingPath: decoder.codingPath,
+                debugDescription: "Expected date string to be JavaScript-ISO8601-formatted."
+            ))
+        }()
     }
 
     /// Encodes a date with as a JavaScript ISO 8601 formatted date with the provided decoder.
@@ -90,6 +86,16 @@ public class JavaScriptISO8601DateFormatter {
     public static func encodeDate(date: Date, encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(fractionalSecondsFormatter.string(from: date))
+    }
+
+    public static func date(from dateAsString: String) -> Date? {
+        for formatter in [fractionalSecondsFormatter, defaultFormatter] {
+            if let res = formatter.date(from: dateAsString) {
+                return res
+            }
+        }
+
+        return nil
     }
 
     private init() {}
