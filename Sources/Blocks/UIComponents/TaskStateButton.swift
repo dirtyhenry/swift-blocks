@@ -21,7 +21,7 @@ public struct TaskStateButton: View {
         _ defaultTitleKey: LocalizedStringKey,
         runningTitleKey: LocalizedStringKey? = nil,
         systemImage: String? = nil,
-        action: @escaping () -> Void,
+        action: @escaping (() -> Void) = {},
         disabledWhenCompleted: Bool = true,
         state: TaskState
     ) {
