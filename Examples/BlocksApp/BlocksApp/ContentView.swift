@@ -51,8 +51,7 @@ struct ContentView: View {
                 }
             }
         } detail: {
-            if let selectedSectionId,
-               let section = Section(rawValue: selectedSectionId) {
+            if let selectedSectionId, let section = Section(rawValue: selectedSectionId) {
                 switch section {
                 case .misc:
                     VStack {

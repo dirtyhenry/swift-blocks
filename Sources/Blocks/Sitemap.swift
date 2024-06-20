@@ -36,10 +36,12 @@ public class Sitemap {
         let changeFreq: ChangeFreq?
         let priority: Priority?
 
-        public init(location: URL,
-                    lastmod: PlainDate?,
-                    changeFreq: ChangeFreq?,
-                    priority: Priority?) {
+        public init(
+            location: URL,
+            lastmod: PlainDate?,
+            changeFreq: ChangeFreq?,
+            priority: Priority?
+        ) {
             self.location = location
             self.lastmod = lastmod
             self.changeFreq = changeFreq

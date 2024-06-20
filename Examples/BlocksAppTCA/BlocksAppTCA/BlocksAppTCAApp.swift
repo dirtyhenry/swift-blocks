@@ -5,11 +5,9 @@ import SwiftUI
 struct BlocksAppTCAApp: App {
     var body: some Scene {
         WindowGroup {
-            RootView(store: Store(
-                initialState: RootFeature.State()) {
+            RootView(store: Store(initialState: RootFeature.State()) {
                 RootFeature()
-            }
-            )
+            })
         }
     }
 }
