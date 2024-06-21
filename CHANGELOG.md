@@ -1,3 +1,28 @@
+## 0.4.0 (2024-06-21)
+
+### Feat
+
+- **poc**: add a little experiement using os logging
+- **cli**: add new barcode generation command
+- **transport**: add Linux compatibility
+- **transport**: add RetryTransport
+- **ui**: add alignment to TaskStateButton
+- **ui**: add default action for TaskStateButton
+- add date function to JavaScriptISO8601DateFormatter
+- **web**: add OpenGraph and FrontMatter structs
+- **ci**: improve error output of ListDevices
+
+### Fix
+
+- Linux build
+- macOS build
+- bump CLI version number
+
+### Refactor
+
+- **tests**: lint and improve
+- use leaner style
+
 ## 0.3.0 (2024-03-21)
 
 ### Feat
