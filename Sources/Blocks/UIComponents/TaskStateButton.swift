@@ -94,11 +94,11 @@ public struct TaskStateButton: View {
     private func isDisabled() -> Bool {
         switch state {
         case .notStarted, .failed:
-            return false
+            false
         case .running:
-            return true
+            true
         case .completed:
-            return disabledWhenCompleted
+            disabledWhenCompleted
         }
     }
 }

@@ -8,9 +8,9 @@ enum HorizontalAlignmentOption: Hashable {
     func value() -> HorizontalAlignment {
         switch self {
         case .center:
-            return .center
+            .center
         case .leading:
-            return .leading
+            .leading
         }
     }
 }

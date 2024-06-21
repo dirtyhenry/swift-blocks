@@ -1,10 +1,12 @@
 import Foundation
 
-/// A formatter that converts between dates and their ISO 8601 string representations
-/// [as JavaScript recommends to do so][1].
+/// A formatter that converts dates to and from their ISO 8601 string representations,
+/// [as recommended by JavaScript's `toJSON` method][1].
 ///
 /// The best way to use this formatter is via `JSONDecoder.javaScriptISO8601()` and `JSONEncoder.javaScriptISO8601()`
 /// that this package provides as an extension to `Foundation`.
+///
+/// # About JavaScript interoperability
 ///
 /// With JavaScript, running:
 ///
@@ -88,6 +90,23 @@ public class JavaScriptISO8601DateFormatter {
         try container.encode(fractionalSecondsFormatter.string(from: date))
     }
 
+    /// Converts a JavaScript ISO 8601 formatted string to a Date object.
+    ///
+    /// This method attempts to parse the provided string using a set of predefined date formatters.
+    /// If the string can be successfully parsed by any of these formatters, the corresponding Date object is returned.
+    /// If none of the formatters can parse the string, the method returns `nil`.
+    ///
+    /// - Parameter dateAsString: The ISO 8601 formatted date string to be converted.
+    /// - Returns: A Date object if the string could be parsed by any of the formatters, otherwise nil.
+    ///
+    /// # Usage Example:
+    /// ```
+    /// if let date = JavaScriptISO8601DateFormatter.date(from: "2023-06-21T10:20:30Z") {
+    ///     print("Date parsed successfully: \(date)")
+    /// } else {
+    ///     print("Failed to parse date string.")
+    /// }
+    /// ```
     public static func date(from dateAsString: String) -> Date? {
         for formatter in [fractionalSecondsFormatter, defaultFormatter] {
             if let res = formatter.date(from: dateAsString) {
