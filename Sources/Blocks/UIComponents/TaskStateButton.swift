@@ -106,7 +106,7 @@ public struct TaskStateButton: View {
 #if DEBUG
 
 #Preview("Not started") {
-    if #available(iOS 15.0, *) {
+    if #available(iOS 15.0, macOS 12.0, *) {
         var taskState: TaskState = .notStarted
         return TaskStateButton(
             "Do this",
@@ -119,12 +119,12 @@ public struct TaskStateButton: View {
         )
         .buttonStyle(.bordered)
     } else {
-        return Text("iOS 15 is required.")
+        return Text("OS is not supported.")
     }
 }
 
 #Preview("Running") {
-    if #available(iOS 15.0, *) {
+    if #available(iOS 15.0, macOS 12.0, *) {
         var taskState: TaskState = .running
         return TaskStateButton(
             "Do this",
@@ -137,12 +137,12 @@ public struct TaskStateButton: View {
         )
         .buttonStyle(.bordered)
     } else {
-        return Text("iOS 15 is required.")
+        return Text("OS is not supported.")
     }
 }
 
 #Preview("Completed") {
-    if #available(iOS 15.0, *) {
+    if #available(iOS 15.0, macOS 12.0, *) {
         var taskState: TaskState = .completed
         return TaskStateButton(
             "Do this",
@@ -155,12 +155,12 @@ public struct TaskStateButton: View {
         )
         .buttonStyle(.bordered)
     } else {
-        return Text("iOS 15 is required.")
+        return Text("OS is not supported.")
     }
 }
 
 #Preview("Error") {
-    if #available(iOS 15.0, *) {
+    if #available(iOS 15.0, macOS 12.0, *) {
         var taskState: TaskState = .failed(errorDescription: "Very long error message")
         return TaskStateButton(
             "Do this",
@@ -174,7 +174,7 @@ public struct TaskStateButton: View {
         )
         .buttonStyle(.bordered)
     } else {
-        return Text("iOS 15 is required.")
+        return Text("OS is not supported.")
     }
 }
 #endif
