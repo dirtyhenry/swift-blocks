@@ -12,6 +12,7 @@
 		002136DF2B57DDD40031AE9A /* TaskStateDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002136DE2B57DDD40031AE9A /* TaskStateDemoView.swift */; };
 		0030C2522A99047F00AB2087 /* WatchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0030C2512A99047F00AB2087 /* WatchState.swift */; };
 		0030C2542A99077400AB2087 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0030C2532A99077400AB2087 /* Settings.bundle */; };
+		0038EF682C00F1F0004BF4FB /* LoggingPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0038EF672C00F1F0004BF4FB /* LoggingPlaygroundView.swift */; };
 		003995752AFBF4680051BFCE /* BackgroundTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 003995742AFBF4680051BFCE /* BackgroundTaskView.swift */; };
 		007314A72AF00BFC0092F234 /* FontsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007314A62AF00BFC0092F234 /* FontsView.swift */; };
 		008D62CC2A56C35800254FD9 /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008D62CB2A56C35800254FD9 /* ImagePickerView.swift */; };
@@ -51,6 +52,7 @@
 		002136DE2B57DDD40031AE9A /* TaskStateDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStateDemoView.swift; sourceTree = "<group>"; };
 		0030C2512A99047F00AB2087 /* WatchState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchState.swift; sourceTree = "<group>"; };
 		0030C2532A99077400AB2087 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		0038EF672C00F1F0004BF4FB /* LoggingPlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingPlaygroundView.swift; sourceTree = "<group>"; };
 		003995742AFBF4680051BFCE /* BackgroundTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskView.swift; sourceTree = "<group>"; };
 		006E38742A370C0600B4142B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		007314A62AF00BFC0092F234 /* FontsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontsView.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */,
 				002136DC2B57C2570031AE9A /* PlainDateDemoView.swift */,
 				002136DE2B57DDD40031AE9A /* TaskStateDemoView.swift */,
+				0038EF672C00F1F0004BF4FB /* LoggingPlaygroundView.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -328,6 +331,7 @@
 				00D1E24A2A36327100E8D275 /* ContentView.swift in Sources */,
 				007314A72AF00BFC0092F234 /* FontsView.swift in Sources */,
 				0030C2522A99047F00AB2087 /* WatchState.swift in Sources */,
+				0038EF682C00F1F0004BF4FB /* LoggingPlaygroundView.swift in Sources */,
 				00D1E2482A36327100E8D275 /* BlocksApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
