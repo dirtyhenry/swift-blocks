@@ -11,13 +11,13 @@ extension TaskState {
     func debugLoopNextState() -> TaskState {
         switch self {
         case .notStarted:
-            return .running
+            .running
         case .running:
-            return .completed
+            .completed
         case .completed:
-            return .failed(errorDescription: "Dummy error")
+            .failed(errorDescription: "Dummy error")
         case .failed:
-            return .notStarted
+            .notStarted
         }
     }
 }
@@ -27,13 +27,13 @@ extension TaskState: CustomStringConvertible {
     public var description: String {
         switch self {
         case .notStarted:
-            return "Not started"
+            "Not started"
         case .running:
-            return "Running"
+            "Running"
         case .completed:
-            return "Completed"
+            "Completed"
         case .failed:
-            return "Failed"
+            "Failed"
         }
     }
 }

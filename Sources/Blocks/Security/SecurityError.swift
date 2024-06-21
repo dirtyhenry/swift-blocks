@@ -15,12 +15,12 @@ extension SecurityError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .unexpectedData:
-            return "Properties of the keychain item could not be retrieved."
+            "Properties of the keychain item could not be retrieved."
         case let .unhandledError(status):
             if let errorMessage = SecCopyErrorMessageString(status, nil) {
-                return errorMessage as String
+                errorMessage as String
             } else {
-                return "Unhandled keychain error code: \(status)"
+                "Unhandled keychain error code: \(status)"
             }
         }
     }

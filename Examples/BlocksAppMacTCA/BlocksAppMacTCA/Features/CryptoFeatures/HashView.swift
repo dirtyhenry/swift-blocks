@@ -15,9 +15,9 @@ struct HashView: View {
 struct HashView_Previews: PreviewProvider {
     static var previews: some View {
         HashView(store: Store(
-            initialState: HashFeature.State(myVar1: true, myVar2: false)) {
+            initialState: HashFeature.State(myVar1: true, myVar2: false)
+        ) {
             HashFeature()
-        }
-        )
+        })
     }
 }

@@ -26,16 +26,16 @@ struct ImagePickerFeature: Reducer {
     func reduce(into _: inout State, action: Action) -> Effect<Action> {
         switch action {
         case .cancelButtonTapped:
-            return .run { _ in await dismiss() }
+            .run { _ in await dismiss() }
 
         case let .usePhotoButtonTapped(newPhoto):
-            return .run { send in
+            .run { send in
                 await send(.delegate(.usePhoto(newPhoto)))
                 await dismiss()
             }
 
         case .delegate:
-            return .none
+            .none
         }
     }
 }

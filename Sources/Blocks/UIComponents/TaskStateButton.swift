@@ -15,15 +15,20 @@ public struct TaskStateButton: View {
     private var action: () -> Void
     private var disabledWhenCompleted: Bool
 
+    // MARK: - VStack props
+
+    private var alignment: HorizontalAlignment
+
     private var state: TaskState
 
     public init(
         _ defaultTitleKey: LocalizedStringKey,
         runningTitleKey: LocalizedStringKey? = nil,
         systemImage: String? = nil,
-        action: @escaping () -> Void,
+        action: @escaping (() -> Void) = {},
         disabledWhenCompleted: Bool = true,
-        state: TaskState
+        state: TaskState,
+        alignment: HorizontalAlignment = .center
     ) {
         self.defaultTitleKey = defaultTitleKey
         self.runningTitleKey = runningTitleKey
@@ -31,10 +36,11 @@ public struct TaskStateButton: View {
         self.action = action
         self.disabledWhenCompleted = disabledWhenCompleted
         self.state = state
+        self.alignment = alignment
     }
 
     public var body: some View {
-        VStack {
+        VStack(alignment: alignment) {
             HStack {
                 Button(action: action, label: {
                     switch state {
@@ -88,58 +94,85 @@ public struct TaskStateButton: View {
     private func isDisabled() -> Bool {
         switch state {
         case .notStarted, .failed:
-            return false
+            false
         case .running:
-            return true
+            true
         case .completed:
-            return disabledWhenCompleted
+            disabledWhenCompleted
         }
     }
 }
 
-#if DEBUG
-@available(macOS 12.0, *)
-@available(iOS 14.0, *)
-struct TaskStateButtonPreviews: PreviewProvider {
-    struct PreviewWrapper: View {
-        @State var task1State: TaskState = .notStarted
-        @State var task2State: TaskState = .notStarted
-
-        var body: some View {
-            VStack {
-                Text("Buttons")
-                if #available(iOS 15.0, *) {
-                    TaskStateButton(
-                        "Do this",
-                        runningTitleKey: "Doing this…",
-                        systemImage: "play",
-                        action: {
-                            task1State = task1State.debugLoopNextState()
-                        },
-                        state: task1State
-                    )
-                    .buttonStyle(.bordered)
-                }
-
-                if #available(iOS 15.0, *) {
-                    TaskStateButton(
-                        "Do that",
-                        action: {
-                            task2State = task2State.debugLoopNextState()
-                        },
-                        disabledWhenCompleted: false,
-                        state: task2State
-                    )
-                    .buttonStyle(.borderedProminent)
-                }
-            }
-        }
-    }
-
-    static var previews: some View {
-        PreviewWrapper()
-            .padding(32)
+#Preview("Not started") {
+    if #available(iOS 15.0, macOS 12.0, *) {
+        var taskState: TaskState = .notStarted
+        return TaskStateButton(
+            "Do this",
+            runningTitleKey: "Doing this…",
+            systemImage: "play",
+            action: {
+                taskState = taskState.debugLoopNextState()
+            },
+            state: taskState
+        )
+        .buttonStyle(.bordered)
+    } else {
+        return Text("OS is not supported.")
     }
 }
-#endif
+
+#Preview("Running") {
+    if #available(iOS 15.0, macOS 12.0, *) {
+        var taskState: TaskState = .running
+        return TaskStateButton(
+            "Do this",
+            runningTitleKey: "Doing this…",
+            systemImage: "play",
+            action: {
+                taskState = taskState.debugLoopNextState()
+            },
+            state: taskState
+        )
+        .buttonStyle(.bordered)
+    } else {
+        return Text("OS is not supported.")
+    }
+}
+
+#Preview("Completed") {
+    if #available(iOS 15.0, macOS 12.0, *) {
+        var taskState: TaskState = .completed
+        return TaskStateButton(
+            "Do this",
+            runningTitleKey: "Doing this…",
+            systemImage: "play",
+            action: {
+                taskState = taskState.debugLoopNextState()
+            },
+            state: taskState
+        )
+        .buttonStyle(.bordered)
+    } else {
+        return Text("OS is not supported.")
+    }
+}
+
+#Preview("Error") {
+    if #available(iOS 15.0, macOS 12.0, *) {
+        var taskState: TaskState = .failed(errorDescription: "Very long error message")
+        return TaskStateButton(
+            "Do this",
+            runningTitleKey: "Doing this…",
+            systemImage: "play",
+            action: {
+                taskState = taskState.debugLoopNextState()
+            },
+            state: taskState,
+            alignment: .leading
+        )
+        .buttonStyle(.bordered)
+    } else {
+        return Text("OS is not supported.")
+    }
+}
 #endif

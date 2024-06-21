@@ -48,8 +48,7 @@ struct ImagePickerView: UIViewControllerRepresentable {
 struct ImagePickerView_Previews: PreviewProvider {
     static var previews: some View {
         ImagePickerView(
-            store: Store(
-                initialState: ImagePickerFeature.State()) {
+            store: Store(initialState: ImagePickerFeature.State()) {
                 ImagePickerFeature()
             }
         )

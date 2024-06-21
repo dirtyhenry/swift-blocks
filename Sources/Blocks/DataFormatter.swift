@@ -86,16 +86,15 @@ public enum DataFormatter {
             .replacingOccurrences(of: "-", with: "+")
 
         let nbOfPaddedCharacters = modifiedString.count % 4
-        let padding: String
-        switch nbOfPaddedCharacters {
+        let padding = switch nbOfPaddedCharacters {
         case 1:
-            padding = "==="
+            "==="
         case 2:
-            padding = "=="
+            "=="
         case 3:
-            padding = "="
+            "="
         default: // Including 0
-            padding = ""
+            ""
         }
 
         return Data(base64Encoded: "\(modifiedString)\(padding)")
