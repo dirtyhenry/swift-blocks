@@ -103,6 +103,7 @@ public struct TaskStateButton: View {
     }
 }
 
+#if DEBUG
 #Preview("Not started") {
     if #available(iOS 15.0, macOS 12.0, *) {
         var taskState: TaskState = .notStarted
@@ -175,4 +176,5 @@ public struct TaskStateButton: View {
         return Text("OS is not supported.")
     }
 }
+#endif
 #endif
