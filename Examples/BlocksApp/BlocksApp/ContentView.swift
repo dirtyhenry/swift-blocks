@@ -12,6 +12,7 @@ struct ContentView: View {
         #endif
         case fileSystemExplorer = "FileSystem Explorer"
         case plainDateDemo = "PlainDate demo"
+        case loggingPlayground = "Logging Playground"
 
         var id: String {
             rawValue
@@ -99,6 +100,8 @@ struct ContentView: View {
                     PlainDateDemoView()
                 case .taskStateDemo:
                     TaskStateDemoView()
+                case .loggingPlayground:
+                    LoggingPlaygroundView()
                 }
             } else {
                 Text("Select a section")
