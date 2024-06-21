@@ -9,7 +9,7 @@ public final class MockTransport: Transport {
     let data: Data
     let response: HTTPURLResponse?
 
-    public init(data: Data, response: HTTPURLResponse? = nil) {
+    public init(data: Data = Data("Hello MockTransport".utf8), response: HTTPURLResponse? = nil) {
         self.data = data
         self.response = response
     }

@@ -6,17 +6,12 @@ import XCTest
 @available(macOS 12.0, *)
 final class LoggingTransportTests: XCTestCase {
     func testPassing() async throws {
-        let mockTransport = MockTransport(data: "Hello".data(using: .utf8)!, response: HTTPURLResponse(
-            url: URL(string: "https://github.com/dirtyhenry/swift-blocks")!,
-            statusCode: 200,
-            httpVersion: nil,
-            headerFields: nil)!)
-
-        let dummyURLRequest = try DummyURLRequest().create()
+        let mockData = Data("Hello LoggingTransport".utf8)
+        let mockTransport = MockTransport(data: mockData)
         let sut = LoggingTransport(wrapping: mockTransport, subsystem: "net.mickf.swift-blocks", category: "UnitTests")
-        let (data, response) = try await sut.send(urlRequest: dummyURLRequest, delegate: nil)
+        let (data, response) = try await sut.send(urlRequest: DummyURLRequest.create(), delegate: nil)
         XCTAssertEqual(response.statusCode, 200)
-        XCTAssertEqual(data, "Hello".data(using: .utf8)!)
+        XCTAssertEqual(data, mockData)
     }
 }
 #endif
