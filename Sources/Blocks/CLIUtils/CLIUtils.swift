@@ -39,7 +39,6 @@ public enum CLIUtils {
             switch self {
             case .none:
                 "\u{001B}[39m"
-
             case .black:
                 "\u{001B}[30m"
             case .red:
@@ -63,7 +62,6 @@ public enum CLIUtils {
             switch self {
             case .none:
                 "\u{001B}[49m"
-
             case .black:
                 "\u{001B}[40m"
             case .red:

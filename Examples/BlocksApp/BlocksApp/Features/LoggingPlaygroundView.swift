@@ -1,13 +1,13 @@
-import SwiftUI
-import os
 import Blocks
+import os
 import OSLog
+import SwiftUI
 
 struct LoggingPlaygroundView: View {
     let logger = Logger(subsystem: "net.mickf.BlocksDemoApp", category: "LoggingPlayground")
-    
+
     @State var wrappedLogEntries: [LogEntryIdentifiableWrapper] = []
-    
+
     var body: some View {
         VStack {
             Text("Logging Playground")
@@ -26,7 +26,7 @@ struct LoggingPlaygroundView: View {
             }
         }
     }
-    
+
     func readLogs() {
         do {
             let logStore = try OSLogStore(scope: .currentProcessIdentifier)
@@ -35,8 +35,8 @@ struct LoggingPlaygroundView: View {
                 // https://useyourloaf.com/blog/fetching-oslog-messages-in-swift/
                 matching: .init(format: "(subsystem == %@) && (category IN %@)", "net.mickf.BlocksDemoApp", ["LoggingPlayground"])
             )
-            
-            self.wrappedLogEntries = logStoreEntries
+
+            wrappedLogEntries = logStoreEntries
                 .enumerated()
                 .map { LogEntryIdentifiableWrapper(id: $0.offset, entry: $0.element) }
         } catch {
@@ -52,7 +52,7 @@ struct LoggingPlaygroundView: View {
 struct LogEntryIdentifiableWrapper: Identifiable {
     let id: Int
     let entry: OSLogEntry
-    
+
     var color: Color {
         if let logEntryLog = entry as? OSLogEntryLog {
             switch logEntryLog.level {
@@ -72,13 +72,13 @@ struct LogEntryIdentifiableWrapper: Identifiable {
                 return .gray
             }
         }
-        
+
         return .gray
     }
 }
 
-extension Logger {
-    public func _debug(_ message: String, metadata: Codable) {
-        self.debug("🟦 \(message) (\(JSON.stringify(metadata))")
+public extension Logger {
+    func _debug(_ message: String, metadata: Codable) {
+        debug("🟦 \(message) (\(JSON.stringify(metadata))")
     }
 }

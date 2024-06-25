@@ -39,9 +39,9 @@ struct GenerateBarcodeCommand: ParsableCommand {
     func image(for inputMessage: String, as symbology: SupportedSymbology) throws -> CIImage? {
         switch symbology {
         case .aztec:
-            return aztecCode(inputMessage: inputMessage)
+            aztecCode(inputMessage: inputMessage)
         case .qr:
-            return qrCode(inputMessage: inputMessage)
+            qrCode(inputMessage: inputMessage)
         }
     }
 
