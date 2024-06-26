@@ -16,4 +16,7 @@
    <FileRef
       location = "group:Examples/BlocksAppMacTCA/BlocksAppMacTCA.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Examples/Martinet/Martinet.xcodeproj">
+   </FileRef>
 </Workspace>
