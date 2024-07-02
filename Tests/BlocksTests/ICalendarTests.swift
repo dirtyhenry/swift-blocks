@@ -3,10 +3,7 @@ import XCTest
 
 final class ICalendarTests: XCTestCase {
     func testBasicUsage() throws {
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withYear, .withMonth, .withDay, .withTime, .withTimeZone]
-
-        var iCalendarObject = ICalendarObject(productIdentifier: "-//ABC Corporation//NONSGML My Product//")
+        var iCalendarObject = ICalendarObject(productIdentifier: productIdentifier)
 
         let event = ICalendarEventComponent(
             uid: "19970901T130000Z-123401@example.com",
@@ -37,7 +34,7 @@ final class ICalendarTests: XCTestCase {
     }
 
     func testWithNameAndDescription() throws {
-        var iCalendarObject = ICalendarObject(productIdentifier: "-//ABC Corporation//NONSGML My Product//")
+        var iCalendarObject = ICalendarObject(productIdentifier: productIdentifier)
         iCalendarObject.name = "My Calendar Name"
         iCalendarObject.description = "A description of my calendar"
 
@@ -56,10 +53,7 @@ final class ICalendarTests: XCTestCase {
     }
 
     func testWithCustomFormatter() throws {
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withYear, .withMonth, .withDay, .withTime]
-
-        var iCalendarObject = ICalendarObject(productIdentifier: "-//ABC Corporation//NONSGML My Product//")
+        var iCalendarObject = ICalendarObject(productIdentifier: productIdentifier)
 
         let event = ICalendarEventComponent(
             uid: "19970901T130000Z-123401@example.com",
@@ -86,6 +80,19 @@ final class ICalendarTests: XCTestCase {
         END:VCALENDAR
         """.replacingOccurrences(of: "\n", with: "\r\n")
 
-        XCTAssertEqual(iCalendarObject.iCalString(formatter: dateFormatter), expectedICAL)
+        let skipTimezoneDateFormatter = ISO8601DateFormatter()
+        skipTimezoneDateFormatter.formatOptions = [.withYear, .withMonth, .withDay, .withTime]
+
+        XCTAssertEqual(iCalendarObject.iCalString(formatter: skipTimezoneDateFormatter), expectedICAL)
     }
+
+    // MARK: - Test Utils
+
+    let productIdentifier = "-//ABC Corporation//NONSGML My Product//"
+
+    var dateFormatter: ISO8601DateFormatter = {
+        let res = ISO8601DateFormatter()
+        res.formatOptions = [.withYear, .withMonth, .withDay, .withTime, .withTimeZone]
+        return res
+    }()
 }
