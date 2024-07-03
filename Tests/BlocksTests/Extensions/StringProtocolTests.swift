@@ -16,5 +16,8 @@ final class StringProtocolTests: XCTestCase {
         XCTAssertEqual("  ".slugify(), "")
         XCTAssertEqual("   ".slugify(), "")
         XCTAssertEqual("    ".slugify(), "")
+
+        XCTAssertEqual("Hello     Luka Dončić".slugify(), "hello-luka-doncic")
+        XCTAssertEqual("สวัสดีชาวโลก".slugify(), "swasdi-chaw-lok")
     }
 }
