@@ -112,7 +112,7 @@ public struct TaskStateButton: View {
             runningTitleKey: "Doing this…",
             systemImage: "play",
             action: {
-                taskState = taskState.debugLoopNextState()
+                print("TaskStateButton was tapped")
             },
             state: taskState
         )
@@ -130,7 +130,7 @@ public struct TaskStateButton: View {
             runningTitleKey: "Doing this…",
             systemImage: "play",
             action: {
-                taskState = taskState.debugLoopNextState()
+                print("TaskStateButton was tapped")
             },
             state: taskState
         )
@@ -148,7 +148,7 @@ public struct TaskStateButton: View {
             runningTitleKey: "Doing this…",
             systemImage: "play",
             action: {
-                taskState = taskState.debugLoopNextState()
+                print("TaskStateButton was tapped")
             },
             state: taskState
         )
@@ -166,7 +166,7 @@ public struct TaskStateButton: View {
             runningTitleKey: "Doing this…",
             systemImage: "play",
             action: {
-                taskState = taskState.debugLoopNextState()
+                print("TaskStateButton was tapped")
             },
             state: taskState,
             alignment: .leading
