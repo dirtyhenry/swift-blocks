@@ -18,6 +18,7 @@ public extension StringProtocol {
         var slug = lowercased()
 
         // Remove accents and combining marks
+        slug = slug.applyingTransform(.toLatin, reverse: false) ?? slug
         slug = slug.applyingTransform(.stripDiacritics, reverse: false) ?? slug
         slug = slug.applyingTransform(.stripCombiningMarks, reverse: false) ?? slug
 
