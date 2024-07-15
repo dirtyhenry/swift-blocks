@@ -13,6 +13,7 @@ struct ContentView: View {
         case fileSystemExplorer = "FileSystem Explorer"
         case plainDateDemo = "PlainDate demo"
         case loggingPlayground = "Logging Playground"
+        case slugifyPlayground = "Slugify Playground"
 
         var id: String {
             rawValue
@@ -52,60 +53,67 @@ struct ContentView: View {
                 }
             }
         } detail: {
-            if let selectedSectionId, let section = Section(rawValue: selectedSectionId) {
-                switch section {
-                case .misc:
-                    VStack {
-                        Text("Is a watch paired with this iPhone?")
-                        Text(model.state.rawValue)
-                        Spacer().frame(height: 16)
-                        #if os(iOS) || os(tvOS)
-                        Button("Photo", role: nil) {
-                            isShowingCamera = true
-                        }.fullScreenCover(isPresented: $isShowingCamera) {
-                            // In order to use this, `NSCameraUsageDescription` must be set.
-                            ImagePickerView(sourceType: .camera, mediaTypes: [UTType.image.identifier])
-                                .edgesIgnoringSafeArea(.all)
-                        }
-                        Spacer().frame(height: 16)
-                        #endif
-
-                        #if canImport(MessageUI)
-                        if MailComposeView.canSendMail() {
-                            Button("Mail", role: nil) {
-                                isShowingComposer = true
-                            }.fullScreenCover(isPresented: $isShowingComposer) {
-                                MailComposeView()
+            Group {
+                if let selectedSectionId, let section = Section(rawValue: selectedSectionId) {
+                    switch section {
+                    case .misc:
+                        VStack {
+                            Text("Is a watch paired with this iPhone?")
+                            Text(model.state.rawValue)
+                            Spacer().frame(height: 16)
+                            #if os(iOS) || os(tvOS)
+                            Button("Photo", role: nil) {
+                                isShowingCamera = true
+                            }.fullScreenCover(isPresented: $isShowingCamera) {
+                                // In order to use this, `NSCameraUsageDescription` must be set.
+                                ImagePickerView(sourceType: .camera, mediaTypes: [UTType.image.identifier])
                                     .edgesIgnoringSafeArea(.all)
                             }
-                        } else {
-                            Text("Can not send mail in-app.")
-                        }
-                        #endif
+                            Spacer().frame(height: 16)
+                            #endif
 
-                        Link("Alternative mailto", destination: mailtoURL())
+                            #if canImport(MessageUI)
+                            if MailComposeView.canSendMail() {
+                                Button("Mail", role: nil) {
+                                    isShowingComposer = true
+                                }.fullScreenCover(isPresented: $isShowingComposer) {
+                                    MailComposeView()
+                                        .edgesIgnoringSafeArea(.all)
+                                }
+                            } else {
+                                Text("Can not send mail in-app.")
+                            }
+                            #endif
+
+                            Link("Alternative mailto", destination: mailtoURL())
+                        }
+                        .padding()
+                    case .fonts:
+                        FontsView()
+                    #if os(iOS)
+                    case .bg:
+                        BackgroundTaskView()
+                    #endif
+                    case .fileSystemExplorer:
+                        Button("Explore") {
+                            explore()
+                        }
+                    case .plainDateDemo:
+                        PlainDateDemoView()
+                    case .taskStateDemo:
+                        TaskStateDemoView()
+                    case .loggingPlayground:
+                        LoggingPlaygroundView()
+                    case .slugifyPlayground:
+                        SlugifyView()
                     }
-                    .padding()
-                case .fonts:
-                    FontsView()
-                #if os(iOS)
-                case .bg:
-                    BackgroundTaskView()
-                #endif
-                case .fileSystemExplorer:
-                    Button("Explore") {
-                        explore()
-                    }
-                case .plainDateDemo:
-                    PlainDateDemoView()
-                case .taskStateDemo:
-                    TaskStateDemoView()
-                case .loggingPlayground:
-                    LoggingPlaygroundView()
+                } else {
+                    Text("Select a section")
                 }
-            } else {
-                Text("Select a section")
             }
+            #if os(macOS)
+            .scenePadding()
+            #endif
         }
         .onAppear {
             model.start()

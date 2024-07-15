@@ -23,6 +23,7 @@ public extension StringProtocol {
         slug = slug.applyingTransform(.stripCombiningMarks, reverse: false) ?? slug
 
         // Replace spaces and non-alphanumeric characters with hyphens
+        slug = slug.replacingOccurrences(of: "[\\+]+", with: "+plus+", options: .regularExpression)
         slug = slug.replacingOccurrences(of: "[^a-z0-9]+", with: "-", options: .regularExpression)
 
         // Trim hyphens from the start and end

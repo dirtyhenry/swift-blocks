@@ -20,4 +20,11 @@ final class StringProtocolTests: XCTestCase {
         XCTAssertEqual("Hello     Luka Dončić".slugify(), "hello-luka-doncic")
         XCTAssertEqual("สวัสดีชาวโลก".slugify(), "swasdi-chaw-lok")
     }
+
+    func testMathSigns() {
+        XCTAssertEqual("a+b".slugify(), "a-plus-b")
+        XCTAssertEqual("a++b".slugify(), "a-plus-b")
+        XCTAssertEqual("a   + b".slugify(), "a-plus-b")
+        XCTAssertEqual("a ++  b".slugify(), "a-plus-b")
+    }
 }
