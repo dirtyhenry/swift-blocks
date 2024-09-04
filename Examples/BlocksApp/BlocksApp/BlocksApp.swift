@@ -10,8 +10,8 @@ struct BlocksApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView(model: WatchState())
-        }.onChange(of: scenePhase) { newPhase in
-            switch newPhase {
+        }.onChange(of: scenePhase) {
+            switch scenePhase {
             case .active:
                 logger.info("Active")
             case .background:
