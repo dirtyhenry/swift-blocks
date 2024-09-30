@@ -1,3 +1,25 @@
+## Unreleased
+
+### Feat
+
+- **Slug creation tool.** A `slugify` function for strings, or anything
+  conforming to `StringProtocol`, has been added. There's a demo available in
+  the example app, and the function is also accessible through the CLI. I wrote
+  [a blog article][1] that explains in detail the requirements, the
+  implementation, and provides examples—including emoji characters and various
+  alphabets.
+- **JSON dictionary merging tool.** A new CLI command can now merge two files
+  containing simple string-to-string dictionary objects. [Why might you need
+  this?][2]
+- **Imported legacy demo app.** This repository is my latest attempt to collect
+  useful Swift code for reuse across projects, demos, and proof-of-concepts.
+  Learn more about [why `swift-blocks` is already a successful effort][3]. I
+  also imported a previous project called Martinet—named after the swift bird in
+  French, _not_ [the punishment tool for misbehaving children][4]—as part of
+  consolidating my GitHub repositories to reduce maintenance. While it includes
+  some legacy features, it brings back fond memories and could be useful in the
+  future.
+
 ## 0.4.0 (2024-06-21)
 
 ### Feat
@@ -74,4 +96,17 @@
 
 ## 0.1.0 (2023-07-27)
 
-An initial version. A non-empty starting point.
+- 🐛 macOS version now compiles without error or warning
+
+### Refactor
+
+- 💡 Renaming swift-blocks
+- 💡 Linting and cleaning up useless edits
+- 💡 Move utility to Blocks and import it in the app
+
+- Is this the right URL?
+
+[1]: https://bootstragram.com/blog/slugify-in-swift/
+[2]: https://micro.mickf.net/2024/09/30/a-simple-workflow.html
+[3]: https://bootstragram.com/blog/blocks-and-hoods/
+[4]: https://en.wikipedia.org/wiki/Martinet
