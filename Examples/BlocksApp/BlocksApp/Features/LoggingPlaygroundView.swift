@@ -33,12 +33,16 @@ struct LoggingPlaygroundView: View {
             let logStoreEntries = try logStore.getEntries(
                 // 📜 Help to write predicates
                 // https://useyourloaf.com/blog/fetching-oslog-messages-in-swift/
-                matching: .init(format: "(subsystem == %@) && (category IN %@)", "net.mickf.BlocksDemoApp", ["LoggingPlayground"])
+                matching: .init(
+                    format: "(subsystem == %@) && (category IN %@)", "net.mickf.BlocksDemoApp",
+                    ["LoggingPlayground"]
+                )
             )
 
-            wrappedLogEntries = logStoreEntries
-                .enumerated()
-                .map { LogEntryIdentifiableWrapper(id: $0.offset, entry: $0.element) }
+            wrappedLogEntries =
+                logStoreEntries
+                    .enumerated()
+                    .map { LogEntryIdentifiableWrapper(id: $0.offset, entry: $0.element) }
         } catch {
             logger.error("Error")
         }
