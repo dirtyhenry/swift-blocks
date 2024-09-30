@@ -1,25 +1,22 @@
 ## 0.5.0 (2024-09-30)
 
-### Feat
-
-- **app**: make slugify form look better on macOS
-- **demo**: add slugify demo in app
-- **slugify**: custom support of plus sign character
-- **slugify**: iterate with more use cases and tests
-- **cli**: add slugify command to the CLI
-- **extensions**: add slugify command to StringProtocol
-- **cli**: add merge JSON command
-- copy files from legacy app Martinet
-- add scaffold for legacy Martinet app
-
-### Fix
-
-- release build would break
-- **ci**: release build should not use debugging extensions
-
-### Refactor
-
-- DRY code to address JSCPD linting warning
+- **Slug creation tool.** A `slugify` function for strings, or anything
+  conforming to `StringProtocol`, has been added. There's a demo available in
+  the example app, and the function is also accessible through the CLI. I wrote
+  [a blog article][1] that explains in detail the requirements, the
+  implementation, and provides examples—including emoji characters and various
+  alphabets.
+- **JSON dictionary merging tool.** A new CLI command can now merge two files
+  containing simple string-to-string dictionary objects. [Why might you need
+  this?][2]
+- **Imported legacy demo app.** This repository is my latest attempt to collect
+  useful Swift code for reuse across projects, demos, and proof-of-concepts.
+  Learn more about [why `swift-blocks` is already a successful effort][3]. I
+  also imported a previous project called Martinet—named after the swift bird in
+  French, _not_ [the punishment tool for misbehaving children][4]—as part of
+  consolidating my GitHub repositories to reduce maintenance. While it includes
+  some legacy features, it brings back fond memories and could be useful in the
+  future.
 
 ## 0.4.0 (2024-06-21)
 
