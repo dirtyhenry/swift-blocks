@@ -7,3 +7,4 @@ DerivedData/
 .swiftpm
 
 scratchpad.md
+/Examples/.build
