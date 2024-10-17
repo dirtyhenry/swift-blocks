@@ -1,6 +1,6 @@
-#if canImport(os)
+#if canImport(OSLog)
 import Foundation
-import os
+import OSLog
 
 @available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
