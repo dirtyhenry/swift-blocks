@@ -50,11 +50,10 @@ responses, will snapshot results on disks, will throw if the response's status
 code is in not in the 200 to 399 range, then, you could use:
 
 ```swift
-SnapshottingTransport(
-    wrapping: LogginTransport(
-       wrapping: StatusCodeCheckingTransport(
-            wrapping: URLSession.shared
-        )
+StatusCodeCheckingTransport(
+    wrapping: LoggingTransport(
+        wrapping: URLSession.shared,
+        subsystem: bundleId
     )
 )
 ```
