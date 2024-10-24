@@ -41,12 +41,27 @@ extension URL {
 }
 
 struct TransportDemoView: View {
+    let readme: LocalizedStringKey = """
+    A `Transport` can compose behaviors dealing with URL requests.
+
+    The one demoed here will:
+
+    1. **Load data** from the internet (`URLSession.shared`);
+    2. **Log requests** and responses to OSLog (`LoggingTransport`);
+    3. **Throw** if the status code is an error one (`StatusCodeCheckingTransport`);
+    4. **Retry** the request if it failed a couple of times (`RetryTransport`).
+    """
+
     @State var taskState: TaskState = .notStarted
     @State var quote: String?
     @State var author: String?
 
     var body: some View {
-        VStack {
+        VStack(spacing: 32) {
+            VStack(alignment: .leading) {
+                Text(readme)
+            }.frame(maxWidth: .infinity, alignment: .leading)
+            Divider()
             TaskStateButton(
                 "Load quote",
                 runningTitleKey: "Loading quote…",
@@ -70,9 +85,15 @@ struct TransportDemoView: View {
             )
             .buttonStyle(.borderedProminent)
             .padding(32)
-            Text(quote ?? "")
-            Text(author ?? "")
+            VStack {
+                Text(quote ?? "")
+                Text(author ?? "")
+                    .font(.caption)
+            }
+            Spacer()
         }
+        .padding()
+        .navigationTitle("Transport Demo")
     }
 }
 
