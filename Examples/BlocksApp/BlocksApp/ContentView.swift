@@ -14,6 +14,7 @@ struct ContentView: View {
         case plainDateDemo = "PlainDate demo"
         case loggingPlayground = "Logging Playground"
         case slugifyPlayground = "Slugify Playground"
+        case transportDemo = "Transport demo"
 
         var id: String {
             rawValue
@@ -106,6 +107,8 @@ struct ContentView: View {
                         LoggingPlaygroundView()
                     case .slugifyPlayground:
                         SlugifyView()
+                    case .transportDemo:
+                        TransportDemoView()
                     }
                 } else {
                     Text("Select a section")
