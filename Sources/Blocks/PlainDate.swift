@@ -1,13 +1,14 @@
 import Foundation
 
-/// A string that represents dates using their ISO 8601 representations.
+/// A string that represents dates without time, using their ISO 8601 representations.
 ///
-/// `PlainDate` is a way to handle dates with no time — such as `2022-03-02` for March 2nd of 2022 — to
-/// perform operations with convenience including adding days, dealing with ranges, etc.
+/// `PlainDate` provides a way to handle dates with no time — such as `2022-03-02` for March 2nd of 2022 — to
+/// perform operations with convenience, including adding days, dealing with ranges, and more.
 ///
 /// ## Usage Overview
 ///
-/// A plain date can be initiated from a string literal, and can be used to create ranges.
+/// A plain date can be created from a string literal, or directly using a `Date` object. It supports date range
+/// iteration, addition of days, and custom formatting.
 ///
 /// ```swift
 /// let march1st: PlainDate = "2022-03-01"
@@ -19,11 +20,12 @@ import Foundation
 public struct PlainDate {
     // MARK: - Creating an instance
 
-    /// Returns a plain date initialized using their ISO 8601 representation.
+    /// Creates a plain date from an ISO 8601 string representation.
+    ///
     /// - Parameters:
-    ///   - dateAsString: The ISO 8601 representation of the date. For instance, `2022-03-02`for March 2nd of 2022.
-    ///   - calendar: The calendar — including the time zone — to use. The default is the current calendar.
-    /// - Returns: A plain date, or `nil` if a valid date could not be created from `dateAsString`.
+    ///   - dateAsString: The ISO 8601 string representing the date (e.g., `2022-03-02` for March 2nd, 2022).
+    ///   - calendar: The calendar to use (default is `.current`).
+    /// - Returns: A `PlainDate`, or `nil` if the string could not be parsed into a valid date.
     public init?(from dateAsString: String, calendar: Calendar = .current) {
         let formatter = Self.createFormatter(timeZone: calendar.timeZone)
         guard let date = formatter.date(from: dateAsString) else {
@@ -33,10 +35,11 @@ public struct PlainDate {
         self.init(date: date, calendar: calendar, formatter: formatter)
     }
 
-    /// Returns a plain date initialized using their ISO 8601 representation.
+    /// Creates a plain date from a `Date` object.
+    ///
     /// - Parameters:
-    ///   - date: The date to represent.
-    ///   - calendar: The calendar — including the time zone — to use. The default is the current calendar.
+    ///   - date: The `Date` to represent.
+    ///   - calendar: The calendar to use (default is `.current`).
     public init(date: Date, calendar: Calendar = .current) {
         self.init(date: date, calendar: calendar, formatter: Self.createFormatter(timeZone: calendar.timeZone))
     }
@@ -55,14 +58,12 @@ public struct PlainDate {
 
     // MARK: - Converting to other formats
 
-    /// Returns a string representation of the date that the system formats using the receiver’s current settings.
+    /// Returns a string representation of the date using a custom formatter.
     ///
-    /// Use this method only if you need a string representation of the date that is not ISO 8601.
+    /// - Note: Avoid using an `alternativeFormatter` with a `timeStyle` other than `.none`.
     ///
-    /// The return value might be irrelevant if the date formatter uses some time information.
-    ///
-    /// - Parameter alternativeFormatter: The date formatter to use.
-    /// - Returns: A string representation of the date.
+    /// - Parameter alternativeFormatter: The formatter to use.
+    /// - Returns: A string representing the date.
     public func string(with alternativeFormatter: DateFormatter) -> String {
         #if DEBUG
         if alternativeFormatter.timeStyle != .none {
@@ -81,6 +82,14 @@ public struct PlainDate {
 }
 
 extension PlainDate: ExpressibleByStringLiteral {
+    // MARK: - ExpressibleByStringLiteral
+
+    /// Allows `PlainDate` to be initialized from a string literal.
+    ///
+    /// Example:
+    /// ```swift
+    /// let date: PlainDate = "2022-03-02"
+    /// ```
     public init(stringLiteral value: String) {
         if PlainDate(from: value) != nil {
             self.init(from: value)!
@@ -91,18 +100,27 @@ extension PlainDate: ExpressibleByStringLiteral {
 }
 
 extension PlainDate: CustomStringConvertible {
+    // MARK: - CustomStringConvertible
+
+    /// A string description of the `PlainDate` in ISO 8601 format.
     public var description: String {
         formatter.string(from: date)
     }
 }
 
 extension PlainDate: CustomDebugStringConvertible {
+    // MARK: - CustomDebugStringConvertible
+
+    /// A debug description of the `PlainDate` including calendar and time zone details.
     public var debugDescription: String {
         "\(formatter.string(from: date)) (\(calendar) \(calendar.timeZone) \(date))"
     }
 }
 
 extension PlainDate: Strideable {
+    // MARK: - Strideable Conformance
+
+    /// Calculates the distance in days to another `PlainDate`.
     public func distance(to other: PlainDate) -> Int {
         if #available(macOS 10.15, iOS 13.0, *) {
             // 🐇 A faster working — so far — alternative.
@@ -121,26 +139,17 @@ extension PlainDate: Strideable {
         }
     }
 
+    /// Advances the date by a specified number of days.
     public func advanced(by value: Int) -> PlainDate {
         let newDate = calendar.date(byAdding: .day, value: value, to: date)!
         return PlainDate(date: newDate, calendar: calendar, formatter: formatter)
     }
 }
 
-extension PlainDate: Decodable {
-    public init(from decoder: Decoder) throws {
-        try self.init(stringLiteral: decoder.singleValueContainer().decode(String.self))
-    }
-}
-
-extension PlainDate: Encodable {
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(description)
-    }
-}
-
 public extension PlainDate {
+    // MARK: - Weekday and Components
+
+    /// Represents a day of the week.
     enum Weekday: Int {
         case sunday = 1
         case monday = 2
@@ -151,6 +160,7 @@ public extension PlainDate {
         case saturday = 7
     }
 
+    /// The day of the week for this `PlainDate`.
     var weekday: Weekday {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withFullDate]
@@ -162,6 +172,7 @@ public extension PlainDate {
         return result
     }
 
+    /// The year and week number of this `PlainDate`.
     var yearWeek: String {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withYear, .withWeekOfYear, .withDashSeparatorInDate]
@@ -169,6 +180,7 @@ public extension PlainDate {
         return formatter.string(from: date)
     }
 
+    /// Advances the date to the next specified weekday.
     func advanced(toNext outputWeekday: Weekday) -> PlainDate {
         var advancingDay = self
         while advancingDay.weekday != outputWeekday {
@@ -179,8 +191,24 @@ public extension PlainDate {
 }
 
 public extension PlainDate {
+    /// The date components (year, month, day) of this `PlainDate`.
     var dateComponents: DateComponents {
         calendar.dateComponents([.year, .month, .day], from: date)
+    }
+}
+
+// MARK: - Codable Conformance
+
+extension PlainDate: Decodable {
+    public init(from decoder: Decoder) throws {
+        try self.init(stringLiteral: decoder.singleValueContainer().decode(String.self))
+    }
+}
+
+extension PlainDate: Encodable {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(description)
     }
 }
 
