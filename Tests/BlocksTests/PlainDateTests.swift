@@ -85,4 +85,16 @@ final class PlainDateTests: XCTestCase {
         XCTAssertEqual(PlainDate(stringLiteral: "2023-03-18").advanced(toNext: .tuesday).description, "2023-03-21")
         XCTAssertEqual(PlainDate(stringLiteral: "2023-03-19").advanced(toNext: .tuesday).description, "2023-03-21")
     }
+
+    func testYearWeek() {
+        XCTAssertEqual(PlainDate(stringLiteral: "2023-03-12").yearWeek, "2023-W10")
+        XCTAssertEqual(PlainDate(stringLiteral: "2023-03-13").yearWeek, "2023-W11")
+        XCTAssertEqual(PlainDate(stringLiteral: "2023-03-14").yearWeek, "2023-W11")
+        XCTAssertEqual(PlainDate(stringLiteral: "2023-03-15").yearWeek, "2023-W11")
+        XCTAssertEqual(PlainDate(stringLiteral: "2023-03-16").yearWeek, "2023-W11")
+        XCTAssertEqual(PlainDate(stringLiteral: "2023-03-17").yearWeek, "2023-W11")
+        XCTAssertEqual(PlainDate(stringLiteral: "2023-03-18").yearWeek, "2023-W11")
+        XCTAssertEqual(PlainDate(stringLiteral: "2023-03-19").yearWeek, "2023-W11")
+        XCTAssertEqual(PlainDate(stringLiteral: "2023-03-20").yearWeek, "2023-W12")
+    }
 }

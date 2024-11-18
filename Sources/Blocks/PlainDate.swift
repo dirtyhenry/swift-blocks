@@ -162,6 +162,13 @@ public extension PlainDate {
         return result
     }
 
+    var yearWeek: String {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withYear, .withWeekOfYear, .withDashSeparatorInDate]
+        formatter.timeZone = calendar.timeZone
+        return formatter.string(from: date)
+    }
+
     func advanced(toNext outputWeekday: Weekday) -> PlainDate {
         var advancingDay = self
         while advancingDay.weekday != outputWeekday {
