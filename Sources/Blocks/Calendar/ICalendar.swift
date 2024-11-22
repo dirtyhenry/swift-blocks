@@ -110,9 +110,9 @@ extension ICalendarEventComponent {
     }
 }
 
-@resultBuilder
 /// 📜 Cf. https://www.avanderlee.com/swift/result-builders/ for convenient help.
 /// 📜 Cf. https://docs.swift.org/swift-book/documentation/the-swift-programming-language/advancedoperators#Result-Builders for reference help.
+@resultBuilder
 enum ICalendarBuilder {
     static var formatter: ISO8601DateFormatter = {
         let dateFormatter = ISO8601DateFormatter()

@@ -1,5 +1,6 @@
 #import "ArrayDataSource.h"
 
+#if TARGET_OS_PHONE
 @interface ArrayDataSource ()
 
 @property (nonatomic, strong) NSArray *items;
@@ -50,3 +51,4 @@
 }
 
 @end
+#endif

@@ -7,8 +7,8 @@ import WatchConnectivity
 @available(iOS 14.0, *)
 let logger = Logger(subsystem: "net.mickf.Blocks", category: "Watch")
 
-@available(iOS 14.0, *)
 /// A utility singleton that can detect if a watch is paired to a device with ease.
+@available(iOS 14.0, *)
 public class WatchPairingUtil: NSObject {
     struct TimedOutError: Error, Equatable {}
 
