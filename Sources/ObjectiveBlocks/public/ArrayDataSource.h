@@ -1,6 +1,10 @@
+#import <TargetConditionals.h>
+
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 #import "CommonDataSource.h"
+
+#if TARGET_OS_PHONE
+#import <UIKit/UIKit.h>
 
 /**
  A `UITableViewDataSource` implementation using an `NSArray` as a base.
@@ -33,3 +37,4 @@
 - (id)itemAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
+#endif
