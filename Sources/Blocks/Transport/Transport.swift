@@ -3,9 +3,9 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// A type that can transport URL requests to a server-like target.
 @available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
-/// A type that can transport URL requests to a server-like target.
 public protocol Transport {
     func send(
         urlRequest: URLRequest,

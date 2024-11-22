@@ -234,13 +234,13 @@ public struct NoDataError: Error {
 @available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
 public extension Transport {
-    @discardableResult
     /// Loads an endpoint by creating (and directly resuming) a data task.
     ///
     /// - Parameters:
     ///   - e: The endpoint.
     ///   - onComplete: The completion handler.
     /// - Returns: The data task.
+    @discardableResult
     func load<A>(_ endpoint: Endpoint<A>) async throws -> A {
         let (data, httpResponse) = try await send(urlRequest: endpoint.request, delegate: nil)
         let result = endpoint.parse(data, httpResponse)
