@@ -41,17 +41,7 @@ import Foundation
 ///
 /// [1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toJSON
 @available(macOS 10.13, *)
-public class JavaScriptISO8601DateFormatter {
-    static let fractionalSecondsFormatter: ISO8601DateFormatter = {
-        let res = ISO8601DateFormatter()
-        // The default format options is .withInternetDateTime.
-        // We need to add .withFractionalSeconds to parse dates with milliseconds.
-        res.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return res
-    }()
-
-    static let defaultFormatter = ISO8601DateFormatter()
-
+public enum JavaScriptISO8601DateFormatter {
     /// Returns a date from a decoder holding a single primitive value representing a JavaScript ISO 8601 date.
     ///
     /// This function is intended to be used as a custom implementation of `JSONDecoder.DateDecodingStrategy`.
@@ -87,7 +77,7 @@ public class JavaScriptISO8601DateFormatter {
     ///   - encoder: The encoder.
     public static func encodeDate(date: Date, encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(fractionalSecondsFormatter.string(from: date))
+        try container.encode(fractionalSecondsFormatter().string(from: date))
     }
 
     /// Converts a JavaScript ISO 8601 formatted string to a Date object.
@@ -108,7 +98,7 @@ public class JavaScriptISO8601DateFormatter {
     /// }
     /// ```
     public static func date(from dateAsString: String) -> Date? {
-        for formatter in [fractionalSecondsFormatter, defaultFormatter] {
+        for formatter in [fractionalSecondsFormatter(), defaultFormatter()] {
             if let res = formatter.date(from: dateAsString) {
                 return res
             }
@@ -117,5 +107,17 @@ public class JavaScriptISO8601DateFormatter {
         return nil
     }
 
-    private init() {}
+    // MARK: - Utils
+
+    static func fractionalSecondsFormatter() -> ISO8601DateFormatter {
+        let res = ISO8601DateFormatter()
+        // The default format options is .withInternetDateTime.
+        // We need to add .withFractionalSeconds to parse dates with milliseconds.
+        res.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return res
+    }
+
+    static func defaultFormatter() -> ISO8601DateFormatter {
+        ISO8601DateFormatter()
+    }
 }

@@ -2,7 +2,7 @@ import Foundation
 
 /// A formatter that converts between binary data and their plain text representations.
 public enum DataFormatter {
-    public struct HexadecimalEncodingOptions: OptionSet {
+    public struct HexadecimalEncodingOptions: OptionSet, Sendable {
         public let rawValue: Int
 
         public static let uppercase = HexadecimalEncodingOptions(rawValue: 1 << 0)

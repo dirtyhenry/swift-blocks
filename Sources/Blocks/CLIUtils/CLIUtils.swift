@@ -81,7 +81,7 @@ public enum CLIUtils {
             }
         }
 
-        static var reset = "\u{001B}[0m"
+        static let reset = "\u{001B}[0m"
     }
 }
 

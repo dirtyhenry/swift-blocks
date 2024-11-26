@@ -55,13 +55,17 @@ final class ICalendarTests: XCTestCase {
     func testWithCustomFormatter() throws {
         var iCalendarObject = ICalendarObject(productIdentifier: productIdentifier)
 
+        let skipTimezoneDateFormatter = ISO8601DateFormatter()
+        skipTimezoneDateFormatter.formatOptions = [.withYear, .withMonth, .withDay, .withTime]
+
         let event = ICalendarEventComponent(
             uid: "19970901T130000Z-123401@example.com",
             dateTimeStamp: dateFormatter.date(from: "19970901T130000Z")!,
             dateTimeStart: dateFormatter.date(from: "19970903T163000Z")!,
             dateTimeEnd: dateFormatter.date(from: "19970903T190000Z")!,
             summary: "Annual Employee Review",
-            description: "Some more details here."
+            description: "Some more details here.",
+            dateFormatter: skipTimezoneDateFormatter
         )
         iCalendarObject.add(event: event)
 
@@ -80,10 +84,7 @@ final class ICalendarTests: XCTestCase {
         END:VCALENDAR
         """.replacingOccurrences(of: "\n", with: "\r\n")
 
-        let skipTimezoneDateFormatter = ISO8601DateFormatter()
-        skipTimezoneDateFormatter.formatOptions = [.withYear, .withMonth, .withDay, .withTime]
-
-        XCTAssertEqual(iCalendarObject.iCalString(formatter: skipTimezoneDateFormatter), expectedICAL)
+        XCTAssertEqual(iCalendarObject.iCalString(), expectedICAL)
     }
 
     // MARK: - Test Utils

@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version: 6.0
 
 // 📜 https://github.com/apple/swift-package-manager/blob/main/Documentation/PackageDescription.md
 import PackageDescription
