@@ -30,11 +30,8 @@ public struct ICalendarObject {
         events.append(event)
     }
 
-    public func iCalString(formatter: ISO8601DateFormatter? = nil) -> String {
-        if let formatter {
-            ICalendarBuilder.formatter = formatter
-        }
-        return components.joined(separator: separator)
+    public func iCalString() -> String {
+        components.joined(separator: separator)
     }
 
     @ICalendarBuilder var components: [String] {
@@ -62,6 +59,13 @@ struct ICalKeyValue {
 struct ICalKeyDateValue {
     let key: String
     let value: Date
+    let formatter: ISO8601DateFormatter?
+
+    init(key: String, value: Date, formatter: ISO8601DateFormatter? = nil) {
+        self.key = key
+        self.value = value
+        self.formatter = formatter
+    }
 }
 
 public struct ICalendarEventComponent {
@@ -87,13 +91,24 @@ public struct ICalendarEventComponent {
     /// calendar component than that provided by the `summary` property.
     let description: String
 
-    public init(uid: String, dateTimeStamp: Date, dateTimeStart: Date, dateTimeEnd: Date, summary: String, description: String) {
+    let dateFormatter: ISO8601DateFormatter?
+
+    public init(
+        uid: String,
+        dateTimeStamp: Date,
+        dateTimeStart: Date,
+        dateTimeEnd: Date,
+        summary: String,
+        description: String,
+        dateFormatter: ISO8601DateFormatter? = nil
+    ) {
         self.uid = uid
         self.dateTimeStamp = dateTimeStamp
         self.dateTimeStart = dateTimeStart
         self.dateTimeEnd = dateTimeEnd
         self.summary = summary
         self.description = description
+        self.dateFormatter = dateFormatter
     }
 }
 
@@ -101,9 +116,9 @@ extension ICalendarEventComponent {
     @ICalendarBuilder var components: [String] {
         ICalKeyValue(key: "BEGIN", value: "VEVENT")
         ICalKeyValue(key: "UID", value: uid)
-        ICalKeyDateValue(key: "DTSTAMP", value: dateTimeStamp)
-        ICalKeyDateValue(key: "DTSTART", value: dateTimeStart)
-        ICalKeyDateValue(key: "DTEND", value: dateTimeEnd)
+        ICalKeyDateValue(key: "DTSTAMP", value: dateTimeStamp, formatter: dateFormatter)
+        ICalKeyDateValue(key: "DTSTART", value: dateTimeStart, formatter: dateFormatter)
+        ICalKeyDateValue(key: "DTEND", value: dateTimeEnd, formatter: dateFormatter)
         ICalKeyValue(key: "SUMMARY", value: summary)
         ICalKeyValue(key: "DESCRIPTION", value: description)
         ICalKeyValue(key: "END", value: "VEVENT")
@@ -114,12 +129,6 @@ extension ICalendarEventComponent {
 /// 📜 Cf. https://docs.swift.org/swift-book/documentation/the-swift-programming-language/advancedoperators#Result-Builders for reference help.
 @resultBuilder
 enum ICalendarBuilder {
-    static var formatter: ISO8601DateFormatter = {
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withYear, .withMonth, .withDay, .withTime, .withTimeZone]
-        return dateFormatter
-    }()
-
     static func buildBlock(_ components: [String]...) -> [String] {
         components.flatMap { $0 }
     }
@@ -129,7 +138,7 @@ enum ICalendarBuilder {
     }
 
     static func buildExpression(_ expression: ICalKeyDateValue) -> [String] {
-        ["\(expression.key):\(formatter.string(from: expression.value))"]
+        ["\(expression.key):\((expression.formatter ?? formatter()).string(from: expression.value))"]
     }
 
     static func buildExpression(_ expression: [ICalendarEventComponent]) -> [String] {
@@ -150,5 +159,11 @@ enum ICalendarBuilder {
 
     static func buildEither(second components: [String]) -> [String] {
         components
+    }
+
+    static func formatter() -> ISO8601DateFormatter {
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withYear, .withMonth, .withDay, .withTime, .withTimeZone]
+        return dateFormatter
     }
 }

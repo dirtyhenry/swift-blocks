@@ -140,7 +140,7 @@ public struct TaskStateButton: View {
 #if DEBUG
 #Preview("Not started") {
     if #available(iOS 15.0, macOS 12.0, *) {
-        var taskState: TaskState = .notStarted
+        let taskState: TaskState = .notStarted
         return TaskStateButton(
             "Do this",
             runningTitleKey: "Doing this…",
@@ -158,7 +158,7 @@ public struct TaskStateButton: View {
 
 #Preview("Running") {
     if #available(iOS 15.0, macOS 12.0, *) {
-        var taskState: TaskState = .running
+        let taskState: TaskState = .running
         return TaskStateButton(
             "Do this",
             runningTitleKey: "Doing this…",
@@ -176,7 +176,7 @@ public struct TaskStateButton: View {
 
 #Preview("Completed") {
     if #available(iOS 15.0, macOS 12.0, *) {
-        var taskState: TaskState = .completed
+        let taskState: TaskState = .completed
         return TaskStateButton(
             "Do this",
             runningTitleKey: "Doing this…",
@@ -194,7 +194,7 @@ public struct TaskStateButton: View {
 
 #Preview("Error") {
     if #available(iOS 15.0, macOS 12.0, *) {
-        var taskState: TaskState = .failed(errorDescription: "Very long error message")
+        let taskState: TaskState = .failed(errorDescription: "Very long error message")
         return TaskStateButton(
             "Do this",
             runningTitleKey: "Doing this…",
