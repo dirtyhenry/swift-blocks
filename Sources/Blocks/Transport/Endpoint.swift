@@ -16,7 +16,7 @@ public enum ContentType: String {
 /// to improve testability and composition.
 ///
 /// Also, JSON defaults encoder and decoder are using the ones from this package.
-public struct Endpoint<A> {
+public struct Endpoint<A>: Sendable {
     /// The HTTP Method
     public enum Method: String {
         case get = "GET"
@@ -30,17 +30,17 @@ public struct Endpoint<A> {
     public var request: URLRequest
 
     /// This is used to (try to) parse a response into an `A`.
-    var parse: (Data?, URLResponse?) -> Result<A, Error>
+    var parse: @Sendable (Data?, URLResponse?) -> Result<A, Error>
 
     /// Transforms the result
-    public func map<B>(_ f: @escaping (A) -> B) -> Endpoint<B> {
+    public func map<B>(_ f: @Sendable @escaping (A) -> B) -> Endpoint<B> {
         Endpoint<B>(request: request, parse: { value, response in
             parse(value, response).map(f)
         })
     }
 
     /// Transforms the result
-    public func compactMap<B>(_ transform: @escaping (A) -> Result<B, Error>) -> Endpoint<B> {
+    public func compactMap<B>(_ transform: @Sendable @escaping (A) -> Result<B, Error>) -> Endpoint<B> {
         Endpoint<B>(request: request, parse: { data, response in
             parse(data, response).flatMap(transform)
         })
@@ -65,7 +65,7 @@ public struct Endpoint<A> {
         body: Data? = nil,
         headers: [URLRequestHeaderItem] = [],
         query: [URLQueryItem] = [],
-        parse: @escaping (Data?, URLResponse?) -> Result<A, Error>
+        parse: @Sendable @escaping (Data?, URLResponse?) -> Result<A, Error>
     ) {
         var requestUrl: URL
         if query.isEmpty {
@@ -100,7 +100,7 @@ public struct Endpoint<A> {
     ///   - request: the URL request
     ///   - expectedStatusCode: the status code that's expected. If this returns false for a given status code, parsing fails.
     ///   - parse: this converts a response into an `A`.
-    public init(request: URLRequest, parse: @escaping (Data?, URLResponse?) -> Result<A, Error>) {
+    public init(request: URLRequest, parse: @Sendable @escaping (Data?, URLResponse?) -> Result<A, Error>) {
         self.request = request
         self.parse = parse
     }
