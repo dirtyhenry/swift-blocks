@@ -14,18 +14,19 @@ class WatchState: ObservableObject {
     func start() {
         Task {
             #if os(iOS)
-            let value = try? await UIDevice.current.isPairedWithWatch(timeoutAfter: 3)
-
-            await MainActor.run {
-                switch value {
-                case .none:
-                    state = .unknown
-                case .some(true):
-                    state = .paired
-                case .some(false):
-                    state = .unpaired
-                }
-            }
+            // FIXME: Reenable
+//            let value = try? await UIDevice.current.isPairedWithWatch(timeoutAfter: 3)
+//
+//            await MainActor.run {
+//                switch value {
+//                case .none:
+//                    state = .unknown
+//                case .some(true):
+//                    state = .paired
+//                case .some(false):
+//                    state = .unpaired
+//                }
+//            }
             #endif
         }
     }
