@@ -1,3 +1,4 @@
+#if canImport(SwiftUI)
 import SwiftUI
 
 @available(iOS 15.0, *)
@@ -47,3 +48,4 @@ public struct LabeledTextField: View {
         }
     }
 }
+#endif

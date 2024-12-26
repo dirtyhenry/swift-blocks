@@ -1,5 +1,6 @@
 import Foundation
 
+#if !os(Linux)
 public extension StringProtocol {
     /// Converts the string into a URL-friendly slug.
     ///
@@ -23,8 +24,12 @@ public extension StringProtocol {
         slug = slug.applyingTransform(.stripCombiningMarks, reverse: false) ?? slug
 
         // Replace spaces and non-alphanumeric characters with hyphens
-        slug = slug.replacingOccurrences(of: "[\\+]+", with: "+plus+", options: .regularExpression)
-        slug = slug.replacingOccurrences(of: "[^a-z0-9]+", with: "-", options: .regularExpression)
+        slug = slug.replacingOccurrences(
+            of: "[\\+]+", with: "+plus+", options: .regularExpression
+        )
+        slug = slug.replacingOccurrences(
+            of: "[^a-z0-9]+", with: "-", options: .regularExpression
+        )
 
         // Trim hyphens from the start and end
         slug = slug.trimmingCharacters(in: CharacterSet(charactersIn: "-"))
@@ -39,3 +44,4 @@ public extension StringProtocol {
         return slug
     }
 }
+#endif
