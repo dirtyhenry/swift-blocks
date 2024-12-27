@@ -20,6 +20,7 @@
 		008D62CE2A56C96E00254FD9 /* MailComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008D62CD2A56C96E00254FD9 /* MailComposeView.swift */; };
 		008D62D02A56EA1500254FD9 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 008D62CF2A56EA1500254FD9 /* UniformTypeIdentifiers.framework */; };
 		00A12BF42CC0F84B0006D9F7 /* TransportDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A12BF32CC0F8450006D9F7 /* TransportDemoView.swift */; };
+		00A274EA2D1EC88B00A2DD67 /* FormPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A274E92D1EC88B00A2DD67 /* FormPlaygroundView.swift */; };
 		00A37E302B1911A800FA4B5F /* FileSystemExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */; };
 		00A37E322B19135400FA4B5F /* ObjectiveBlocks in Frameworks */ = {isa = PBXBuildFile; productRef = 00A37E312B19135400FA4B5F /* ObjectiveBlocks */; };
 		00D1E2482A36327100E8D275 /* BlocksApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D1E2472A36327100E8D275 /* BlocksApp.swift */; };
@@ -63,6 +64,7 @@
 		008D62CD2A56C96E00254FD9 /* MailComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposeView.swift; sourceTree = "<group>"; };
 		008D62CF2A56EA1500254FD9 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
 		00A12BF32CC0F8450006D9F7 /* TransportDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportDemoView.swift; sourceTree = "<group>"; };
+		00A274E92D1EC88B00A2DD67 /* FormPlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormPlaygroundView.swift; sourceTree = "<group>"; };
 		00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSystemExplorerView.swift; sourceTree = "<group>"; };
 		00D1E2442A36327100E8D275 /* BlocksApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlocksApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00D1E2472A36327100E8D275 /* BlocksApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksApp.swift; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 				002136DE2B57DDD40031AE9A /* TaskStateDemoView.swift */,
 				0038EF672C00F1F0004BF4FB /* LoggingPlaygroundView.swift */,
 				00333CCA2C45682900A58365 /* SlugifyView.swift */,
+				00A274E92D1EC88B00A2DD67 /* FormPlaygroundView.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -333,6 +336,7 @@
 				002136DF2B57DDD40031AE9A /* TaskStateDemoView.swift in Sources */,
 				003995752AFBF4680051BFCE /* BackgroundTaskView.swift in Sources */,
 				008D62CE2A56C96E00254FD9 /* MailComposeView.swift in Sources */,
+				00A274EA2D1EC88B00A2DD67 /* FormPlaygroundView.swift in Sources */,
 				002136DD2B57C2570031AE9A /* PlainDateDemoView.swift in Sources */,
 				00A12BF42CC0F84B0006D9F7 /* TransportDemoView.swift in Sources */,
 				00333CCB2C45682900A58365 /* SlugifyView.swift in Sources */,

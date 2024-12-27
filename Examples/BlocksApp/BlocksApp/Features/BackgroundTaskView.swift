@@ -1,6 +1,6 @@
 #if os(iOS)
 import Blocks
-import os
+import OSLog
 import SwiftUI
 
 class BackgroundRunnerSingleton {

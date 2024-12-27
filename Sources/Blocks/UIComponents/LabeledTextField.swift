@@ -22,30 +22,29 @@ public struct LabeledTextField: View {
     public var body: some View {
         #if os(iOS)
         ZStack(alignment: .leading) {
-            if !text.isEmpty || fieldIsFocused {
-                Text(title)
-                    .foregroundColor(text.isEmpty ? Color(.placeholderText) : .accentColor)
-                    .offset(y: text.isEmpty ? 0 : -25)
-                    .scaleEffect(text.isEmpty ? 1 : 0.8, anchor: .leading)
-            }
+            Text(title)
+                .foregroundColor((text.isEmpty && !fieldIsFocused) ? Color(.placeholderText) : .accentColor)
+                .offset(y: (text.isEmpty && !fieldIsFocused) ? 0 : -20)
+                .scaleEffect((text.isEmpty && !fieldIsFocused) ? 1 : 0.6, anchor: .leading)
             TextField("", text: $text, prompt: prompt)
                 .focused($fieldIsFocused)
+                .offset(y: (text.isEmpty && !fieldIsFocused) ? 0 : 4)
         }
-        .padding(.top, 16)
-        .animation(.default, value: text)
+        .padding(.vertical, 4)
+        .animation(.default)
         #else
         TextField(title, text: $text, prompt: prompt)
         #endif
     }
 }
 
+@available(iOS 18.0, *)
+@available(macOS 14.0, *)
 #Preview {
-    Form {
-        if #available(iOS 15.0, macOS 12.0, *) {
-            LabeledTextField("Input", text: .constant("Value"))
-        } else {
-            Text("macOS 12 is required.")
-        }
+    @Previewable @State var text = ""
+    return Form {
+        LabeledTextField("Input 1", text: $text)
+        TextField("Input to blur", text: $text)
     }
 }
 #endif

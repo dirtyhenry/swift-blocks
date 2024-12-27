@@ -1,6 +1,6 @@
 #if os(iOS)
 import Combine
-import os
+import OSLog
 import SwiftUI
 import WatchConnectivity
 
