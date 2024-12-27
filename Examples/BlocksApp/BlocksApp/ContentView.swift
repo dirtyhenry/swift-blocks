@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     enum Section: String, Identifiable, CaseIterable {
+        case formPlayground = "Form Playground"
         case taskStateDemo = "TaskState demo"
         case misc = "Misc"
         case fonts = "Fonts"
@@ -109,6 +110,8 @@ struct ContentView: View {
                         SlugifyView()
                     case .transportDemo:
                         TransportDemoView()
+                    case .formPlayground:
+                        FormPlaygroundView()
                     }
                 } else {
                     Text("Select a section")

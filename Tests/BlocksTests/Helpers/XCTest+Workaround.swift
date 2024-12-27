@@ -1,5 +1,5 @@
 #if os(Linux)
-import XCTest
+@preconcurrency import XCTest
 
 extension XCTestCase {
     /// Wait on an array of expectations for up to the specified timeout, and optionally specify whether they
