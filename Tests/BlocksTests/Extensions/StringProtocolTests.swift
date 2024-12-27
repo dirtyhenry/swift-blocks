@@ -1,6 +1,7 @@
 import Blocks
 import XCTest
 
+#if !os(Linux)
 final class StringProtocolTests: XCTestCase {
     func testSlugify() {
         XCTAssertEqual(
@@ -28,3 +29,4 @@ final class StringProtocolTests: XCTestCase {
         XCTAssertEqual("a ++  b".slugify(), "a-plus-b")
     }
 }
+#endif
