@@ -38,10 +38,9 @@ final class URLLoadingSystemErrorCodesTests: XCTestCase {
 
         // SSL Errors
         #if os(Linux)
-        // cannot find 'NSURLErrorFileOutsideSafeArea' in scope 🤷‍♂️
+        // 🎟 https://github.com/swiftlang/swift-corelibs-foundation/pull/4861
         #else
         XCTAssertEqual(NSURLErrorFileOutsideSafeArea, -1104)
-        #endif
         XCTAssertEqual(NSURLErrorSecureConnectionFailed, -1200)
         XCTAssertEqual(NSURLErrorServerCertificateHasBadDate, -1201)
         XCTAssertEqual(NSURLErrorServerCertificateUntrusted, -1202)
@@ -49,6 +48,7 @@ final class URLLoadingSystemErrorCodesTests: XCTestCase {
         XCTAssertEqual(NSURLErrorServerCertificateNotYetValid, -1204)
         XCTAssertEqual(NSURLErrorClientCertificateRejected, -1205)
         XCTAssertEqual(NSURLErrorClientCertificateRequired, -1206)
+        #endif
         XCTAssertEqual(NSURLErrorCannotLoadFromNetwork, -2000)
 
         // Download and file I/O errors
