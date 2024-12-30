@@ -3,7 +3,7 @@ import Blocks
 import Foundation
 
 struct SlugifyCommand: ParsableCommand {
-    static var configuration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         commandName: "slugify",
         abstract: "Outputs a slug for the input."
     )

@@ -4,7 +4,7 @@ import CoreImage
 import Vision
 
 struct ReadBarcodeCommand: ParsableCommand {
-    static var configuration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         commandName: "read-barcode",
         abstract: "Extract the textual payload from a barcode."
     )
@@ -29,7 +29,9 @@ struct ReadBarcodeCommand: ParsableCommand {
     }
 
     func detectBarcodes(in fileURL: URL) throws -> [VNBarcodeObservation] {
-        let imageRequestHandler = VNImageRequestHandler(url: fileURL, orientation: .up, options: [:])
+        let imageRequestHandler = VNImageRequestHandler(
+            url: fileURL, orientation: .up, options: [:]
+        )
         let request = VNDetectBarcodesRequest()
         try imageRequestHandler.perform([request])
         return request.results ?? []
@@ -54,7 +56,8 @@ extension VNBarcodeObservation {
                 "payload": payloadStringValue ?? "n/a",
                 "symbolVersion": qrCodeDescriptor.symbolVersion.description,
                 "maskPattern": qrCodeDescriptor.maskPattern.description,
-                "errorCorrectionLevel.rawValue": qrCodeDescriptor.errorCorrectionLevel.rawValue.description
+                "errorCorrectionLevel.rawValue": qrCodeDescriptor.errorCorrectionLevel.rawValue
+                    .description
             ]
             return JSON.stringify(props)
         default:

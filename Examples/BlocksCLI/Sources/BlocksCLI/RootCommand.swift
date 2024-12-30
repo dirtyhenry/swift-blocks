@@ -2,7 +2,7 @@ import ArgumentParser
 
 @main
 struct BlocksCLI: AsyncParsableCommand {
-    static var configuration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         abstract: "Blocks CLI Tool.",
         version: "0.3.0",
         subcommands: [

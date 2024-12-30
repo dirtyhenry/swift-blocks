@@ -3,7 +3,7 @@ import Blocks
 import Foundation
 
 struct ReadPasswordCommand: ParsableCommand {
-    static var configuration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         commandName: "password",
         abstract: "Read a password from the cli."
     )
