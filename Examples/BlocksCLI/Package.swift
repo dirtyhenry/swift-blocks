@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -17,10 +17,13 @@ let package = Package(
         .package(name: "Blocks", path: "../../")
     ],
     targets: [
-        .executableTarget(name: "BlocksCLI", dependencies: [
-            .product(name: "Blocks", package: "Blocks"),
-            .product(name: "ArgumentParser", package: "swift-argument-parser")
-        ]),
+        .executableTarget(
+            name: "BlocksCLI",
+            dependencies: [
+                .product(name: "Blocks", package: "Blocks"),
+                .product(name: "ArgumentParser", package: "swift-argument-parser")
+            ]
+        ),
         .testTarget(
             name: "BlocksCLITests",
             dependencies: ["BlocksCLI"],
