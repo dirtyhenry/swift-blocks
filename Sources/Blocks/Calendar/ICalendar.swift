@@ -130,7 +130,7 @@ extension ICalendarEventComponent {
 @resultBuilder
 enum ICalendarBuilder {
     static func buildBlock(_ components: [String]...) -> [String] {
-        components.flatMap { $0 }
+        components.flatMap(\.self)
     }
 
     static func buildExpression(_ expression: ICalKeyValue) -> [String] {
@@ -142,11 +142,11 @@ enum ICalendarBuilder {
     }
 
     static func buildExpression(_ expression: [ICalendarEventComponent]) -> [String] {
-        expression.map(\.components).flatMap { $0 }
+        expression.map(\.components).flatMap(\.self)
     }
 
     static func buildArray(_ components: [[String]]) -> [String] {
-        components.flatMap { $0 }
+        components.flatMap(\.self)
     }
 
     static func buildOptional(_ components: [String]?) -> [String] {

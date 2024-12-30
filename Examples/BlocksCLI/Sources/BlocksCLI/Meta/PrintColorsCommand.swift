@@ -3,7 +3,7 @@ import Blocks
 import Foundation
 
 struct PrintColorsCommand: ParsableCommand {
-    static var configuration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         commandName: "print-colors",
         abstract: "A test tool for CLIUtils."
     )

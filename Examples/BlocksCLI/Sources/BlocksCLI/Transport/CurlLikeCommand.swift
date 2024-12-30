@@ -4,7 +4,7 @@ import Foundation
 
 @available(macOS 10.15.0, *)
 struct CurlLikeCommand: AsyncParsableCommand {
-    static var configuration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         commandName: "curl",
         abstract: "A curl-like command, implemented with Blocks."
     )
@@ -25,7 +25,8 @@ struct CurlLikeCommand: AsyncParsableCommand {
         var urlRequest = URLRequest(url: url)
         for rawHeader in headers {
             let subheaders = rawHeader.split(separator: ":", maxSplits: 1)
-                .map { String($0).trimmingCharacters(in: .whitespacesAndNewlines)
+                .map {
+                    String($0).trimmingCharacters(in: .whitespacesAndNewlines)
                 }
             guard subheaders.count == 2 else {
                 fatalError("Unsupported header \(rawHeader)")
@@ -36,7 +37,9 @@ struct CurlLikeCommand: AsyncParsableCommand {
         if #available(macOS 12.0, *) {
             let transport: Transport = URLSession.shared
             dump(urlRequest)
-            let (data, response) = try await transport.send(urlRequest: urlRequest, delegate: nil)
+            let (data, response) = try await transport.send(
+                urlRequest: urlRequest, delegate: nil
+            )
 
             guard response.textEncodingName == "utf-8" else {
                 fatalError("Only UTF8 is supported for HTTP responses encoding")

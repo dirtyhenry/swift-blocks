@@ -3,7 +3,7 @@ import Blocks
 import Foundation
 
 struct LintCopyCommand: ParsableCommand {
-    static var configuration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         commandName: "lint-copy",
         abstract: "Fix common mistakes in copy typography."
     )

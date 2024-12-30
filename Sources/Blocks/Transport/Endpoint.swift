@@ -117,7 +117,7 @@ extension Endpoint: CustomStringConvertible {
             request.url?.absoluteString ?? "<no url>",
             String(data: data, encoding: .utf8)
         ]
-        .compactMap { $0 }
+        .compactMap(\.self)
         .filter { !$0.isEmpty }
 
         return components.joined(separator: " ")

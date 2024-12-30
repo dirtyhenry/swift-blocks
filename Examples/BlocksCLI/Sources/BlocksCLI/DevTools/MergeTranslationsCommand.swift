@@ -27,7 +27,7 @@ extension Translations {
 }
 
 struct MergeTranslationsCommand: ParsableCommand {
-    static var configuration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         commandName: "merge-translations",
         abstract: "Merge 2 translations files into a new file."
     )

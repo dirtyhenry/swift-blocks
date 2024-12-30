@@ -6,7 +6,7 @@ import Foundation
 import Vision
 
 struct GenerateBarcodeCommand: ParsableCommand {
-    static var configuration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         commandName: "gen-barcode",
         abstract: "Create a barcode from a text input."
     )
@@ -85,7 +85,9 @@ struct GenerateBarcodeCommand: ParsableCommand {
 
     func cgImageAsPNG(_ cgImage: CGImage) -> Data? {
         // Step 1: Convert CGImage to NSImage
-        let image = NSImage(cgImage: cgImage, size: NSSize(width: cgImage.width, height: cgImage.height))
+        let image = NSImage(
+            cgImage: cgImage, size: NSSize(width: cgImage.width, height: cgImage.height)
+        )
 
         // Step 2: Convert NSImage to PNG Data using NSBitmapImageRep
         guard let tiffData = image.tiffRepresentation,

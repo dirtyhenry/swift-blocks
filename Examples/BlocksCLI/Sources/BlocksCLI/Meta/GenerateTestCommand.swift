@@ -4,7 +4,7 @@ import Foundation
 
 @available(macOS 10.15.0, *)
 struct GenerateTestCommand: AsyncParsableCommand {
-    static var configuration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         commandName: "gen-tests",
         abstract: "A command to generate tests instructions for all test targets of a package."
     )

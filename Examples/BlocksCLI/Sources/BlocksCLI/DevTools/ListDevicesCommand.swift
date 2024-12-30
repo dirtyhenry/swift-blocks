@@ -1,12 +1,12 @@
 import ArgumentParser
-import Foundation
 
 // import ShellOut
 // import TSCBasic
 import Blocks
+import Foundation
 
 struct ListDevicesCommand: ParsableCommand {
-    static var configuration = CommandConfiguration(
+    static let configuration = CommandConfiguration(
         commandName: "list-simulators",
         abstract: "List (or filter) the available simulators Xcode provide."
     )
@@ -18,7 +18,9 @@ struct ListDevicesCommand: ParsableCommand {
     mutating func run() throws {
         let rawAvailableDevicesJSON = CLIUtils.shell("xcrun simctl list --json devices available")
 
-        let filteredZippedResults = try find(osName: osFilter, deviceName: deviceFilter, in: rawAvailableDevicesJSON)
+        let filteredZippedResults = try find(
+            osName: osFilter, deviceName: deviceFilter, in: rawAvailableDevicesJSON
+        )
 
         switch (osFilter, deviceFilter) {
         case (.some, .some):
@@ -26,9 +28,10 @@ struct ListDevicesCommand: ParsableCommand {
             precondition(filteredZippedResults.count == 1)
             print(filteredZippedResults.first!.simulator.udid)
         default:
-            let output = filteredZippedResults
-                .sorted()
-                .map(\.description)
+            let output =
+                filteredZippedResults
+                    .sorted()
+                    .map(\.description)
             print(output.joined(separator: "\n"))
         }
     }
@@ -44,10 +47,13 @@ struct ListDevicesCommand: ParsableCommand {
             .decode(DeviceContainer.self, from: Data(rawOutput.utf8))
             .devices
             .reduce(into: [ZipOSSimulator]()) { partialResult, newItem in
-                partialResult.append(contentsOf: newItem.value.map {
-                    ZipOSSimulator(osIdentifier: newItem.key,
-                                   simulator: $0)
-                })
+                partialResult.append(
+                    contentsOf: newItem.value.map {
+                        ZipOSSimulator(
+                            osIdentifier: newItem.key,
+                            simulator: $0
+                        )
+                    })
             }
     }
 }
