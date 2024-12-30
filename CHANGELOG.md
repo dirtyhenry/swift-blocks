@@ -2,30 +2,20 @@
 
 ### Feat
 
-- **ui**: add demo for form
-- **ui**: fix LabeledTextField for macOS
-- **ui**: add LabeledTextField component
-- make Endpoint conform to Sendable
-- use Swift 6
-- **maths**: add code to compute average of arrays
-- **PlainDate**: add yearWeek property
-- **obj-c**: add ancient utilities from my previous library
-- **demo**: Integrate demo to the app
-- **demo**: add transport demo
-
-### Fix
-
-- **cli**: Swift 6 errors
-- **linux**: fix linux build
-- comment out breaking part of the demo app
-- deactivate WatchPairingUtil to compile with Swift 6
-- address warnings
-- add TARGET_OS_PHONE flag
-
-### Refactor
-
-- run code format
-- import OSLog rather than os
+- **Swift 6 compatibility.** This was easier than I expected. The only challenge
+  I faced (so far?) was creating a convenient utility to detect if a device is
+  connected to an Apple Watch, which I (temporarily?) removed from the library
+  and the demo.
+- **`LabeledTextField` and Demo Form.** Forms can be challenging in SwiftUI, as
+  their appearance may be off-putting at first. To address this, I began using
+  Blocks to create custom form components and tested them in a playground to
+  ensure my forms look great on both iOS and macOS, which is often overlooked.
+- **Transport Demo.** Transport features are the ones I use most in the apps
+  built on these Blocks. I added a long-overdue demo to help users understand
+  them more easily.
+- **Misc.** An `.average()` function for collections of numbers (as generic as
+  possible), a `yearWeek` property on `PlainDate`, and some Objective-C
+  memorabilia.
 
 ## 0.5.0 (2024-09-30)
 
