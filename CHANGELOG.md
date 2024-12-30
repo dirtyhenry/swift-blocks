@@ -1,3 +1,32 @@
+## 0.6.0 (2024-12-30)
+
+### Feat
+
+- **ui**: add demo for form
+- **ui**: fix LabeledTextField for macOS
+- **ui**: add LabeledTextField component
+- make Endpoint conform to Sendable
+- use Swift 6
+- **maths**: add code to compute average of arrays
+- **PlainDate**: add yearWeek property
+- **obj-c**: add ancient utilities from my previous library
+- **demo**: Integrate demo to the app
+- **demo**: add transport demo
+
+### Fix
+
+- **cli**: Swift 6 errors
+- **linux**: fix linux build
+- comment out breaking part of the demo app
+- deactivate WatchPairingUtil to compile with Swift 6
+- address warnings
+- add TARGET_OS_PHONE flag
+
+### Refactor
+
+- run code format
+- import OSLog rather than os
+
 ## 0.5.0 (2024-09-30)
 
 - **Slug creation tool.** A `slugify` function for strings, or anything
