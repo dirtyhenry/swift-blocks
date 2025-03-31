@@ -19,7 +19,9 @@ public enum CLIUtils {
         }
     }
 
-    public static func write(message: String, foreground: CLIColor = .none, background: CLIColor = .none) {
+    public static func write(
+        message: String, foreground: CLIColor = .none, background: CLIColor = .none
+    ) {
         print("\(foreground.foreground)\(background.background)\(message)\(CLIColor.reset)")
     }
 
@@ -86,28 +88,40 @@ public enum CLIUtils {
 }
 
 #if os(macOS)
-public extension CLIUtils {
-    /// Executes a shell command and returns the output.
-    ///
-    /// 📜 Heavily inspired by [this SO question](https://stackoverflow.com/a/50035059/455016).
-    ///
-    /// - Parameter command: The shell command to execute.
-    /// - Returns: Output of the executed shell command.
-    static func shell(_ command: String) -> String {
-        let task = Process()
-        let pipe = Pipe()
+    extension CLIUtils {
+        /// Executes a shell command and returns the output.
+        ///
+        /// 📜 Heavily inspired by [this SO question][1] and by [_Building macOS Utility Apps with Command Line
+        /// Tools_][2] by Karin Prater.
+        ///
+        /// [1]: https://stackoverflow.com/a/50035059/455016
+        /// [2]: https://www.swiftyplace.com/blog/building-macos-utiltiy-apps
+        ///
+        /// - Parameter command: The shell command to execute.
+        /// - Returns: Output of the executed shell command.
+        public static func shell(_ command: String) throws -> String {
+            let process = Process()
+            let pipe = Pipe()
 
-        task.standardOutput = pipe
-        task.standardError = pipe
-        task.arguments = ["-c", command]
-        task.launchPath = "/bin/zsh"
-        task.standardInput = nil
-        task.launch()
+            process.standardOutput = pipe
+            process.standardError = pipe
+            process.arguments = ["-c", command]
+            process.launchPath = "/bin/zsh"
+            process.standardInput = nil
+            try process.run()
 
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)!
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            guard let output = String(data: data, encoding: .utf8) else {
+                throw SimpleMessageError(message: "Could not read UTF8 output from command.")
+            }
 
-        return output
+            process.waitUntilExit()
+
+            guard process.terminationStatus == 0 else {
+                throw SimpleMessageError(message: "Command failed with status \(process.terminationStatus)")
+            }
+
+            return output
+        }
     }
-}
 #endif
