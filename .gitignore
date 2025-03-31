@@ -18,3 +18,6 @@ scratchpad.md
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Dependency directories
+node_modules/
