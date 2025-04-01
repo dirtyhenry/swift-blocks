@@ -66,7 +66,7 @@
 
 ### Feat
 
-- Add ways to list XCode devices as a CLI command and a CI script;
+- Add ways to list Xcode devices as a CLI command and a CI script;
 - New project icon
 - Add `Bundle` extension syntactic sugar to load `Data` and `String` contents
 - Add `CopyUtils` to lint copy text

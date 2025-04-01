@@ -6,7 +6,7 @@
 
 # 🧱 Blocks
 
-[![Build macOS CI state badge](https://github.com/dirtyhenry/swift-blocks/workflows/Build%20macOS/badge.svg)](https://github.com/dirtyhenry/swift-blocks/actions?query=workflow:%22Build+macOS%22++)
+[![Build Blocks](https://github.com/dirtyhenry/swift-blocks/actions/workflows/build.yml/badge.svg)](https://github.com/dirtyhenry/swift-blocks/actions/workflows/build.yml)
 [![Swift versions compatibility badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fdirtyhenry%2Fswift-blocks%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/dirtyhenry/swift-blocks)
 [![Platforms compatibility badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fdirtyhenry%2Fswift-blocks%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/dirtyhenry/swift-blocks)
 

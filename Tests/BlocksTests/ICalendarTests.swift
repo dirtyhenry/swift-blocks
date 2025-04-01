@@ -1,6 +1,7 @@
 import Blocks
 import XCTest
 
+/* jscpd:ignore-start */
 final class ICalendarTests: XCTestCase {
     func testBasicUsage() throws {
         var iCalendarObject = ICalendarObject(productIdentifier: productIdentifier)
@@ -97,3 +98,5 @@ final class ICalendarTests: XCTestCase {
         return res
     }()
 }
+
+/* jscpd:ignore-end */

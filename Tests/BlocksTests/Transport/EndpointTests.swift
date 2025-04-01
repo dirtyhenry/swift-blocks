@@ -1,5 +1,6 @@
-@testable import Blocks
 import XCTest
+
+@testable import Blocks
 
 final class EndpointTests: XCTestCase {
     func testBasic() async throws {
@@ -13,10 +14,23 @@ final class EndpointTests: XCTestCase {
             ]
         )
 
-        XCTAssertEqual(endpoint.request.allHTTPHeaderFields, [
-            "Accept": "application/json",
-            "a-header": "a-value"
-        ])
+        #if os(Linux)
+        XCTAssertEqual(
+            endpoint.request.allHTTPHeaderFields,
+            [
+                "Accept": "application/json",
+                "A-Header": "a-value"
+            ]
+        )
+        #else
+        XCTAssertEqual(
+            endpoint.request.allHTTPHeaderFields,
+            [
+                "Accept": "application/json",
+                "a-header": "a-value"
+            ]
+        )
+        #endif
 
         XCTAssertEqual(endpoint.description, "GET https://foo.tld/bar")
     }

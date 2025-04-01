@@ -16,7 +16,7 @@ struct ListDevicesCommand: ParsableCommand {
     @Option var deviceFilter: String?
 
     mutating func run() throws {
-        let rawAvailableDevicesJSON = CLIUtils.shell("xcrun simctl list --json devices available")
+        let rawAvailableDevicesJSON = try CLIUtils.shell("xcrun simctl list --json devices available")
 
         let filteredZippedResults = try find(
             osName: osFilter, deviceName: deviceFilter, in: rawAvailableDevicesJSON
