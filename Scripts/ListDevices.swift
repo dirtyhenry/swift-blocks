@@ -2,6 +2,7 @@
 
 import Foundation
 
+/* jscpd:ignore-start */
 extension FileHandle: TextOutputStream {
     public func write(_ string: String) {
         let data = Data(string.utf8)
@@ -108,10 +109,13 @@ func find(osName: String?, deviceName: String?, in rawOutput: String) throws -> 
         .decode(DeviceContainer.self, from: Data(rawOutput.utf8))
         .devices
         .reduce(into: [ZipOSSimulator]()) { partialResult, newItem in
-            partialResult.append(contentsOf: newItem.value.map {
-                ZipOSSimulator(osIdentifier: newItem.key,
-                               simulator: $0)
-            })
+            partialResult.append(
+                contentsOf: newItem.value.map {
+                    ZipOSSimulator(
+                        osIdentifier: newItem.key,
+                        simulator: $0
+                    )
+                })
         }
         .filter { osName == nil ? true : $0.formattedOS == osName }
         .filter { deviceName == nil ? true : $0.simulator.name == deviceName }
@@ -121,7 +125,10 @@ if CommandLine.argc != 3 {
     print("Usage: ./\(CommandLine.arguments[0]) \"os\" \"device\"")
 } else {
     let rawAvailableDevicesJSON = shell("xcrun simctl list --json devices available")
-    let filteredZippedResults = try find(osName: CommandLine.arguments[1], deviceName: CommandLine.arguments[2], in: rawAvailableDevicesJSON)
+    let filteredZippedResults = try find(
+        osName: CommandLine.arguments[1], deviceName: CommandLine.arguments[2],
+        in: rawAvailableDevicesJSON
+    )
 
     if filteredZippedResults.count == 1 {
         print(filteredZippedResults.first!.simulator.udid)
@@ -136,3 +143,5 @@ if CommandLine.argc != 3 {
         exit(1)
     }
 }
+
+/* jscpd:ignore-end */
