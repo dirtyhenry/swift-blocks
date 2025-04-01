@@ -45,10 +45,17 @@ final class JavaScriptISO8601DateFormatterTests: XCTestCase {
         """
 
         XCTAssertThrowsError(try JSONDecoder.javaScriptISO8601().decode(SamplePayload.self, from: json.data(using: .utf8)!)) {
+            #if os(Linux)
+            XCTAssertEqual(
+                $0.localizedDescription,
+                "The operation could not be completed. The data isn’t in the correct format."
+            )
+            #else
             XCTAssertEqual(
                 $0.localizedDescription,
                 "The data couldn’t be read because it isn’t in the correct format."
             )
+            #endif
         }
     }
 }
