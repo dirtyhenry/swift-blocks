@@ -17,7 +17,7 @@ public extension JSONEncoder {
 
     static func prettyEncoder() -> JSONEncoder {
         let result = JSONEncoder.javaScriptISO8601()
-        result.outputFormatting = [.prettyPrinted, .sortedKeys]
+        result.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
         return result
     }
 }

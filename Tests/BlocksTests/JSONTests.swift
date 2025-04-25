@@ -20,7 +20,7 @@ final class JSONTests: XCTestCase {
             xNullable: nil,
             mOpinionatedDate: Date(timeIntervalSince1970: 123_456_789),
             dBool: true,
-            cString: "Hello JSON",
+            cString: "Hello JSON / Hello \"World\"",
             bNumber: 12.34,
             aNumber: 5678
         )
@@ -29,7 +29,7 @@ final class JSONTests: XCTestCase {
         {
           "aNumber" : 5678,
           "bNumber" : 12.34,
-          "cString" : "Hello JSON",
+          "cString" : "Hello JSON / Hello \\"World\\"",
           "dBool" : true,
           "mOpinionatedDate" : "1973-11-29T21:33:09.000Z",
           "yObject" : {
