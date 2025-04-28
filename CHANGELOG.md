@@ -1,3 +1,27 @@
+## 0.7.0
+
+### Minor Changes
+
+- 17c901b: Iterate on `CLIUtils.shell` command.
+
+  ⚠️ The signature now throws:
+
+  ```diff
+  -static func shell(_ command: String) -> String
+  +static func shell(_ command: String) throws -> String
+  ```
+
+### Patch Changes
+
+- 995be85: Stop escaping slashes on `JSON` functions.
+
+  Output examples:
+
+  ```diff
+  -foo\/bar
+  +foo/bar
+  ```
+
 ## 0.6.0 (2024-12-30)
 
 ### Feat
