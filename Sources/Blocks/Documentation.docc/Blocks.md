@@ -14,7 +14,7 @@
 ## Links
 
 - [GitHub Repository](https://github.com/dirtyhenry/swift-blocks)
-- [bootstragram.com](https://bootstragram.com) for the journaling part of this
+- [mickf.net](https://mickf.net/tech) for the journaling part of this
 - [statium.app](https://statium.app) for the visible part of my current
   adventures
 
