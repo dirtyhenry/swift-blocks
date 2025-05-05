@@ -147,7 +147,7 @@
 
 - Is this the right URL?
 
-[1]: https://bootstragram.com/blog/slugify-in-swift/
+[1]: https://mickf.net/tech/slugify-in-swift/
 [2]: https://micro.mickf.net/2024/09/30/a-simple-workflow.html
-[3]: https://bootstragram.com/blog/blocks-and-hoods/
+[3]: https://mickf.net/tech/blocks-and-hoods/
 [4]: https://en.wikipedia.org/wiki/Martinet
