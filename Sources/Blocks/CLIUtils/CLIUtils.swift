@@ -125,7 +125,7 @@ public extension CLIUtils {
     ///
     /// [1]: https://stackoverflow.com/a/50035059/455016
     /// [2]: https://www.swiftyplace.com/blog/building-macos-utiltiy-apps
-    static func shell(_ command: String) throws -> String {
+    @discardableResult static func shell(_ command: String) throws -> String {
         let process = Process()
         let pipe = Pipe()
 
