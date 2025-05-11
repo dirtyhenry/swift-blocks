@@ -69,12 +69,13 @@ struct ZipOSSimulator: Comparable, CustomStringConvertible {
         let pattern = #"com\.apple\.CoreSimulator\.SimRuntime\.([a-zA-Z]+)-(\d+)-(\d+)"#
 
         let regex = try? NSRegularExpression(pattern: pattern, options: [])
-        let nsrange = NSRange(identifier.startIndex ..< identifier.endIndex, in: identifier)
+        let nsrange = NSRange(identifier.startIndex..<identifier.endIndex, in: identifier)
 
         if let match = regex?.firstMatch(in: identifier, options: [], range: nsrange) {
             if let osRange = Range(match.range(at: 1), in: identifier),
-               let majorVersionRange = Range(match.range(at: 2), in: identifier),
-               let minorVersionRange = Range(match.range(at: 3), in: identifier) {
+                let majorVersionRange = Range(match.range(at: 2), in: identifier),
+                let minorVersionRange = Range(match.range(at: 3), in: identifier)
+            {
                 let os = identifier[osRange]
                 let majorVersion = identifier[majorVersionRange]
                 let minorVersion = identifier[minorVersionRange]
@@ -87,19 +88,28 @@ struct ZipOSSimulator: Comparable, CustomStringConvertible {
     }
 }
 
-func shell(_ command: String) -> String {
-    let task = Process()
+func shell(_ command: String) throws -> String {
+    let process = Process()
     let pipe = Pipe()
 
-    task.standardOutput = pipe
-    task.standardError = pipe
-    task.arguments = ["-c", command]
-    task.launchPath = "/bin/zsh"
-    task.standardInput = nil
-    task.launch()
+    process.standardOutput = pipe
+    process.standardError = pipe
+    process.arguments = ["-c", command]
+    process.launchPath = "/bin/zsh"
+    process.standardInput = nil
+    try process.run()
 
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
-    let output = String(data: data, encoding: .utf8)!
+    guard let output = String(data: data, encoding: .utf8) else {
+        throw SimpleMessageError(message: "Could not read UTF8 output from command.")
+    }
+
+    process.waitUntilExit()
+
+    guard process.terminationStatus == 0 else {
+        throw SimpleMessageError(
+            message: "Command failed with status \(process.terminationStatus)")
+    }
 
     return output
 }
@@ -124,7 +134,7 @@ func find(osName: String?, deviceName: String?, in rawOutput: String) throws -> 
 if CommandLine.argc != 3 {
     print("Usage: ./\(CommandLine.arguments[0]) \"os\" \"device\"")
 } else {
-    let rawAvailableDevicesJSON = shell("xcrun simctl list --json devices available")
+    let rawAvailableDevicesJSON = try shell("xcrun simctl list --json devices available")
     let filteredZippedResults = try find(
         osName: CommandLine.arguments[1], deviceName: CommandLine.arguments[2],
         in: rawAvailableDevicesJSON
