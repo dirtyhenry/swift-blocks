@@ -101,4 +101,10 @@ final class PlainDateTests: XCTestCase {
     func testCraftURL() throws {
         try XCTAssertEqual(PlainDate(stringLiteral: "2025-05-26").craftURL().absoluteString, "day://2025.05.26")
     }
+
+    func testComparable() throws {
+        XCTAssertTrue(PlainDate(stringLiteral: "2025-05-26") == PlainDate(stringLiteral: "2025-05-26"))
+        XCTAssertTrue(PlainDate(stringLiteral: "2025-05-26") != PlainDate(stringLiteral: "2025-05-27"))
+        XCTAssertTrue(PlainDate(stringLiteral: "2025-05-26") < PlainDate(stringLiteral: "2025-05-27"))
+    }
 }

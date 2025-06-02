@@ -91,11 +91,11 @@ extension PlainDate: ExpressibleByStringLiteral {
     /// let date: PlainDate = "2022-03-02"
     /// ```
     public init(stringLiteral value: String) {
-        if PlainDate(from: value) != nil {
-            self.init(from: value)!
-        } else {
+        guard let instance = PlainDate(from: value) else {
             fatalError("Could not turn \(value) into a DateString.")
         }
+
+        self = instance
     }
 }
 
@@ -146,6 +146,8 @@ extension PlainDate: Strideable {
     }
 }
 
+extension PlainDate: Equatable, Hashable, Comparable {}
+
 public extension PlainDate {
     // MARK: - Weekday and Components
 
@@ -162,8 +164,6 @@ public extension PlainDate {
 
     /// The day of the week for this `PlainDate`.
     var weekday: Weekday {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withFullDate]
         let components = calendar.dateComponents([.weekday], from: date)
         guard let result = Weekday(rawValue: components.weekday!) else {
             fatalError("No weekday found for \(self)")
