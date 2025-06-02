@@ -41,7 +41,10 @@ public struct PlainDate {
     ///   - date: The `Date` to represent.
     ///   - calendar: The calendar to use (default is `.current`).
     public init(date: Date, calendar: Calendar = .current) {
-        self.init(date: date, calendar: calendar, formatter: Self.createFormatter(timeZone: calendar.timeZone))
+        self.init(
+            date: date, calendar: calendar,
+            formatter: Self.createFormatter(timeZone: calendar.timeZone)
+        )
     }
 
     private init(date: Date, calendar: Calendar = .current, formatter: ISO8601DateFormatter) {
@@ -67,7 +70,8 @@ public struct PlainDate {
     public func string(with alternativeFormatter: DateFormatter) -> String {
         #if DEBUG
         if alternativeFormatter.timeStyle != .none {
-            fatalError("Runtime issue: please do not use timeStyle in an alternative formatter.")
+            fatalError(
+                "Runtime issue: please do not use timeStyle in an alternative formatter.")
         }
         #endif
         return alternativeFormatter.string(from: date)
@@ -91,11 +95,11 @@ extension PlainDate: ExpressibleByStringLiteral {
     /// let date: PlainDate = "2022-03-02"
     /// ```
     public init(stringLiteral value: String) {
-        if PlainDate(from: value) != nil {
-            self.init(from: value)!
-        } else {
+        guard let instance = PlainDate(from: value) else {
             fatalError("Could not turn \(value) into a DateString.")
         }
+
+        self = instance
     }
 }
 
@@ -146,6 +150,8 @@ extension PlainDate: Strideable {
     }
 }
 
+extension PlainDate: Equatable, Hashable, Comparable {}
+
 public extension PlainDate {
     // MARK: - Weekday and Components
 
@@ -162,8 +168,6 @@ public extension PlainDate {
 
     /// The day of the week for this `PlainDate`.
     var weekday: Weekday {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withFullDate]
         let components = calendar.dateComponents([.weekday], from: date)
         guard let result = Weekday(rawValue: components.weekday!) else {
             fatalError("No weekday found for \(self)")
@@ -214,3 +218,24 @@ extension PlainDate: Encodable {
 
 @available(*, deprecated, renamed: "PlainDate", message: "Cf. Temporal effort in JS.")
 public typealias DateString = PlainDate
+
+// MARK: - 3rd-Party Apps helpers
+
+public extension PlainDate {
+    /// Creates a custom URL for the current PlainDate instance, using the "day" URL scheme.
+    ///
+    /// The host portion of the URL is the date in ISO 8601 format, but with hyphens replaced by periods
+    /// (for example, 2025-06-02 becomes 2025.06.02). This is intended for integration with third-party
+    /// apps (such as Craft) that recognize or handle this style of date-based linking.
+    func craftURL() throws -> URL {
+        var components = URLComponents()
+        components.scheme = "day"
+        components.host = description.replacingOccurrences(of: "-", with: ".")
+
+        guard let url = components.url else {
+            throw SimpleMessageError(message: "Could not generate Craft URL for date \(self).")
+        }
+
+        return url
+    }
+}
