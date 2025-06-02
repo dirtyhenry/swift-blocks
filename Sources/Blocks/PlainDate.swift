@@ -214,3 +214,19 @@ extension PlainDate: Encodable {
 
 @available(*, deprecated, renamed: "PlainDate", message: "Cf. Temporal effort in JS.")
 public typealias DateString = PlainDate
+
+// MARK: - 3rd-Party Apps helpers
+
+public extension PlainDate {
+    func craftURL() throws -> URL {
+        var components = URLComponents()
+        components.scheme = "day"
+        components.host = description.replacingOccurrences(of: "-", with: ".")
+
+        guard let url = components.url else {
+            throw SimpleMessageError(message: "Could not generate Craft URL for date \(self).")
+        }
+
+        return url
+    }
+}
