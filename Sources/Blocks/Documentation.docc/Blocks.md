@@ -4,7 +4,7 @@
 
 ## Overview
 
-- <doc:Transport>**🌐 Transport.**</doc:Transport> A set of tools and techniques to write simple and low-footprint networking code, that makes  composition and tests easy to write.
+- <doc:Transport> A set of tools and techniques to write simple and low-footprint networking code, that makes  composition and tests easy to write.
 - **API Management**. Some helpers to deal with common pitfalls of the native
   support of JSON API via Swift's `Codable`.
 - **Web tooling**. Create JSON Feeds, sitemaps.
