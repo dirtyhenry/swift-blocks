@@ -11,9 +11,9 @@ on:
 jobs:
   greet:
     name: Find Device ID
-    runs-on: macos-13
+    runs-on: macos-15
     steps:
-      - name: Find iOS 17.2, iPhone 15
+      - name: Find iOS 18.5, iPhone 16
         run: |
           curl \
             --silent \
@@ -21,7 +21,7 @@ jobs:
             --location https://raw.githubusercontent.com/dirtyhenry/swift-blocks/main/Scripts/ListDevices.swift \
             -o listDevices
           chmod +x listDevices
-          DEVICE_ID=$(./listDevices "iOS 17.2" "iPhone 15")
+          DEVICE_ID=$(./listDevices "iOS 18.5" "iPhone 16")
           echo "The output of the script was $DEVICE_ID"
           echo "All available devices are:"
           xcrun simctl list devices available
