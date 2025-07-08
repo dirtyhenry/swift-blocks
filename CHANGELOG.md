@@ -1,3 +1,29 @@
+# Changelog
+
+## 0.8.0
+
+### Minor Changes
+
+- 7780c6a: Add Craft-style URL generation for PlainDate
+
+  Example:
+
+  ```swift
+  let date: PlainDate = "2025-06-02"
+  let url = try date.craftURL()
+  // url is day://2025.06.02
+  ```
+
+### Patch Changes
+
+- d812474: Add `@discardableResult` to `shell` function
+
+  This will help silence warnings in current usage of the `shell` function:
+
+  ```sh
+  - warning: result of call to 'shell' is unused
+  ```
+
 ## 0.7.0
 
 ### Minor Changes
