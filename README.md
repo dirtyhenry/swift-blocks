@@ -42,7 +42,7 @@ Swift Package Manager is recommended:
 dependencies: [
     .package(
         url: "https://github.com/dirtyhenry/swift-blocks",
-        from: "0.7.0"
+        from: "0.8.0"
     ),
 ]
 ```
