@@ -53,14 +53,14 @@ public final class StatusCodeCheckingTransport: Transport {
     let wrapped: Transport
 
     /// A closure defining the expected range of HTTP status codes.
-    let expectedStatusCode: (Int) -> Bool
+    let expectedStatusCode: @Sendable (Int) -> Bool
 
     /// Initializes a `StatusCodeCheckingTransport` instance.
     /// - Parameters:
     ///   - wrapping: The underlying transport to be wrapped.
     ///   - expectedStatusCode: A closure defining the expected range of HTTP status codes.
     ///     Defaults to `expected200to300`.
-    public init(wrapping: Transport, expectedStatusCode: @escaping (Int) -> Bool = expected200to300) {
+    public init(wrapping: Transport, expectedStatusCode: @Sendable @escaping (Int) -> Bool = expected200to300) {
         wrapped = wrapping
         self.expectedStatusCode = expectedStatusCode
     }
