@@ -17,7 +17,7 @@ import Foundation
 ///   print(day)
 /// }
 /// ```
-public struct PlainDate {
+public struct PlainDate: Sendable {
     // MARK: - Creating an instance
 
     /// Creates a plain date from an ISO 8601 string representation.
@@ -32,7 +32,7 @@ public struct PlainDate {
             return nil
         }
 
-        self.init(date: date, calendar: calendar, formatter: formatter)
+        self.init(date: date, calendar: calendar)
     }
 
     /// Creates a plain date from a `Date` object.
@@ -41,21 +41,12 @@ public struct PlainDate {
     ///   - date: The `Date` to represent.
     ///   - calendar: The calendar to use (default is `.current`).
     public init(date: Date, calendar: Calendar = .current) {
-        self.init(
-            date: date, calendar: calendar,
-            formatter: Self.createFormatter(timeZone: calendar.timeZone)
-        )
-    }
-
-    private init(date: Date, calendar: Calendar = .current, formatter: ISO8601DateFormatter) {
-        self.formatter = formatter
         self.date = date
         self.calendar = calendar
     }
 
     // MARK: - Properties
 
-    private let formatter: ISO8601DateFormatter
     let date: Date
     let calendar: Calendar
 
@@ -108,7 +99,7 @@ extension PlainDate: CustomStringConvertible {
 
     /// A string description of the `PlainDate` in ISO 8601 format.
     public var description: String {
-        formatter.string(from: date)
+        Self.createFormatter(timeZone: calendar.timeZone).string(from: date)
     }
 }
 
@@ -117,7 +108,7 @@ extension PlainDate: CustomDebugStringConvertible {
 
     /// A debug description of the `PlainDate` including calendar and time zone details.
     public var debugDescription: String {
-        "\(formatter.string(from: date)) (\(calendar) \(calendar.timeZone) \(date))"
+        "\(Self.createFormatter(timeZone: calendar.timeZone).string(from: date)) (\(calendar) \(calendar.timeZone) \(date))"
     }
 }
 
@@ -146,7 +137,7 @@ extension PlainDate: Strideable {
     /// Advances the date by a specified number of days.
     public func advanced(by value: Int) -> PlainDate {
         let newDate = calendar.date(byAdding: .day, value: value, to: date)!
-        return PlainDate(date: newDate, calendar: calendar, formatter: formatter)
+        return PlainDate(date: newDate, calendar: calendar)
     }
 }
 
