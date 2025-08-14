@@ -2,6 +2,8 @@
 
 @implementation FileSystemExplorer
 
+// TODO: Use https://en.wikipedia.org/wiki/Box-drawing_character
+
 + (NSString *)paddingSpaces:(NSUInteger)level {
     NSMutableString *result = [NSMutableString new];
     for (int i = 0; i < level; i++) {
