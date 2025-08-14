@@ -10,7 +10,7 @@ struct FrontMatter: Codable {
         case openGraph = "_openGraph"
     }
 
-    public init(feed: JSONFeed.Item, openGraph: OpenGraph) {
+    init(feed: JSONFeed.Item, openGraph: OpenGraph) {
         self.feed = feed
         self.openGraph = openGraph
     }

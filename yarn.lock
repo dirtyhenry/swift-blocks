@@ -35,9 +35,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/assemble-release-plan@npm:^6.0.7":
-  version: 6.0.7
-  resolution: "@changesets/assemble-release-plan@npm:6.0.7"
+"@changesets/assemble-release-plan@npm:^6.0.9":
+  version: 6.0.9
+  resolution: "@changesets/assemble-release-plan@npm:6.0.9"
   dependencies:
     "@changesets/errors": "npm:^0.2.0"
     "@changesets/get-dependents-graph": "npm:^2.1.3"
@@ -45,7 +45,7 @@ __metadata:
     "@changesets/types": "npm:^6.1.0"
     "@manypkg/get-packages": "npm:^1.1.3"
     semver: "npm:^7.5.3"
-  checksum: 10c0/a11bd3c6cf963e61497802f9fb9658ac56a38b2859593e12d3b6aa0926533fc374a02ce81889eb144bbef7c6970e35f3d90206dad5efc61e0e6e96bc7c8fce02
+  checksum: 10c0/128f87975f65d9ceb2c997df186a5deae8637fd3868098bb4fb9772f35fdd3b47883ccbdc2761d0468e60a83ef4e2c1561a8e58f8052bfe2daf1ea046803fe1a
   languageName: node
   linkType: hard
 
@@ -58,17 +58,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/cli@npm:^2.29.3":
-  version: 2.29.3
-  resolution: "@changesets/cli@npm:2.29.3"
+"@changesets/cli@npm:^2.29.5":
+  version: 2.29.5
+  resolution: "@changesets/cli@npm:2.29.5"
   dependencies:
     "@changesets/apply-release-plan": "npm:^7.0.12"
-    "@changesets/assemble-release-plan": "npm:^6.0.7"
+    "@changesets/assemble-release-plan": "npm:^6.0.9"
     "@changesets/changelog-git": "npm:^0.2.1"
     "@changesets/config": "npm:^3.1.1"
     "@changesets/errors": "npm:^0.2.0"
     "@changesets/get-dependents-graph": "npm:^2.1.3"
-    "@changesets/get-release-plan": "npm:^4.0.11"
+    "@changesets/get-release-plan": "npm:^4.0.13"
     "@changesets/git": "npm:^3.0.4"
     "@changesets/logger": "npm:^0.1.1"
     "@changesets/pre": "npm:^2.0.2"
@@ -92,7 +92,7 @@ __metadata:
     term-size: "npm:^2.1.0"
   bin:
     changeset: bin.js
-  checksum: 10c0/6f3fd34d67e8ce9f19b8bc794ed353f0332e6c85016d3c0eceed62023ec3d1f5daa3d378dcfb3d2cdfc852bdb06e93f3df6f7b44076d269b10cc986aa129339d
+  checksum: 10c0/7a83c7a38f636b09d049255180f9abf67b05c49237c7212a03da5f484af117bb5fd071352ba55e7d95b87e1d1aca922c45e5f93bb208ebec65e8d3f8b7cd955b
   languageName: node
   linkType: hard
 
@@ -132,17 +132,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/get-release-plan@npm:^4.0.11":
-  version: 4.0.11
-  resolution: "@changesets/get-release-plan@npm:4.0.11"
+"@changesets/get-release-plan@npm:^4.0.13":
+  version: 4.0.13
+  resolution: "@changesets/get-release-plan@npm:4.0.13"
   dependencies:
-    "@changesets/assemble-release-plan": "npm:^6.0.7"
+    "@changesets/assemble-release-plan": "npm:^6.0.9"
     "@changesets/config": "npm:^3.1.1"
     "@changesets/pre": "npm:^2.0.2"
     "@changesets/read": "npm:^0.6.5"
     "@changesets/types": "npm:^6.1.0"
     "@manypkg/get-packages": "npm:^1.1.3"
-  checksum: 10c0/ce8f033ba6ec83292ab9b2924dbb9307ef3c1af37f2ec125ebddf6ef164bd612d838dcbda26a27c21dfaf348ca205f2ab97663efddddf0b70636102c83639a73
+  checksum: 10c0/908fea784ced29764e02065da6d3d0f1e6590d1c8ac77504efe5879ef183de7a01b2da0be210caa28fc10159125da10540f4bcb6917d371988e50c5b984edd07
   languageName: node
   linkType: hard
 
@@ -917,7 +917,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "swift-blocks@workspace:."
   dependencies:
-    "@changesets/cli": "npm:^2.29.3"
+    "@changesets/cli": "npm:^2.29.5"
   languageName: unknown
   linkType: soft
 
