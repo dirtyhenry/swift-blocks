@@ -14,8 +14,8 @@ import FoundationNetworking
 public final class RetryTransport: Transport {
     let wrapped: Transport
 
-    let canRetry: (Error, Int) -> Bool
-    let delay: (Int) async -> Void
+    let canRetry: @Sendable (Error, Int) -> Bool
+    let delay: @Sendable (Int) async -> Void
 
     /// Initializes a new `RetryTransport` instance.
     ///
@@ -26,8 +26,8 @@ public final class RetryTransport: Transport {
     ///   - delay: A closure that specifies the delay before the next retry attempt.
     public init(
         wrapping: Transport,
-        canRetry: @escaping (Error, Int) -> Bool = max(of: 3),
-        delay: @escaping (Int) async -> Void = noDelay
+        canRetry: @Sendable @escaping (Error, Int) -> Bool = max(of: 3),
+        delay: @Sendable @escaping (Int) async -> Void = noDelay
     ) {
         wrapped = wrapping
         self.canRetry = canRetry
@@ -64,7 +64,7 @@ public final class RetryTransport: Transport {
 
     // - MARK: Retry strategies
 
-    public static func max(of maxNumberOfAttempts: Int) -> ((Error, Int) -> Bool) {
+    public static func max(of maxNumberOfAttempts: Int) -> (@Sendable (Error, Int) -> Bool) {
         { _, nbAttempt in
             nbAttempt < maxNumberOfAttempts
         }
