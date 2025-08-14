@@ -5,8 +5,6 @@
 xcuserdata/
 DerivedData/
 .swiftpm
-.claude/
-CLAUDE.md
 
 scratchpad.md
 /Examples/.build
