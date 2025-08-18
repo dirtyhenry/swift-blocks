@@ -6,7 +6,7 @@ import FoundationNetworking
 /// A type that can transport URL requests to a server-like target.
 @available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
-public protocol Transport {
+public protocol Transport: Sendable {
     func send(
         urlRequest: URLRequest,
         delegate: URLSessionTaskDelegate?

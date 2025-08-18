@@ -39,7 +39,8 @@ final class RetryTransportTests: XCTestCase {
         let (data, response) = try await sut.send(urlRequest: DummyURLRequest.create(), delegate: nil)
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(data, recoveringTransport.mockTransport.data)
-        XCTAssertEqual(recoveringTransport.nbOfCalls, 3)
+        let nbOfCalls = await recoveringTransport.nbOfCalls
+        XCTAssertEqual(nbOfCalls, 3)
     }
 
     func testRecoveringWithShortDelay() async throws {
@@ -53,7 +54,8 @@ final class RetryTransportTests: XCTestCase {
         let after = Date()
         XCTAssertEqual(response.statusCode, 200)
         XCTAssertEqual(data, mockTransport.mockTransport.data)
-        XCTAssertEqual(mockTransport.nbOfCalls, 3)
+        let nbOfCalls = await mockTransport.nbOfCalls
+        XCTAssertEqual(nbOfCalls, 3)
         let duration = after.timeIntervalSinceReferenceDate - before.timeIntervalSinceReferenceDate
         XCTAssert(duration > 0.4)
         if isRunningOnDeveloperMachine() {
@@ -81,7 +83,7 @@ struct ThrowingTransport: Transport {
 
 @available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
-class RecoveringTransport: Transport {
+actor RecoveringTransport: Transport {
     let mockTransport: MockTransport
     let throwingTransport: ThrowingTransport
     let maxNumberOfCalls: Int
@@ -98,7 +100,11 @@ class RecoveringTransport: Transport {
         self.maxNumberOfCalls = maxNumberOfCalls
     }
 
-    func send(urlRequest: URLRequest, delegate: (any URLSessionTaskDelegate)?) async throws -> (Data, HTTPURLResponse) {
+    nonisolated func send(urlRequest: URLRequest, delegate: (any URLSessionTaskDelegate)?) async throws -> (Data, HTTPURLResponse) {
+        try await incrementAndSend(urlRequest: urlRequest, delegate: delegate)
+    }
+
+    private func incrementAndSend(urlRequest: URLRequest, delegate: (any URLSessionTaskDelegate)?) async throws -> (Data, HTTPURLResponse) {
         nbOfCalls = nbOfCalls + 1
         if nbOfCalls < maxNumberOfCalls {
             return try await throwingTransport.send(urlRequest: urlRequest, delegate: delegate)
