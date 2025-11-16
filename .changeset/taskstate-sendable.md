@@ -2,4 +2,4 @@
 "swift-blocks": patch
 ---
 
-Add Sendable conformance to TaskState enum
+Add `Sendable` conformance to `TaskState` enum
