@@ -5,13 +5,11 @@
 /// - `running`: The task is currently running. (Future improvement: this state could optionally include a cancellable object.)
 /// - `completed`: The task has completed successfully.
 /// - `failed(errorDescription: String)`: The task has failed, and the reason for the failure is provided as a string.
-public enum TaskState: Equatable {
+public enum TaskState: Equatable, Sendable {
     /// The task has not started yet.
     case notStarted
 
     /// The task is currently running.
-    ///
-    /// TODO: Add an optional cancellable to the running state to handle cancellation scenarios in the future.
     case running
 
     /// The task has completed successfully.
@@ -40,21 +38,3 @@ extension TaskState: CustomStringConvertible {
         }
     }
 }
-
-// MARK: - Usage Example
-
-/// Example of how to use `TaskState`.
-///
-/// ```
-/// var currentState: TaskState = .notStarted
-/// print(currentState) // Prints "Not started"
-///
-/// currentState = .running
-/// print(currentState) // Prints "Running"
-///
-/// currentState = .completed
-/// print(currentState) // Prints "Completed"
-///
-/// currentState = .failed(errorDescription: "Network error")
-/// print(currentState) // Prints "Failed"
-/// ```
