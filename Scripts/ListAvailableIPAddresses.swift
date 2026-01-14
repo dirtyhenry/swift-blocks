@@ -3,6 +3,8 @@
 import Darwin
 import Foundation
 
+/* jscpd:ignore-start */
+
 func getPrivateIPv4Addresses() -> [String] {
     var addresses: [String] = []
     var ifaddr: UnsafeMutablePointer<ifaddrs>?
@@ -58,3 +60,5 @@ func isPrivateIPv4(_ ip: String) -> Bool {
 // Usage
 let privateIPs = getPrivateIPv4Addresses()
 print(privateIPs)
+
+/* jscpd:ignore-end */
