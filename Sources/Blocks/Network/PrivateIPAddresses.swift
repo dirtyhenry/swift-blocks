@@ -63,6 +63,9 @@ public func isPrivateIPv4(_ ip: String) -> Bool {
     let components = ip.split(separator: ".").compactMap { Int($0) }
     guard components.count == 4 else { return false }
 
+    // Validate all octets are in valid IPv4 range
+    guard components.allSatisfy({ (0 ... 255).contains($0) }) else { return false }
+
     let (a, b) = (components[0], components[1])
 
     // 10.0.0.0/8
