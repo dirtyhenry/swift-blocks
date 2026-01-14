@@ -19,6 +19,7 @@
 		008D62CC2A56C35800254FD9 /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008D62CB2A56C35800254FD9 /* ImagePickerView.swift */; };
 		008D62CE2A56C96E00254FD9 /* MailComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008D62CD2A56C96E00254FD9 /* MailComposeView.swift */; };
 		008D62D02A56EA1500254FD9 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 008D62CF2A56EA1500254FD9 /* UniformTypeIdentifiers.framework */; };
+		00925B672F18037C00C00699 /* IPAddressScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00925B662F18037C00C00699 /* IPAddressScannerView.swift */; };
 		00A12BF42CC0F84B0006D9F7 /* TransportDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A12BF32CC0F8450006D9F7 /* TransportDemoView.swift */; };
 		00A274EA2D1EC88B00A2DD67 /* FormPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A274E92D1EC88B00A2DD67 /* FormPlaygroundView.swift */; };
 		00A37E302B1911A800FA4B5F /* FileSystemExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */; };
@@ -63,6 +64,7 @@
 		008D62CB2A56C35800254FD9 /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		008D62CD2A56C96E00254FD9 /* MailComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposeView.swift; sourceTree = "<group>"; };
 		008D62CF2A56EA1500254FD9 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
+		00925B662F18037C00C00699 /* IPAddressScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddressScannerView.swift; sourceTree = "<group>"; };
 		00A12BF32CC0F8450006D9F7 /* TransportDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportDemoView.swift; sourceTree = "<group>"; };
 		00A274E92D1EC88B00A2DD67 /* FormPlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormPlaygroundView.swift; sourceTree = "<group>"; };
 		00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSystemExplorerView.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 		008D62CA2A56C2AF00254FD9 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				00925B662F18037C00C00699 /* IPAddressScannerView.swift */,
 				00A12BF32CC0F8450006D9F7 /* TransportDemoView.swift */,
 				008D62CB2A56C35800254FD9 /* ImagePickerView.swift */,
 				008D62CD2A56C96E00254FD9 /* MailComposeView.swift */,
@@ -339,6 +342,7 @@
 				00A274EA2D1EC88B00A2DD67 /* FormPlaygroundView.swift in Sources */,
 				002136DD2B57C2570031AE9A /* PlainDateDemoView.swift in Sources */,
 				00A12BF42CC0F84B0006D9F7 /* TransportDemoView.swift in Sources */,
+				00925B672F18037C00C00699 /* IPAddressScannerView.swift in Sources */,
 				00333CCB2C45682900A58365 /* SlugifyView.swift in Sources */,
 				00D1E24A2A36327100E8D275 /* ContentView.swift in Sources */,
 				007314A72AF00BFC0092F234 /* FontsView.swift in Sources */,
