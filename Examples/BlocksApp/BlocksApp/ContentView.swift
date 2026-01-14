@@ -12,6 +12,7 @@ struct ContentView: View {
         case bg = "Background test"
         #endif
         case fileSystemExplorer = "FileSystem Explorer"
+        case ipAddressScanner = "IP Address Scanner"
         case plainDateDemo = "PlainDate demo"
         case loggingPlayground = "Logging Playground"
         case slugifyPlayground = "Slugify Playground"
@@ -100,6 +101,8 @@ struct ContentView: View {
                         Button("Explore") {
                             explore()
                         }
+                    case .ipAddressScanner:
+                        IPAddressScannerView()
                     case .plainDateDemo:
                         PlainDateDemoView()
                     case .taskStateDemo:
