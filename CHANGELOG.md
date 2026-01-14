@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.9.0
+
+### Minor Changes
+
+- 9fe32c6: Add `getPrivateIPv4Addresses()` function to retrieve private IPv4
+  addresses from network interfaces
+
+### Patch Changes
+
+- 129cda2: Make `PlainDate` conform to `Sendable`
+
+  Remove stored `ISO8601DateFormatter` instance which wasn't
+  `Sendable`-compliant, and instead create formatter on-demand when needed for
+  string conversion. This maintains the same functionality while making
+  `PlainDate` thread-safe and suitable for concurrent contexts.
+
+- 438bc6c: Fix `Sendable` conformance for `RetryTransport` and
+  `StatusCodeCheckingTransport`
+
+  - Added `@Sendable` attributes to closure parameters and properties in
+    `RetryTransport`
+  - Added `@Sendable` attributes to closure parameters and properties in
+    `StatusCodeCheckingTransport`
+  - Updated `RetryTransport.max(of:)` to return a `@Sendable` closure
+  - Both transport classes now properly conform to `Sendable` protocol
+    requirements
+
+- 5a918f1: Enhance SlugifyView UI with modern card-based layout, improved
+  styling, and copy confirmation feedback
+- 505e787: Add `Sendable` conformance to `TaskState` enum
+
 ## 0.8.0
 
 ### Minor Changes
