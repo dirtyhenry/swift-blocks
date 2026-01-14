@@ -23,13 +23,20 @@ public func getPrivateIPv4Addresses() -> [String] {
     var ptr = firstAddr
     while true {
         let interface = ptr.pointee
-        let family = interface.ifa_addr.pointee.sa_family
+
+        // Skip interfaces without an address (can happen for unconfigured interfaces)
+        guard let addr = interface.ifa_addr else {
+            guard let next = interface.ifa_next else { break }
+            ptr = next
+            continue
+        }
+
+        let family = addr.pointee.sa_family
 
         if family == UInt8(AF_INET) {
             var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
-            let addr = interface.ifa_addr
 
-            if getnameinfo(addr, socklen_t(interface.ifa_addr.pointee.sa_len),
+            if getnameinfo(addr, socklen_t(addr.pointee.sa_len),
                            &hostname, socklen_t(hostname.count),
                            nil, 0, NI_NUMERICHOST) == 0 {
                 let ip = hostname.withUnsafeBufferPointer { buffer in
