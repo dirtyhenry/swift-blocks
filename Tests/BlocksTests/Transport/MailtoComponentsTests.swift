@@ -19,7 +19,7 @@ final class MailtoComponentsTests: XCTestCase {
         dump(components)
     }
 
-    func testBuildingLikeURLComponents() throws {
+    func testBuildingLikeURLComponents() {
         var sut = MailtoComponents()
         sut.recipient = "foo@bar.tld"
         sut.subject = "My Subject"
@@ -32,7 +32,7 @@ final class MailtoComponentsTests: XCTestCase {
         XCTAssertEqual(mailToURL?.absoluteString, "mailto:foo@bar.tld?subject=My%20Subject&body=A%20dummy%20text%0D%0Awith%20paragraphs.")
     }
 
-    func testBuildingLikeMFMailComposeViewController() throws {
+    func testBuildingLikeMFMailComposeViewController() {
         var sut = MailtoComponents()
         sut.setToRecipient("foo@bar.tld")
         sut.setSubject("My Subject")

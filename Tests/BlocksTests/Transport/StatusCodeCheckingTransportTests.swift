@@ -17,12 +17,12 @@ final class StatusCodeCheckingTransportTests: XCTestCase {
 
     func testThrowing() async throws {
         let expectation = expectation(description: "Transport will throw")
-        let mockTransport = MockTransport(response: HTTPURLResponse(
-            url: URL(string: "https://github.com/dirtyhenry/swift-blocks")!,
+        let mockTransport = try MockTransport(response: XCTUnwrap(try HTTPURLResponse(
+            url: XCTUnwrap(URL(string: "https://github.com/dirtyhenry/swift-blocks")),
             statusCode: 404,
             httpVersion: nil,
             headerFields: nil
-        )!)
+        )))
 
         let sut = StatusCodeCheckingTransport(wrapping: mockTransport)
 

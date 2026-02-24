@@ -5,8 +5,8 @@ import FoundationNetworking
 import XCTest
 
 final class URLRequestHeaderItemTests: XCTestCase {
-    func testBasic() async throws {
-        var request = URLRequest(url: URL(string: "https://foo.tld/bar")!)
+    func testBasic() throws {
+        var request = try URLRequest(url: XCTUnwrap(URL(string: "https://foo.tld/bar")))
         // This is an example from the [RFC 7617](https://datatracker.ietf.org/doc/html/rfc7617):
         //
         // > If the user agent wishes to send the user-id "Aladdin" and password

@@ -2,7 +2,7 @@
 import XCTest
 
 final class PlainDateTests: XCTestCase {
-    func testBasicUsage() throws {
+    func testBasicUsage() {
         let randomDate: PlainDate = "2022-01-19"
         XCTAssertEqual(randomDate.description, "2022-01-19")
         XCTAssertEqual(randomDate.advanced(by: 1).description, "2022-01-20")
@@ -12,20 +12,20 @@ final class PlainDateTests: XCTestCase {
 
     func testDaylightSavingTimePeriods() throws {
         // In France, time will change on March 27th in 2022.
-        let march26 = PlainDate(from: "2022-03-26", calendar: .parisCalendar())!
+        let march26 = try XCTUnwrap(PlainDate(from: "2022-03-26", calendar: .parisCalendar()))
         XCTAssertEqual(march26.description, "2022-03-26")
         XCTAssertEqual(march26.advanced(by: 1).description, "2022-03-27")
         XCTAssertEqual(march26.advanced(by: 2).description, "2022-03-28")
 
         // In New York, time will change on March 13th in 2022.
-        let march12 = PlainDate(from: "2022-03-12", calendar: .newYorkCalendar())!
+        let march12 = try XCTUnwrap(PlainDate(from: "2022-03-12", calendar: .newYorkCalendar()))
         XCTAssertEqual(march12.description, "2022-03-12")
         XCTAssertEqual(march12.advanced(by: 1).description, "2022-03-13")
         XCTAssertEqual(march12.advanced(by: 2).description, "2022-03-14")
     }
 
     func testFormattingRangeOfDates() throws {
-        let march1st = PlainDate(from: "2022-03-01", calendar: .parisCalendar())!
+        let march1st = try XCTUnwrap(PlainDate(from: "2022-03-01", calendar: .parisCalendar()))
         let aWeekLater = march1st.advanced(by: 7)
         let range = march1st ..< aWeekLater
 
@@ -37,7 +37,7 @@ final class PlainDateTests: XCTestCase {
     }
 
     func testDistanceOfDatesIsConsistent() throws {
-        let januaryFirst = PlainDate(from: "2022-01-01", calendar: .parisCalendar())!
+        let januaryFirst = try XCTUnwrap(PlainDate(from: "2022-01-01", calendar: .parisCalendar()))
 
         measure {
             for offset in 1 ... 10000 {
@@ -62,7 +62,7 @@ final class PlainDateTests: XCTestCase {
     }
 
     func testDecodable() throws {
-        let mockCodable = try JSONDecoder().decode(MockCodable.self, from: mockJSON.data(using: .utf8)!)
+        let mockCodable = try JSONDecoder().decode(MockCodable.self, from: XCTUnwrap(mockJSON.data(using: .utf8)))
         XCTAssertEqual("2022-01-19", mockCodable.dateString.description)
     }
 
@@ -102,7 +102,7 @@ final class PlainDateTests: XCTestCase {
         try XCTAssertEqual(PlainDate(stringLiteral: "2025-05-26").craftURL().absoluteString, "day://2025.05.26")
     }
 
-    func testComparable() throws {
+    func testComparable() {
         XCTAssertTrue(PlainDate(stringLiteral: "2025-05-26") == PlainDate(stringLiteral: "2025-05-26"))
         XCTAssertTrue(PlainDate(stringLiteral: "2025-05-26") != PlainDate(stringLiteral: "2025-05-27"))
         XCTAssertTrue(PlainDate(stringLiteral: "2025-05-26") < PlainDate(stringLiteral: "2025-05-27"))

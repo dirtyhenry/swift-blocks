@@ -63,5 +63,5 @@ public struct MailtoComponents {
     }
 }
 
-// This conformance can be useful to work with `swift-composable-architecture`.
+/// This conformance can be useful to work with `swift-composable-architecture`.
 extension MailtoComponents: Equatable {}

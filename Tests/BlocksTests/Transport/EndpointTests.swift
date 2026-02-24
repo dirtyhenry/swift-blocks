@@ -1,9 +1,8 @@
+@testable import Blocks
 import XCTest
 
-@testable import Blocks
-
 final class EndpointTests: XCTestCase {
-    func testBasic() async throws {
+    func testBasic() throws {
         let url = try XCTUnwrap(URL(string: "https://foo.tld/bar"))
         let endpoint = Endpoint<String>(
             json: .get,

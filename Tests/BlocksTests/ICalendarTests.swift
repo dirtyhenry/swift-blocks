@@ -6,11 +6,11 @@ final class ICalendarTests: XCTestCase {
     func testBasicUsage() throws {
         var iCalendarObject = ICalendarObject(productIdentifier: productIdentifier)
 
-        let event = ICalendarEventComponent(
+        let event = try ICalendarEventComponent(
             uid: "19970901T130000Z-123401@example.com",
-            dateTimeStamp: dateFormatter.date(from: "19970901T130000Z")!,
-            dateTimeStart: dateFormatter.date(from: "19970903T163000Z")!,
-            dateTimeEnd: dateFormatter.date(from: "19970903T190000Z")!,
+            dateTimeStamp: XCTUnwrap(dateFormatter.date(from: "19970901T130000Z")),
+            dateTimeStart: XCTUnwrap(dateFormatter.date(from: "19970903T163000Z")),
+            dateTimeEnd: XCTUnwrap(dateFormatter.date(from: "19970903T190000Z")),
             summary: "Annual Employee Review",
             description: "Some more details here."
         )
@@ -34,7 +34,7 @@ final class ICalendarTests: XCTestCase {
         XCTAssertEqual(iCalendarObject.iCalString(), expectedICAL)
     }
 
-    func testWithNameAndDescription() throws {
+    func testWithNameAndDescription() {
         var iCalendarObject = ICalendarObject(productIdentifier: productIdentifier)
         iCalendarObject.name = "My Calendar Name"
         iCalendarObject.description = "A description of my calendar"
@@ -59,11 +59,11 @@ final class ICalendarTests: XCTestCase {
         let skipTimezoneDateFormatter = ISO8601DateFormatter()
         skipTimezoneDateFormatter.formatOptions = [.withYear, .withMonth, .withDay, .withTime]
 
-        let event = ICalendarEventComponent(
+        let event = try ICalendarEventComponent(
             uid: "19970901T130000Z-123401@example.com",
-            dateTimeStamp: dateFormatter.date(from: "19970901T130000Z")!,
-            dateTimeStart: dateFormatter.date(from: "19970903T163000Z")!,
-            dateTimeEnd: dateFormatter.date(from: "19970903T190000Z")!,
+            dateTimeStamp: XCTUnwrap(dateFormatter.date(from: "19970901T130000Z")),
+            dateTimeStart: XCTUnwrap(dateFormatter.date(from: "19970903T163000Z")),
+            dateTimeEnd: XCTUnwrap(dateFormatter.date(from: "19970903T190000Z")),
             summary: "Annual Employee Review",
             description: "Some more details here.",
             dateFormatter: skipTimezoneDateFormatter

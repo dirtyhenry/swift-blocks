@@ -83,7 +83,6 @@ struct IPAddressScannerView: View {
         #endif
     }
 
-    @ViewBuilder
     private func addressRow(_ address: String) -> some View {
         HStack {
             Text(address)

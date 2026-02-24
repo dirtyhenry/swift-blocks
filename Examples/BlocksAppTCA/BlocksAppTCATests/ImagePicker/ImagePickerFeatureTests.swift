@@ -1,7 +1,6 @@
+@testable import BlocksAppTCA
 import ComposableArchitecture
 import XCTest
-
-@testable import BlocksAppTCA
 
 @MainActor
 final class ImagePickerFeatureTests: XCTestCase {

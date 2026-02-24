@@ -2,7 +2,7 @@ import Blocks
 import XCTest
 
 final class PasteboardTests: XCTestCase {
-    func testBasicUsage() throws {
+    func testBasicUsage() {
         let pasteboard = Pasteboard()
         pasteboard.copy(text: "8137538166")
 

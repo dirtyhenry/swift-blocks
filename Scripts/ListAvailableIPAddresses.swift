@@ -67,7 +67,7 @@ func isPrivateIPv4(_ ip: String) -> Bool {
     return false
 }
 
-// Usage
+/// Usage
 let privateIPs = getPrivateIPv4Addresses()
 print(privateIPs)
 

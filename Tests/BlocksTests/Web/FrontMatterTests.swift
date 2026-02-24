@@ -1,10 +1,9 @@
-import XCTest
-
 @testable import Blocks
+import XCTest
 
 final class FrontMatterTests: XCTestCase {
     func makeSampleFrontMatter() -> FrontMatter {
-        let frontMatter = FrontMatter(
+        return FrontMatter(
             feed: .init(
                 id: "my-post",
                 url: URL(string: "https://example.org/my-post")!,
@@ -20,10 +19,9 @@ final class FrontMatterTests: XCTestCase {
                 type: .article
             )
         )
-        return frontMatter
     }
 
-    func testFrontMatterEncoding() throws {
+    func testFrontMatterEncoding() {
         let sut = makeSampleFrontMatter()
         let json = JSON.stringify(sut, encoder: JSONFeed.createEncoder())
         XCTAssertEqual(json.count, 275)

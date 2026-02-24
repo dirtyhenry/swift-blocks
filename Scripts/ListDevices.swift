@@ -1,6 +1,6 @@
 #!/usr/bin/swift
 
-/**
+/*
  * -----------------------------------------------------------------------------
  * Find Simulator UDID Script
  * -----------------------------------------------------------------------------
@@ -207,7 +207,8 @@ struct ZipOSSimulator: Comparable, CustomStringConvertible {
 
     guard process.terminationStatus == 0 else {
         throw SimpleMessageError(
-            message: "Command failed with status \(process.terminationStatus)")
+            message: "Command failed with status \(process.terminationStatus)"
+        )
     }
 
     return output
@@ -224,7 +225,8 @@ func find(osName: String?, deviceName: String?, in rawOutput: String) throws -> 
                         osIdentifier: newItem.key,
                         simulator: $0
                     )
-                })
+                }
+            )
         }
         .filter { osName == nil ? true : $0.formattedOS == osName }
         .filter { deviceName == nil ? true : $0.simulator.name == deviceName }

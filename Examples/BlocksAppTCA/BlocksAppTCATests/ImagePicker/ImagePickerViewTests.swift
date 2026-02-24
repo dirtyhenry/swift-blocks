@@ -1,11 +1,10 @@
+@testable import BlocksAppTCA
 import ComposableArchitecture
 import SnapshotTesting
 import XCTest
 
-@testable import BlocksAppTCA
-
 final class ImagePickerViewTests: XCTestCase {
-    func testView() throws {
+    func testView() {
         let store = Store(initialState: ImagePickerFeature.State()) {
             ImagePickerFeature()
         }

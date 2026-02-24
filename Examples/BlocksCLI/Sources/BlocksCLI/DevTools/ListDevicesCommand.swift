@@ -53,7 +53,8 @@ struct ListDevicesCommand: ParsableCommand {
                             osIdentifier: newItem.key,
                             simulator: $0
                         )
-                    })
+                    }
+                )
             }
     }
 }
