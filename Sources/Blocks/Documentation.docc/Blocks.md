@@ -10,6 +10,8 @@
 - **Web tooling**. Create JSON Feeds, sitemaps.
 - **Data Management**. Convert data to hexadecimal or base 64 at ease.
 - **iCalendar Objects**. Create ical documents.
+- <doc:StyledText> Compose colored and formatted text for command-line interfaces.
+- <doc:InteractiveShell> Run external commands with full terminal access.
 
 ## Links
 
@@ -27,3 +29,5 @@
 - <doc:WebTooling>
 - <doc:DataManagement>
 - <doc:Calendar>
+- <doc:StyledText>
+- <doc:InteractiveShell>
