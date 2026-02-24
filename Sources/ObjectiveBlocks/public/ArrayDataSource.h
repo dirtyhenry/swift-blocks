@@ -3,7 +3,7 @@
 #import <Foundation/Foundation.h>
 #import "CommonDataSource.h"
 
-#if TARGET_OS_PHONE
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 
 /**
