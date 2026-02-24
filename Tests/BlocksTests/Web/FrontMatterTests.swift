@@ -3,7 +3,7 @@ import XCTest
 
 final class FrontMatterTests: XCTestCase {
     func makeSampleFrontMatter() -> FrontMatter {
-        return FrontMatter(
+        FrontMatter(
             feed: .init(
                 id: "my-post",
                 url: URL(string: "https://example.org/my-post")!,

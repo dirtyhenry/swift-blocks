@@ -230,6 +230,16 @@ public extension CLIUtils {
         var status: Int32 = 0
         waitpid(pid, &status, 0)
 
+        // POSIX wait-status macros are C macros not bridged to Swift,
+        // so we replicate their logic here.
+        if (status & 0x7F) != 0 {
+            // WIFSIGNALED: the process was terminated by a signal.
+            let signal = status & 0x7F
+            throw SimpleMessageError(
+                message: "Command terminated by signal \(signal)"
+            )
+        }
+
         let exitCode = (status >> 8) & 0xFF
         guard exitCode == 0 else {
             throw SimpleMessageError(

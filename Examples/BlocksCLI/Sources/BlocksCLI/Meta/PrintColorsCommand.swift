@@ -40,10 +40,12 @@ struct PrintColorsCommand: ParsableCommand {
         print("\("bold".bold) \("dim".dim) \("italic".italic) \("underline".underline) \("strikethrough".strikethrough)")
         CLIUtils.write(parts: "Status: ".white.bold, "OK".green.bold)
 
-        let choice = try CLIUtils.interactiveShell(
-            "gum choose \"fix\" \"feat\" \"docs\" \"style\" \"refactor\" \"test\" \"chore\" \"revert\"",
-            captureOutput: true
-        )
-        print("You chose: \(choice ?? "nothing")")
+        if isatty(STDIN_FILENO) != 0 {
+            let choice = try CLIUtils.interactiveShell(
+                "command -v gum >/dev/null && gum choose \"fix\" \"feat\" \"docs\" \"style\" \"refactor\" \"test\" \"chore\" \"revert\"",
+                captureOutput: true
+            )
+            print("You chose: \(choice ?? "nothing (gum not installed)")")
+        }
     }
 }
