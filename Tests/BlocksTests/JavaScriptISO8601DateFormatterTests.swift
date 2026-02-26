@@ -21,7 +21,7 @@ final class JavaScriptISO8601DateFormatterTests: XCTestCase {
         {"message":"👋","creationDate":"\(arbitraryDateAsString)"}
         """
 
-        let payload = try JSONDecoder.javaScriptISO8601().decode(SamplePayload.self, from: json.data(using: .utf8)!)
+        let payload = try JSONDecoder.javaScriptISO8601().decode(SamplePayload.self, from: XCTUnwrap(json.data(using: .utf8)))
         XCTAssertEqual(payload.message, "👋")
         XCTAssertEqual(payload.creationDate, arbitraryDate)
     }
@@ -29,7 +29,7 @@ final class JavaScriptISO8601DateFormatterTests: XCTestCase {
     func testEncoding() throws {
         let payload = SamplePayload(message: "👋", creationDate: arbitraryDate)
         let jsonData = try JSONEncoder.javaScriptISO8601().encode(payload)
-        let jsonString = String(data: jsonData, encoding: .utf8)!
+        let jsonString = try XCTUnwrap(String(data: jsonData, encoding: .utf8))
         XCTAssert(jsonString.contains("\"creationDate\":\"\(arbitraryDateAsString)\""))
         XCTAssert(jsonString.contains("\"message\":\"👋\""))
     }
@@ -38,13 +38,13 @@ final class JavaScriptISO8601DateFormatterTests: XCTestCase {
         XCTAssertEqual(JavaScriptISO8601DateFormatter.date(from: arbitraryDateAsString), arbitraryDate)
     }
 
-    func testInvalidDate() {
+    func testInvalidDate() throws {
         // This is the output of `JSON.stringify({ message: '👋', creationDate: new Date() })` in JS.
         let json = """
         {"message":"👋","creationDate":"2022:01-19T21:21:33.983Z"}
         """
 
-        XCTAssertThrowsError(try JSONDecoder.javaScriptISO8601().decode(SamplePayload.self, from: json.data(using: .utf8)!)) {
+        XCTAssertThrowsError(try JSONDecoder.javaScriptISO8601().decode(SamplePayload.self, from: XCTUnwrap(json.data(using: .utf8)))) {
             #if os(Linux)
             XCTAssertEqual(
                 $0.localizedDescription,

@@ -26,7 +26,7 @@ final class SwiftJSONFeedTests: XCTestCase {
         XCTAssertEqual(jsonFeedString.count, 362)
     }
 
-    func testPerformanceExample() throws {
+    func testPerformanceExample() {
         let encoder = JSONFeed.createEncoder()
         let sampleFeed = makeSampleFeed()
         measure {
@@ -41,6 +41,6 @@ final class SwiftJSONFeedTests: XCTestCase {
         let feed = try decoder.decode(JSONFeed.self, fromResource: "sample-feed", in: Bundle.module)
         XCTAssertEqual(feed.version, "https://jsonfeed.org/version/1")
         XCTAssertEqual(feed.title, "JSON Feed")
-        XCTAssertEqual(feed.items.first!.datePublished, Date(timeIntervalSince1970: 1_596_818_676))
+        XCTAssertEqual(feed.items.first?.datePublished, Date(timeIntervalSince1970: 1_596_818_676))
     }
 }

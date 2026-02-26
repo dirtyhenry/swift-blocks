@@ -62,7 +62,8 @@ public struct PlainDate: Sendable {
         #if DEBUG
         if alternativeFormatter.timeStyle != .none {
             fatalError(
-                "Runtime issue: please do not use timeStyle in an alternative formatter.")
+                "Runtime issue: please do not use timeStyle in an alternative formatter."
+            )
         }
         #endif
         return alternativeFormatter.string(from: date)

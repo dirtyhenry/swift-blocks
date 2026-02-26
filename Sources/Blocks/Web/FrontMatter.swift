@@ -3,10 +3,12 @@ struct FrontMatter: Codable {
     let feed: JSONFeed.Item
     let openGraph: OpenGraph?
 
-    subscript<T>(dynamicMember keyPath: WritableKeyPath<JSONFeed.Item, T>) -> T { feed[keyPath: keyPath] }
+    subscript<T>(dynamicMember keyPath: WritableKeyPath<JSONFeed.Item, T>) -> T {
+        feed[keyPath: keyPath]
+    }
 
     enum SubCodingKeys: String, CodingKey {
-        // In case we want to use snakeCase everywhere, we just need to add the extra `_` here.
+        /// In case we want to use snakeCase everywhere, we just need to add the extra `_` here.
         case openGraph = "_openGraph"
     }
 

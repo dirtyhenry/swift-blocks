@@ -2,7 +2,7 @@ import Blocks
 import XCTest
 
 final class DataFormatterTests: XCTestCase {
-    func testDataFormatterBasicUsage() throws {
+    func testDataFormatterBasicUsage() {
         let bytes: [UInt8] = Array(0 ... 255)
         let sampleData = Data(bytes)
 

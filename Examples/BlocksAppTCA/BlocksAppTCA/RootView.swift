@@ -49,10 +49,11 @@ struct RootView: View {
             store: store.scope(
                 state: \.$takePhoto,
                 action: { .usePhoto($0) }
-            )) { takePhotoStore in
-                NavigationStack {
-                    ImagePickerView(store: takePhotoStore)
-                }
+            )
+        ) { takePhotoStore in
+            NavigationStack {
+                ImagePickerView(store: takePhotoStore)
+            }
         }
     }
 }

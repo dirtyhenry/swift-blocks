@@ -13,7 +13,7 @@ final class JSONTests: XCTestCase {
         let aNumber: Int
     }
 
-    func testStringify() throws {
+    func testStringify() {
         let sampleCodable = SampleCodable(
             zArray: ["z", "y", "x"],
             yObject: ["z": true, "y": false],

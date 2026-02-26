@@ -6,8 +6,8 @@ final class SitemapTests: XCTestCase {
     func testBasicUsage() throws {
         let sitemap = Sitemap()
 
-        let urlEntry = Sitemap.URLEntry(
-            location: URL(string: "http://www.example.com/")!,
+        let urlEntry = try Sitemap.URLEntry(
+            location: XCTUnwrap(URL(string: "http://www.example.com/")),
             lastmod: "2005-01-02",
             changeFreq: .monthly,
             priority: 0.8

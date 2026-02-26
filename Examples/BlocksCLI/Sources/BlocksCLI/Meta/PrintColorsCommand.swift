@@ -30,5 +30,22 @@ struct PrintColorsCommand: ParsableCommand {
         CLIUtils.write(message: "🤍 This should be white.", background: .white)
 
         print("\u{001B}[38;2;255;82;197;48;2;155;106;0mHello")
+
+        // Composable StyledText API
+        print("")
+        print("--- StyledText API ---")
+        print("\("Hello".red) \("world".blue)")
+        print("\("Error".red.bold): something went wrong")
+        print("\("WARNING".yellow.onRed) check this")
+        print("\("bold".bold) \("dim".dim) \("italic".italic) \("underline".underline) \("strikethrough".strikethrough)")
+        CLIUtils.write(parts: "Status: ".white.bold, "OK".green.bold)
+
+        if isatty(STDIN_FILENO) != 0 {
+            let choice = try CLIUtils.interactiveShell(
+                "command -v gum >/dev/null && gum choose \"fix\" \"feat\" \"docs\" \"style\" \"refactor\" \"test\" \"chore\" \"revert\"",
+                captureOutput: true
+            )
+            print("You chose: \(choice ?? "nothing (gum not installed)")")
+        }
     }
 }

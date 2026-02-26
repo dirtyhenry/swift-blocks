@@ -17,12 +17,12 @@ public extension JSONDecoder {
 }
 
 public extension JSONDecoder {
-    func decode<T>(
+    func decode<T: Decodable>(
         _: T.Type,
         fromResource resource: String,
         withExtension fileExtension: String = "json",
         in bundle: Bundle
-    ) throws -> T where T: Decodable {
+    ) throws -> T {
         guard let bundledResourceURL = bundle.url(forResource: resource, withExtension: fileExtension) else {
             throw BlocksError.couldNotLocateFile("\(resource).\(fileExtension)")
         }

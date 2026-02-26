@@ -1,11 +1,10 @@
+@testable import BlocksAppTCA
 import ComposableArchitecture
 import XCTest
 
-@testable import BlocksAppTCA
-
 @MainActor
 final class RootFeatureTests: XCTestCase {
-    func testCancelTakePhoto() async throws {
+    func testCancelTakePhoto() async {
         let store = TestStore(initialState: RootFeature.State()) {
             RootFeature()
         }
@@ -20,7 +19,7 @@ final class RootFeatureTests: XCTestCase {
         }
     }
 
-    func testTakePhoto() async throws {
+    func testTakePhoto() async {
         let store = TestStore(initialState: RootFeature.State()) {
             RootFeature()
         }

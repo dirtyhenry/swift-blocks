@@ -1,6 +1,6 @@
 #import "ArrayDataSource.h"
 
-#if TARGET_OS_PHONE
+#if TARGET_OS_IPHONE
 @interface ArrayDataSource ()
 
 @property (nonatomic, strong) NSArray *items;
