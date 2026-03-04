@@ -36,11 +36,10 @@ public enum ImageResizer {
             throw ImagingError.resizeFailed
         }
 
-        let colorSpace = source.cgImage.colorSpace ?? CGColorSpaceCreateDeviceRGB()
-
-        // Use premultipliedLast (RGBA) which CGContext always supports.
-        // Source images (e.g. JPEG-decoded) may carry alphaInfo=.none which
-        // CGContext rejects for RGB color spaces.
+        // Always use device RGB so the RGBA bitmap configuration is valid.
+        // Non-RGB inputs (e.g. grayscale scanned documents) would cause
+        // CGContext creation to fail with premultipliedLast.
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
 
         guard let context = CGContext(
