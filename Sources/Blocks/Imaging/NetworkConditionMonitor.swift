@@ -21,25 +21,34 @@ public final class NetworkConditionMonitor: Sendable {
 
     private actor State {
         var currentCondition: NetworkCondition = .offline
-        var continuation: AsyncStream<NetworkCondition>.Continuation?
+        var continuations: [UUID: AsyncStream<NetworkCondition>.Continuation] = [:]
 
         func update(_ condition: NetworkCondition) {
             guard condition != currentCondition else { return }
             currentCondition = condition
-            continuation?.yield(condition)
+            for continuation in continuations.values {
+                continuation.yield(condition)
+            }
         }
 
         func getCondition() -> NetworkCondition {
             currentCondition
         }
 
-        func setContinuation(_ continuation: AsyncStream<NetworkCondition>.Continuation) {
-            self.continuation = continuation
+        func addContinuation(_ continuation: AsyncStream<NetworkCondition>.Continuation, id: UUID) {
+            continuations[id] = continuation
+        }
+
+        func removeContinuation(id: UUID) {
+            continuations[id]?.finish()
+            continuations[id] = nil
         }
 
         func finish() {
-            continuation?.finish()
-            continuation = nil
+            for continuation in continuations.values {
+                continuation.finish()
+            }
+            continuations.removeAll()
         }
     }
 
@@ -71,10 +80,17 @@ public final class NetworkConditionMonitor: Sendable {
     }
 
     /// An async stream of network condition changes.
+    ///
+    /// Multiple subscribers can consume this stream concurrently;
+    /// each receives its own independent stream of updates.
     public var conditions: AsyncStream<NetworkCondition> {
         let state = state
+        let id = UUID()
         return AsyncStream { continuation in
-            Task { await state.setContinuation(continuation) }
+            continuation.onTermination = { _ in
+                Task { await state.removeContinuation(id: id) }
+            }
+            Task { await state.addContinuation(continuation, id: id) }
         }
     }
 
