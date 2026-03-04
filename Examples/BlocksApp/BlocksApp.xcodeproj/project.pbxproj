@@ -15,6 +15,7 @@
 		00333CCB2C45682900A58365 /* SlugifyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00333CCA2C45682900A58365 /* SlugifyView.swift */; };
 		0038EF682C00F1F0004BF4FB /* LoggingPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0038EF672C00F1F0004BF4FB /* LoggingPlaygroundView.swift */; };
 		003995752AFBF4680051BFCE /* BackgroundTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 003995742AFBF4680051BFCE /* BackgroundTaskView.swift */; };
+		005A6BF12F5845DE00598974 /* ImageCompressionDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 005A6BF02F5845DE00598974 /* ImageCompressionDemoView.swift */; };
 		007314A72AF00BFC0092F234 /* FontsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007314A62AF00BFC0092F234 /* FontsView.swift */; };
 		008D62CC2A56C35800254FD9 /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008D62CB2A56C35800254FD9 /* ImagePickerView.swift */; };
 		008D62CE2A56C96E00254FD9 /* MailComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 008D62CD2A56C96E00254FD9 /* MailComposeView.swift */; };
@@ -59,6 +60,7 @@
 		00333CCA2C45682900A58365 /* SlugifyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlugifyView.swift; sourceTree = "<group>"; };
 		0038EF672C00F1F0004BF4FB /* LoggingPlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingPlaygroundView.swift; sourceTree = "<group>"; };
 		003995742AFBF4680051BFCE /* BackgroundTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskView.swift; sourceTree = "<group>"; };
+		005A6BF02F5845DE00598974 /* ImageCompressionDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCompressionDemoView.swift; sourceTree = "<group>"; };
 		006E38742A370C0600B4142B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		007314A62AF00BFC0092F234 /* FontsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontsView.swift; sourceTree = "<group>"; };
 		008D62CB2A56C35800254FD9 /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 		008D62CA2A56C2AF00254FD9 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				005A6BF02F5845DE00598974 /* ImageCompressionDemoView.swift */,
 				00925B662F18037C00C00699 /* IPAddressScannerView.swift */,
 				00A12BF32CC0F8450006D9F7 /* TransportDemoView.swift */,
 				008D62CB2A56C35800254FD9 /* ImagePickerView.swift */,
@@ -348,6 +351,7 @@
 				007314A72AF00BFC0092F234 /* FontsView.swift in Sources */,
 				0030C2522A99047F00AB2087 /* WatchState.swift in Sources */,
 				0038EF682C00F1F0004BF4FB /* LoggingPlaygroundView.swift in Sources */,
+				005A6BF12F5845DE00598974 /* ImageCompressionDemoView.swift in Sources */,
 				00D1E2482A36327100E8D275 /* BlocksApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
