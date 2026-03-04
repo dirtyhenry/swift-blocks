@@ -207,7 +207,8 @@ public enum LineEditor {
 
     private static func redraw(prompt: String, buffer: Buffer) {
         let line = prompt + buffer.toString()
-        let cursorCol = prompt.count + buffer.displayCursor
+        let promptWidth = prompt.unicodeScalars.reduce(0) { $0 + Buffer.displayWidth(of: $1) }
+        let cursorCol = promptWidth + buffer.displayCursor
         // CR, write line, erase to EOL, reposition cursor
         writeString("\r\(line)\u{1B}[K\r\u{1B}[\(cursorCol + 1)G")
     }
@@ -223,7 +224,7 @@ extension LineEditor {
         var isEmpty: Bool { characters.isEmpty }
 
         var displayCursor: Int {
-            characters[..<cursor].reduce(0) { $0 + displayWidth(of: $1) }
+            characters[..<cursor].reduce(0) { $0 + Self.displayWidth(of: $1) }
         }
 
         mutating func insert(_ char: Character) {
@@ -304,8 +305,12 @@ extension LineEditor {
             String(characters)
         }
 
-        private func displayWidth(of char: Character) -> Int {
+        static func displayWidth(of char: Character) -> Int {
             guard let scalar = char.unicodeScalars.first else { return 1 }
+            return displayWidth(of: scalar)
+        }
+
+        static func displayWidth(of scalar: Unicode.Scalar) -> Int {
             let v = scalar.value
             // East Asian Wide and Fullwidth characters take 2 columns
             if (0x1100...0x115F).contains(v) || // Hangul Jamo
