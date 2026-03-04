@@ -261,6 +261,72 @@ final class QueryClientTests: XCTestCase {
         }
     }
 
+    func testCancellationDuringRetryBackoffThrowsQueryCancelled() async throws {
+        let client = QueryClient(defaultOptions: QueryOptions(
+            retryCount: 3,
+            retryDelay: { _ in 10.0 } // long delay to ensure cancellation hits during sleep
+        ))
+
+        let task = Task<String, any Error> {
+            try await client.query(key: "cancel-during-backoff") {
+                throw SimpleMessageError(message: "fail")
+            }
+        }
+
+        // Give the first attempt time to fail and enter backoff sleep
+        try await Task.sleep(nanoseconds: 50_000_000)
+        task.cancel()
+
+        do {
+            _ = try await task.value
+            XCTFail("Should have thrown")
+        } catch let error as QueryError {
+            if case .cancelled = error {
+                // expected
+            } else {
+                XCTFail("Expected QueryError.cancelled, got \(error)")
+            }
+        }
+    }
+
+    func testCallerCancellationWhileAwaitingInFlightTask() async throws {
+        let client = QueryClient()
+
+        // Start a slow fetch
+        let slowTask = Task<Int, any Error> {
+            try await client.query(key: "slow") {
+                try await Task.sleep(nanoseconds: 500_000_000)
+                return 42
+            }
+        }
+
+        // Give the first task time to start
+        try await Task.sleep(nanoseconds: 10_000_000)
+
+        // Start a second caller that joins the in-flight task, then cancel it
+        let joinerTask = Task<Int, any Error> {
+            try await client.query(key: "slow") {
+                return 42 // won't be called — deduplication
+            }
+        }
+
+        try await Task.sleep(nanoseconds: 10_000_000)
+        joinerTask.cancel()
+
+        do {
+            _ = try await joinerTask.value
+            XCTFail("Should have thrown due to cancellation")
+        } catch is CancellationError {
+            // expected — the cancellation check after await throws CancellationError
+        } catch {
+            // Also acceptable if it surfaces differently
+        }
+
+        // The original task should still complete successfully
+        let result = try await slowTask.value
+        XCTAssertEqual(result, 42)
+    }
+
     func testQueryOptionsDefaults() {
         let opts = QueryOptions()
         XCTAssertEqual(opts.staleTime, 0)
