@@ -17,6 +17,7 @@ struct ContentView: View {
         case loggingPlayground = "Logging Playground"
         case slugifyPlayground = "Slugify Playground"
         case transportDemo = "Transport demo"
+        case queryClientDemo = "QueryClient demo"
 
         var id: String {
             rawValue
@@ -113,6 +114,8 @@ struct ContentView: View {
                         SlugifyView()
                     case .transportDemo:
                         TransportDemoView()
+                    case .queryClientDemo:
+                        QueryClientDemoView()
                     case .formPlayground:
                         FormPlaygroundView()
                     }
