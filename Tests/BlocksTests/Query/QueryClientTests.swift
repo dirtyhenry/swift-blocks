@@ -207,6 +207,60 @@ final class QueryClientTests: XCTestCase {
         XCTAssertTrue(try XCTUnwrap(mismatch.errorDescription?.contains("Int")))
     }
 
+    func testBackgroundRefetchFailureClearsInFlightAndState() async throws {
+        let client = QueryClient(defaultOptions: QueryOptions(
+            staleTime: 0,
+            cacheTime: 300,
+            retryCount: 0
+        ))
+
+        // Seed with initial data
+        let first: String = try await client.query(key: "bg-fail") { "initial" }
+        XCTAssertEqual(first, "initial")
+
+        // Let it become stale
+        try await Task.sleep(nanoseconds: 10_000_000)
+
+        // Trigger a background refetch that will fail
+        let _: String = try await client.query(key: "bg-fail") {
+            throw SimpleMessageError(message: "network error")
+        }
+
+        // Wait for background refetch to fail
+        try await Task.sleep(nanoseconds: 100_000_000)
+
+        // State should have isFetching reset to false
+        let state = await client.state(for: "bg-fail", as: String.self)
+        XCTAssertEqual(state?.isFetching, false)
+        XCTAssertEqual(state?.data, "initial") // original data preserved
+
+        // A new background refetch should be possible (not blocked by stale in-flight task)
+        let _: String = try await client.query(key: "bg-fail") { "recovered" }
+
+        try await Task.sleep(nanoseconds: 100_000_000)
+
+        let data = await client.getQueryData("bg-fail", as: String.self)
+        XCTAssertEqual(data, "recovered")
+    }
+
+    func testCancellationIsPropagatedAsCancelled() async throws {
+        let client = QueryClient(defaultOptions: QueryOptions(retryCount: 1, retryDelay: { _ in 0.01 }))
+
+        // A fetch that always throws CancellationError simulates a cancelled fetch
+        do {
+            let _: String = try await client.query(key: "cancel-me") {
+                throw CancellationError()
+            }
+            XCTFail("Should have thrown")
+        } catch let error as QueryError {
+            if case .cancelled = error {
+                // expected — CancellationError is wrapped as QueryError.cancelled
+            } else {
+                XCTFail("Expected QueryError.cancelled, got \(error)")
+            }
+        }
+    }
+
     func testQueryOptionsDefaults() {
         let opts = QueryOptions()
         XCTAssertEqual(opts.staleTime, 0)

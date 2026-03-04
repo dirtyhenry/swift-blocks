@@ -184,7 +184,10 @@ public actor QueryClient {
         let retries = max(0, options.retryCount)
         for attempt in 0 ... retries {
             do {
+                try Task.checkCancellation()
                 return try await fetch()
+            } catch is CancellationError {
+                throw QueryError.cancelled
             } catch {
                 lastError = error
                 if attempt < retries {
@@ -220,15 +223,28 @@ public actor QueryClient {
                 await completeBackgroundRefetch(key: key, data: result, options: options)
                 return result as any Sendable
             } catch {
-                await self?.cleanUpFailedBackgroundRefetch(key: key)
+                await self?.cleanUpFailedBackgroundRefetch(key: key, as: T.self, error: error)
                 throw error
             }
         }
         inFlightTasks[key] = task
     }
 
-    private func cleanUpFailedBackgroundRefetch(key: AnyQueryKey) {
+    private func cleanUpFailedBackgroundRefetch<T: Sendable>(key: AnyQueryKey, as _: T.Type, error: any Error) {
         inFlightTasks.removeValue(forKey: key)
+
+        // Reset isFetching so the UI doesn't show a stuck spinner.
+        // Preserve existing data so stale-while-revalidate still works.
+        if let existing = states[key] as? QueryState<T> {
+            states[key] = QueryState<T>(
+                status: existing.data != nil ? existing.status : .error,
+                data: existing.data,
+                error: error,
+                dataUpdatedAt: existing.dataUpdatedAt,
+                isFetching: false,
+                isStale: true
+            )
+        }
     }
 
     private func completeBackgroundRefetch<T: Sendable>(key: AnyQueryKey, data: T, options: QueryOptions) async {
