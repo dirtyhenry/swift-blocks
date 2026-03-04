@@ -12,7 +12,7 @@ enum TerminalMode {
         tcgetattr(STDIN_FILENO, &raw)
         original = raw
 
-        raw.c_lflag &= ~UInt(ICANON | ECHO | ISIG | IEXTEN)
+        raw.c_lflag &= ~tcflag_t(ICANON | ECHO | ISIG | IEXTEN)
 
         withUnsafeMutablePointer(to: &raw.c_cc) { ptr in
             ptr.withMemoryRebound(to: UInt8.self, capacity: Int(NCCS)) { cc in

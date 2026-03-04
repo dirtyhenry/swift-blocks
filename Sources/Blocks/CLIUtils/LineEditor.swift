@@ -305,7 +305,25 @@ extension LineEditor {
         }
 
         private func displayWidth(of char: Character) -> Int {
-            char.unicodeScalars.first.map { $0.value > 0xFFFF ? 2 : 1 } ?? 1
+            guard let scalar = char.unicodeScalars.first else { return 1 }
+            let v = scalar.value
+            // East Asian Wide and Fullwidth characters take 2 columns
+            if (0x1100...0x115F).contains(v) || // Hangul Jamo
+                (0x2E80...0x303E).contains(v) || // CJK Radicals, Kangxi, Ideographic
+                (0x3041...0x33BF).contains(v) || // Hiragana, Katakana, Bopomofo, CJK Compat
+                (0x3400...0x4DBF).contains(v) || // CJK Unified Extension A
+                (0x4E00...0x9FFF).contains(v) || // CJK Unified Ideographs
+                (0xA000...0xA4CF).contains(v) || // Yi
+                (0xAC00...0xD7AF).contains(v) || // Hangul Syllables
+                (0xF900...0xFAFF).contains(v) || // CJK Compatibility Ideographs
+                (0xFE30...0xFE6F).contains(v) || // CJK Compatibility Forms
+                (0xFF01...0xFF60).contains(v) || // Fullwidth Forms
+                (0xFFE0...0xFFE6).contains(v) || // Fullwidth Signs
+                (0x20000...0x2FFFD).contains(v) || // CJK Ext B-F, Compat Supplement
+                (0x30000...0x3FFFD).contains(v) { // CJK Ext G+
+                return 2
+            }
+            return 1
         }
     }
 }
