@@ -181,18 +181,19 @@ public actor QueryClient {
         fetch: @Sendable @escaping () async throws -> T
     ) async throws -> T {
         var lastError: (any Error)?
-        for attempt in 0 ... options.retryCount {
+        let retries = max(0, options.retryCount)
+        for attempt in 0 ... retries {
             do {
                 return try await fetch()
             } catch {
                 lastError = error
-                if attempt < options.retryCount {
-                    let delay = options.retryDelay(attempt)
+                if attempt < retries {
+                    let delay = max(0, options.retryDelay(attempt))
                     try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
                 }
             }
         }
-        throw QueryError.allRetriesFailed(attempts: options.retryCount + 1, lastError: lastError!)
+        throw QueryError.allRetriesFailed(attempts: retries + 1, lastError: lastError!)
     }
 
     private func triggerBackgroundRefetch<T: Sendable>(
@@ -213,12 +214,21 @@ public actor QueryClient {
         }
 
         let task = Task<any Sendable, any Error> { [weak self] in
-            let result = try await self?.fetchWithRetry(options: options, fetch: fetch) as T?
-            guard let self, let result else { return () as any Sendable }
-            await completeBackgroundRefetch(key: key, data: result, options: options)
-            return result as any Sendable
+            do {
+                let result = try await self?.fetchWithRetry(options: options, fetch: fetch) as T?
+                guard let self, let result else { return () as any Sendable }
+                await completeBackgroundRefetch(key: key, data: result, options: options)
+                return result as any Sendable
+            } catch {
+                await self?.cleanUpFailedBackgroundRefetch(key: key)
+                throw error
+            }
         }
         inFlightTasks[key] = task
+    }
+
+    private func cleanUpFailedBackgroundRefetch(key: AnyQueryKey) {
+        inFlightTasks.removeValue(forKey: key)
     }
 
     private func completeBackgroundRefetch<T: Sendable>(key: AnyQueryKey, data: T, options: QueryOptions) async {
