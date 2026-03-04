@@ -134,6 +134,7 @@ public actor QueryClient {
     ) async throws -> T {
         if let existingTask = inFlightTasks[key] {
             let result = try await existingTask.value
+            try Task.checkCancellation()
             guard let typed = result as? T else {
                 throw QueryError.typeMismatch(
                     expected: String(describing: T.self),
@@ -151,7 +152,11 @@ public actor QueryClient {
         inFlightTasks[key] = task
 
         do {
-            let result = try await task.value
+            let result = try await withTaskCancellationHandler {
+                try await task.value
+            } onCancel: {
+                task.cancel()
+            }
             inFlightTasks.removeValue(forKey: key)
 
             guard let typed = result as? T else {
@@ -192,7 +197,11 @@ public actor QueryClient {
                 lastError = error
                 if attempt < retries {
                     let delay = max(0, options.retryDelay(attempt))
-                    try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                    do {
+                        try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                    } catch is CancellationError {
+                        throw QueryError.cancelled
+                    }
                 }
             }
         }
