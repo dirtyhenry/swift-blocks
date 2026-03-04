@@ -18,6 +18,7 @@ struct ContentView: View {
         case loggingPlayground = "Logging"
         case slugifyPlayground = "Slugify"
         case transportDemo = "Transport"
+        case imageCompression = "Image Compression"
 
         var id: String {
             rawValue
@@ -39,6 +40,7 @@ struct ContentView: View {
             case .loggingPlayground: "doc.text.magnifyingglass"
             case .slugifyPlayground: "link"
             case .transportDemo: "arrow.up.arrow.down.circle"
+            case .imageCompression: "photo"
             }
         }
 
@@ -52,7 +54,7 @@ struct ContentView: View {
                 sections += [.fileSystemExplorer, .ipAddressScanner, .mailAndCamera]
                 return sections
             }()),
-            ("Utilities", [.loggingPlayground, .slugifyPlayground, .transportDemo])
+            ("Utilities", [.loggingPlayground, .slugifyPlayground, .transportDemo, .imageCompression])
         ]
     }
 
@@ -108,6 +110,8 @@ struct ContentView: View {
                         FormPlaygroundView()
                     case .watchPairing:
                         WatchPairingDemoView()
+                    case .imageCompression:
+                        ImageCompressionDemoView()
                     }
                 } else {
                     ContentUnavailableView("Select a Demo", systemImage: "square.grid.2x2")
