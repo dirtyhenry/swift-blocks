@@ -12,7 +12,7 @@ public enum CLIUtils {
     /// - Throws: ``LineEditorError/interrupted`` if the user presses Ctrl-C.
     public static func editLine(prompt: String) throws -> String? {
         #if canImport(Darwin) || canImport(Glibc)
-        if isatty(STDIN_FILENO) != 0 {
+        if isatty(STDIN_FILENO) != 0, isatty(STDOUT_FILENO) != 0 {
             return try LineEditor.readLine(prompt: prompt)
         }
         #endif
