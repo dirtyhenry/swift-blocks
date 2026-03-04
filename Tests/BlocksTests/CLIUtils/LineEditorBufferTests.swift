@@ -153,6 +153,24 @@ final class LineEditorBufferTests: XCTestCase {
         XCTAssertEqual(buf.cursor, 6)
     }
 
+    // MARK: - Display Width
+
+    func testDisplayCursorASCII() {
+        let buf = buffer("hello")
+        XCTAssertEqual(buf.displayCursor, 5)
+    }
+
+    func testDisplayCursorCJK() {
+        let buf = buffer("你好")
+        XCTAssertEqual(buf.displayCursor, 4)
+    }
+
+    func testDisplayCursorMixed() {
+        // "hi你" = 2 ASCII (width 1 each) + 1 CJK (width 2) = 4
+        let buf = buffer("hi你")
+        XCTAssertEqual(buf.displayCursor, 4)
+    }
+
     // MARK: - Empty Buffer
 
     func testEmptyBuffer() {
