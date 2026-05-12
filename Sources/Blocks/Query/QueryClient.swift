@@ -21,7 +21,7 @@ import FoundationNetworking
 public actor QueryClient {
     private let cache: QueryCache
     private let defaultOptions: QueryOptions
-    private var inFlightTasks: [AnyQueryKey: Task<any Sendable, any Error>] = [:]
+    private var inFlight: [AnyQueryKey: InFlightFetch] = [:]
     private var states: [AnyQueryKey: any Sendable] = [:]
 
     public init(cache: QueryCache = QueryCache(), defaultOptions: QueryOptions = QueryOptions()) {
@@ -50,7 +50,7 @@ public actor QueryClient {
                     return data
                 }
 
-                triggerBackgroundRefetch(key: anyKey, options: opts, fetch: fetch)
+                startBackgroundRefetchIfIdle(key: anyKey, options: opts, fetch: fetch)
                 return data
             }
         }
@@ -66,7 +66,7 @@ public actor QueryClient {
     ) {
         let opts = options ?? defaultOptions
         let anyKey = AnyQueryKey(key)
-        triggerBackgroundRefetch(key: anyKey, options: opts, fetch: fetch)
+        startBackgroundRefetchIfIdle(key: anyKey, options: opts, fetch: fetch)
     }
 
     /// Manually writes data into the cache for a key.
@@ -98,18 +98,16 @@ public actor QueryClient {
     public func invalidate(_ key: some QueryKey) async {
         let anyKey = AnyQueryKey(key)
         await cache.remove(anyKey)
-        inFlightTasks[anyKey]?.cancel()
-        inFlightTasks.removeValue(forKey: anyKey)
+        cancelInFlight(anyKey)
         states.removeValue(forKey: anyKey)
     }
 
     /// Invalidates all keys whose `QueryKeyPath` starts with the given prefix.
     public func invalidateMatching(prefix: QueryKeyPath) async {
         await cache.removeMatching(prefix: prefix)
-        for key in inFlightTasks.keys {
+        for key in Array(inFlight.keys) {
             if let path = key.unwrap(as: QueryKeyPath.self), path.hasPrefix(prefix) {
-                inFlightTasks[key]?.cancel()
-                inFlightTasks.removeValue(forKey: key)
+                cancelInFlight(key)
                 states.removeValue(forKey: key)
             }
         }
@@ -118,10 +116,9 @@ public actor QueryClient {
     /// Invalidates all cached data.
     public func invalidateAll() async {
         await cache.clear()
-        for task in inFlightTasks.values {
-            task.cancel()
+        for key in Array(inFlight.keys) {
+            cancelInFlight(key)
         }
-        inFlightTasks.removeAll()
         states.removeAll()
     }
 
@@ -132,52 +129,150 @@ public actor QueryClient {
         options: QueryOptions,
         fetch: @Sendable @escaping () async throws -> T
     ) async throws -> T {
-        if let existingTask = inFlightTasks[key] {
-            let result = try await existingTask.value
-            try Task.checkCancellation()
-            guard let typed = result as? T else {
-                throw QueryError.typeMismatch(
-                    expected: String(describing: T.self),
-                    actual: String(describing: type(of: result))
-                )
-            }
-            return typed
+        if inFlight[key] == nil {
+            states[key] = QueryState<T>(status: .loading, isFetching: true)
+            startFetch(key: key, options: options, fetch: fetch)
         }
 
-        states[key] = QueryState<T>(status: .loading, isFetching: true)
+        let result = try await awaitFetch(key: key)
 
-        let task = Task<any Sendable, any Error> {
+        guard let typed = result as? T else {
+            throw QueryError.typeMismatch(
+                expected: String(describing: T.self),
+                actual: String(describing: type(of: result))
+            )
+        }
+        return typed
+    }
+
+    private func startBackgroundRefetchIfIdle<T: Sendable>(
+        key: AnyQueryKey,
+        options: QueryOptions,
+        fetch: @Sendable @escaping () async throws -> T
+    ) {
+        guard inFlight[key] == nil else { return }
+
+        if let existing = states[key] as? QueryState<T> {
+            states[key] = QueryState<T>(
+                status: existing.status,
+                data: existing.data,
+                dataUpdatedAt: existing.dataUpdatedAt,
+                isFetching: true,
+                isStale: true
+            )
+        } else {
+            states[key] = QueryState<T>(status: .loading, isFetching: true)
+        }
+
+        startFetch(key: key, options: options, fetch: fetch)
+    }
+
+    private func startFetch<T: Sendable>(
+        key: AnyQueryKey,
+        options: QueryOptions,
+        fetch: @Sendable @escaping () async throws -> T
+    ) {
+        let fetchTask = Task<any Sendable, any Error> {
             try await fetchWithRetry(options: options, fetch: fetch)
         }
-        inFlightTasks[key] = task
+        inFlight[key] = InFlightFetch(task: fetchTask)
 
-        do {
-            let result = try await withTaskCancellationHandler {
-                try await task.value
-            } onCancel: {
-                task.cancel()
+        Task { [weak self] in
+            let result: Result<any Sendable, any Error>
+            do {
+                let value = try await fetchTask.value
+                result = .success(value)
+            } catch {
+                result = .failure(error)
             }
-            inFlightTasks.removeValue(forKey: key)
+            await self?.settleFetch(key: key, result: result, options: options, cacheType: T.self)
+        }
+    }
 
-            guard let typed = result as? T else {
-                throw QueryError.typeMismatch(
-                    expected: String(describing: T.self),
-                    actual: String(describing: type(of: result))
+    private func awaitFetch(key: AnyQueryKey) async throws -> any Sendable {
+        let waiterId = UUID()
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                registerWaiter(key: key, id: waiterId, continuation: continuation)
+            }
+        } onCancel: {
+            Task { [weak self] in
+                await self?.removeWaiter(key: key, id: waiterId)
+            }
+        }
+    }
+
+    private func registerWaiter(
+        key: AnyQueryKey,
+        id: UUID,
+        continuation: CheckedContinuation<any Sendable, any Error>
+    ) {
+        guard let fetch = inFlight[key] else {
+            // The fetch settled between the caller observing it and registering. This is
+            // possible because the broadcaster runs on the actor and may have completed
+            // before this method ran. Surface as cancellation; the caller can retry.
+            continuation.resume(throwing: QueryError.cancelled)
+            return
+        }
+        fetch.waiters[id] = continuation
+    }
+
+    private func removeWaiter(key: AnyQueryKey, id: UUID) {
+        guard let fetch = inFlight[key] else { return }
+        guard let continuation = fetch.waiters.removeValue(forKey: id) else { return }
+        continuation.resume(throwing: QueryError.cancelled)
+        // Intentionally do not cancel `fetch.task` — other waiters or background completion may still need the result.
+    }
+
+    private func cancelInFlight(_ key: AnyQueryKey) {
+        guard let fetch = inFlight.removeValue(forKey: key) else { return }
+        fetch.task.cancel()
+        for (_, continuation) in fetch.waiters {
+            continuation.resume(throwing: QueryError.cancelled)
+        }
+    }
+
+    private func settleFetch<T: Sendable>(
+        key: AnyQueryKey,
+        result: Result<any Sendable, any Error>,
+        options: QueryOptions,
+        cacheType _: T.Type
+    ) async {
+        guard let fetch = inFlight.removeValue(forKey: key) else {
+            // Already invalidated. Waiters were resumed there.
+            return
+        }
+        let waiters = fetch.waiters
+
+        switch result {
+        case let .success(value):
+            if let typed = value as? T {
+                await cache.set(key, data: typed, staleTime: options.staleTime, cacheTime: options.cacheTime)
+                states[key] = QueryState<T>(
+                    status: .success,
+                    data: typed,
+                    dataUpdatedAt: Date(),
+                    isStale: false
                 )
             }
+        case let .failure(error):
+            if let existing = states[key] as? QueryState<T>, existing.data != nil {
+                // Preserve existing data on background-refetch failure.
+                states[key] = QueryState<T>(
+                    status: existing.status,
+                    data: existing.data,
+                    error: error,
+                    dataUpdatedAt: existing.dataUpdatedAt,
+                    isFetching: false,
+                    isStale: true
+                )
+            } else {
+                states[key] = QueryState<T>(status: .error, error: error)
+            }
+        }
 
-            await cache.set(key, data: typed, staleTime: options.staleTime, cacheTime: options.cacheTime)
-            states[key] = QueryState<T>(
-                status: .success,
-                data: typed,
-                dataUpdatedAt: Date(),
-                isStale: false
-            )
-            return typed
-        } catch {
-            inFlightTasks.removeValue(forKey: key)
-            states[key] = QueryState<T>(status: .error, error: error)
-            throw error
+        for (_, continuation) in waiters {
+            continuation.resume(with: result)
         }
     }
 
@@ -207,64 +302,18 @@ public actor QueryClient {
         }
         throw QueryError.allRetriesFailed(attempts: retries + 1, lastError: lastError!)
     }
+}
 
-    private func triggerBackgroundRefetch<T: Sendable>(
-        key: AnyQueryKey,
-        options: QueryOptions,
-        fetch: @Sendable @escaping () async throws -> T
-    ) {
-        guard inFlightTasks[key] == nil else { return }
+// MARK: - InFlightFetch
 
-        if let existing = states[key] as? QueryState<T> {
-            states[key] = QueryState<T>(
-                status: existing.status,
-                data: existing.data,
-                dataUpdatedAt: existing.dataUpdatedAt,
-                isFetching: true,
-                isStale: true
-            )
-        }
+@available(iOS 15.0.0, *)
+@available(macOS 12.0, *)
+private final class InFlightFetch {
+    let task: Task<any Sendable, any Error>
+    var waiters: [UUID: CheckedContinuation<any Sendable, any Error>] = [:]
 
-        let task = Task<any Sendable, any Error> { [weak self] in
-            do {
-                let result = try await self?.fetchWithRetry(options: options, fetch: fetch) as T?
-                guard let self, let result else { return () as any Sendable }
-                await completeBackgroundRefetch(key: key, data: result, options: options)
-                return result as any Sendable
-            } catch {
-                await self?.cleanUpFailedBackgroundRefetch(key: key, as: T.self, error: error)
-                throw error
-            }
-        }
-        inFlightTasks[key] = task
-    }
-
-    private func cleanUpFailedBackgroundRefetch<T: Sendable>(key: AnyQueryKey, as _: T.Type, error: any Error) {
-        inFlightTasks.removeValue(forKey: key)
-
-        // Reset isFetching so the UI doesn't show a stuck spinner.
-        // Preserve existing data so stale-while-revalidate still works.
-        if let existing = states[key] as? QueryState<T> {
-            states[key] = QueryState<T>(
-                status: existing.data != nil ? existing.status : .error,
-                data: existing.data,
-                error: error,
-                dataUpdatedAt: existing.dataUpdatedAt,
-                isFetching: false,
-                isStale: true
-            )
-        }
-    }
-
-    private func completeBackgroundRefetch<T: Sendable>(key: AnyQueryKey, data: T, options: QueryOptions) async {
-        await cache.set(key, data: data, staleTime: options.staleTime, cacheTime: options.cacheTime)
-        inFlightTasks.removeValue(forKey: key)
-        states[key] = QueryState<T>(
-            status: .success,
-            data: data,
-            dataUpdatedAt: Date(),
-            isStale: false
-        )
+    init(task: Task<any Sendable, any Error>) {
+        self.task = task
     }
 }
 
