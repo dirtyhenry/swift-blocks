@@ -88,8 +88,27 @@ public actor QueryClient {
     }
 
     /// Returns the current `QueryState` for a key, if one exists.
-    public func state<T: Sendable>(for key: some QueryKey, as _: T.Type) -> QueryState<T>? {
-        states[AnyQueryKey(key)] as? QueryState<T>
+    ///
+    /// `isStale` is recomputed from the cache entry at read time so callers
+    /// observe staleness even when no other operation has updated the state
+    /// since the entry crossed its `staleTime`.
+    public func state<T: Sendable>(for key: some QueryKey, as _: T.Type) async -> QueryState<T>? {
+        let anyKey = AnyQueryKey(key)
+        guard let snapshot = states[anyKey] as? QueryState<T> else { return nil }
+        let isStale: Bool = if let entry = await cache.getEntry(anyKey) {
+            entry.isStale(at: Date())
+        } else {
+            snapshot.data != nil ? true : snapshot.isStale
+        }
+        if isStale == snapshot.isStale { return snapshot }
+        return QueryState<T>(
+            status: snapshot.status,
+            data: snapshot.data,
+            error: snapshot.error,
+            dataUpdatedAt: snapshot.dataUpdatedAt,
+            isFetching: snapshot.isFetching,
+            isStale: isStale
+        )
     }
 
     // MARK: - Invalidation

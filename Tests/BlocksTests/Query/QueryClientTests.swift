@@ -154,6 +154,23 @@ final class QueryClientTests: XCTestCase {
         XCTAssertNil(dataB)
     }
 
+    func testStateBecomesStaleOverTimeWithoutFurtherQueries() async throws {
+        let client = QueryClient(defaultOptions: QueryOptions(staleTime: 0.05, cacheTime: 60))
+        let _: String = try await client.query(key: "stale-over-time") { "value" }
+
+        let fresh = await client.state(for: "stale-over-time", as: String.self)
+        XCTAssertEqual(fresh?.isStale, false)
+        XCTAssertEqual(fresh?.data, "value")
+
+        // Sleep past staleTime but well under cacheTime.
+        try await Task.sleep(nanoseconds: 100_000_000)
+
+        let stale = await client.state(for: "stale-over-time", as: String.self)
+        XCTAssertEqual(stale?.isStale, true)
+        XCTAssertEqual(stale?.data, "value")
+        XCTAssertEqual(stale?.status, .success)
+    }
+
     func testQueryState() async throws {
         let client = QueryClient()
         let _: Int = try await client.query(key: "stateful") { 42 }
