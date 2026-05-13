@@ -105,11 +105,13 @@ public actor QueryClient {
     /// Invalidates all keys whose `QueryKeyPath` starts with the given prefix.
     public func invalidateMatching(prefix: QueryKeyPath) async {
         await cache.removeMatching(prefix: prefix)
-        for key in Array(inFlight.keys) {
-            if let path = key.unwrap(as: QueryKeyPath.self), path.hasPrefix(prefix) {
-                cancelInFlight(key)
-                states.removeValue(forKey: key)
-            }
+        let matching = Set(inFlight.keys).union(states.keys).filter { key in
+            guard let path = key.unwrap(as: QueryKeyPath.self) else { return false }
+            return path.hasPrefix(prefix)
+        }
+        for key in matching {
+            cancelInFlight(key)
+            states.removeValue(forKey: key)
         }
     }
 
