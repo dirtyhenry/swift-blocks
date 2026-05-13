@@ -116,6 +116,31 @@ final class QueryClientTests: XCTestCase {
         XCTAssertEqual(data3, "user1")
     }
 
+    func testInvalidateMatchingPrefixClearsCompletedQueryState() async throws {
+        let client = QueryClient(defaultOptions: QueryOptions(staleTime: 60))
+        let postKey = QueryKeyPath(["posts", "1"])
+        let userKey = QueryKeyPath(["users", "1"])
+
+        let _: String = try await client.query(key: postKey) { "post1" }
+        let _: String = try await client.query(key: userKey) { "user1" }
+
+        // Sanity: state is populated for the completed post query.
+        let beforePost = await client.state(for: postKey, as: String.self)
+        XCTAssertEqual(beforePost?.data, "post1")
+
+        await client.invalidateMatching(prefix: QueryKeyPath(["posts"]))
+
+        // Both cache and state should be cleared for matching keys, even when no fetch is in flight.
+        let afterPostState = await client.state(for: postKey, as: String.self)
+        XCTAssertNil(afterPostState)
+        let afterPostData = await client.getQueryData(postKey, as: String.self)
+        XCTAssertNil(afterPostData)
+
+        // Non-matching keys are untouched.
+        let userState = await client.state(for: userKey, as: String.self)
+        XCTAssertEqual(userState?.data, "user1")
+    }
+
     func testInvalidateAll() async throws {
         let client = QueryClient(defaultOptions: QueryOptions(staleTime: 60))
         let _: String = try await client.query(key: "a") { "1" }
