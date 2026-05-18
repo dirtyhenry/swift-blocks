@@ -1,4 +1,5 @@
 #if canImport(SwiftUI)
+import Blocks
 import SwiftUI
 
 /// A button view that reflects the current state of a task (`TaskState`).

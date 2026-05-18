@@ -1,4 +1,5 @@
 import Blocks
+import BlocksUI
 import OSLog
 import SwiftUI
 

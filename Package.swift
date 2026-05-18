@@ -17,6 +17,10 @@ let products: [Product] = [
         targets: ["Blocks"]
     ),
     .library(
+        name: "BlocksUI",
+        targets: ["BlocksUI"]
+    ),
+    .library(
         name: "ObjectiveBlocks",
         targets: ["ObjectiveBlocks"]
     )
@@ -45,6 +49,10 @@ let targets: [Target] = [
         name: "BlocksTests",
         dependencies: ["Blocks"],
         resources: [.process("Resources")]
+    ),
+    .target(
+        name: "BlocksUI",
+        dependencies: ["Blocks"]
     ),
     .target(
         name: "ObjectiveBlocks",

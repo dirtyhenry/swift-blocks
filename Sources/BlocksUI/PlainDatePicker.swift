@@ -1,4 +1,5 @@
 #if canImport(SwiftUI)
+import Blocks
 import SwiftUI
 
 #if os(tvOS)

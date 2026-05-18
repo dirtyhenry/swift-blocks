@@ -47,8 +47,8 @@ public struct PlainDate: Sendable {
 
     // MARK: - Properties
 
-    let date: Date
-    let calendar: Calendar
+    public let date: Date
+    public let calendar: Calendar
 
     // MARK: - Converting to other formats
 
