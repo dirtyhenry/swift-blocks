@@ -8,6 +8,10 @@ let products: [Product] = [
     .library(
         name: "Blocks",
         targets: ["Blocks"]
+    ),
+    .library(
+        name: "BlocksUI",
+        targets: ["BlocksUI"]
     )
 ]
 #else
@@ -15,6 +19,10 @@ let products: [Product] = [
     .library(
         name: "Blocks",
         targets: ["Blocks"]
+    ),
+    .library(
+        name: "BlocksUI",
+        targets: ["BlocksUI"]
     ),
     .library(
         name: "ObjectiveBlocks",
@@ -33,6 +41,10 @@ let targets: [Target] = [
         name: "BlocksTests",
         dependencies: ["Blocks"],
         resources: [.process("Resources")]
+    ),
+    .target(
+        name: "BlocksUI",
+        dependencies: ["Blocks"]
     )
 ]
 #else
@@ -45,6 +57,10 @@ let targets: [Target] = [
         name: "BlocksTests",
         dependencies: ["Blocks"],
         resources: [.process("Resources")]
+    ),
+    .target(
+        name: "BlocksUI",
+        dependencies: ["Blocks"]
     ),
     .target(
         name: "ObjectiveBlocks",

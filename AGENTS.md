@@ -57,7 +57,8 @@ separation of concerns.
 ### Core Components
 
 **Blocks** (Sources/Blocks/) The main library providing utilities across several
-domains:
+domains. It is SwiftUI-free so CLI consumers can build it with a stock SwiftPM
+toolchain:
 
 - **Transport Layer** - Protocol-based networking abstraction with decorators
   for logging, retry, and status code checking. Key protocol: `Transport`
@@ -66,7 +67,11 @@ domains:
 - **Security** - Keychain management, PKCE implementation for OAuth flows
 - **Web Protocols** - JSON Feed, Sitemap, OpenGraph, Front Matter parsing
 - **Calendar** - iCalendar format support
-- **UI Components** - SwiftUI components like TaskStateButton, PlainDatePicker
+
+**BlocksUI** (Sources/BlocksUI/) SwiftUI components shipped as a separate
+product so that consumers of `Blocks` are not forced to deal with the `#Preview`
+macro: `TaskStateButton`, `PlainDatePicker`, `LabeledTextField`. Depends on
+`Blocks`.
 
 **ObjectiveBlocks** (Sources/ObjectiveBlocks/) Legacy Objective-C compatible
 utilities for iOS/macOS development.

@@ -16,6 +16,9 @@ This repository contains:
 
 - `Blocks`: a **dependency-free** Swift package with some utilities to deal with
   networking, API management, web protocols, etc.;
+- `BlocksUI`: SwiftUI components (`TaskStateButton`, `PlainDatePicker`,
+  `LabeledTextField`) shipped as a separate product so that command-line
+  consumers of `Blocks` do not have to deal with the `#Preview` macro;
 
 And the following examples executables/apps:
 

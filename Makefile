@@ -14,6 +14,7 @@ cli:
 
 build-ios:
 	xcrun xcodebuild clean build -scheme Blocks -destination generic/platform=ios
+	xcrun xcodebuild clean build -scheme BlocksUI -destination generic/platform=ios
 	xcrun xcodebuild clean build -scheme ObjectiveBlocks -destination generic/platform=ios
 
 test-debug:

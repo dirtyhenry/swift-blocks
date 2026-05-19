@@ -1,4 +1,5 @@
 import Blocks
+import BlocksUI
 import SwiftUI
 
 enum HorizontalAlignmentOption: Hashable {
