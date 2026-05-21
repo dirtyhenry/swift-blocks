@@ -4,7 +4,7 @@ import FoundationNetworking
 #endif
 
 /// A structure representing an individual header item for a `URLRequest`.
-public struct URLRequestHeaderItem {
+public struct URLRequestHeaderItem: Sendable {
     /// The name of the header.
     let name: String
 
