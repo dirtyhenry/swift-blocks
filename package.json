@@ -1,12 +1,12 @@
 {
   "name": "swift-blocks",
   "private": true,
-  "version": "0.9.0",
+  "version": "0.10.0",
   "packageManager": "yarn@4.4.1",
   "scripts": {
     "postinstall": "chflags hidden node_modules 2>/dev/null || true"
   },
   "dependencies": {
-    "@changesets/cli": "^2.29.8"
+    "@changesets/cli": "^2.31.0"
   }
 }

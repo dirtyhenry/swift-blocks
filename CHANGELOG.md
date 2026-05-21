@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.10.0
+
+### Minor Changes
+
+- cd9c630: Add `CLIUtils.interactiveShell` for running commands with full TTY
+  passthrough and optional output capture
+- cd9c630: Add composable StyledText API for CLI colored output, enabling color
+  and modifier composition via string interpolation
+- 62ecfa0: Extract SwiftUI components (`TaskStateButton`, `PlainDatePicker`,
+  `LabeledTextField`) into a new `BlocksUI` product. `Blocks` is now
+  SwiftUI-free, so command-line consumers no longer need workarounds for the
+  `#Preview` macro. Apps using these views must add a dependency on the
+  `BlocksUI` product and `import BlocksUI`. `PlainDate.date` and
+  `PlainDate.calendar` are now public to support cross-module use from
+  `BlocksUI`.
+
+### Patch Changes
+
+- 75654e0: Conform `URLRequestHeaderItem` to `Sendable` so it can safely cross
+  actor boundaries under strict concurrency checking.
+
 ## 0.9.0
 
 ### Minor Changes
