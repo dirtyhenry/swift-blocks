@@ -16,7 +16,8 @@ struct BlocksCLI: AsyncParsableCommand {
             ListDevicesCommand.self,
             ListIPAddressesCommand.self,
             MergeTranslationsCommand.self,
-            SlugifyCommand.self
+            SlugifyCommand.self,
+            AICommand.self
         ]
     )
 }
