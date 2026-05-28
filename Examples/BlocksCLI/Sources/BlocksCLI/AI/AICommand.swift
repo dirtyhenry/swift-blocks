@@ -1,3 +1,4 @@
+#if canImport(FoundationModels)
 import ArgumentParser
 import Blocks
 import Foundation
@@ -86,13 +87,11 @@ struct ProductCopyEditor {
         * Do not add unsupported claims or marketing promises.
         * If the text is already good, make only minimal edits.
 
-        Return:
-
-        1. The improved version
-        2. A short bullet list explaining the key changes
+        Return only the improved version.
         """
 
         let session = LanguageModelSession(instructions: instructions)
         return try await session.respond(to: copy)
     }
 }
+#endif
