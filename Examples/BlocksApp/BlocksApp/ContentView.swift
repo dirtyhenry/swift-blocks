@@ -17,6 +17,7 @@ struct ContentView: View {
         case loggingPlayground = "Logging Playground"
         case slugifyPlayground = "Slugify Playground"
         case transportDemo = "Transport demo"
+        case imageCompression = "Image Compression"
 
         var id: String {
             rawValue
@@ -115,6 +116,12 @@ struct ContentView: View {
                         TransportDemoView()
                     case .formPlayground:
                         FormPlaygroundView()
+                    case .imageCompression:
+                        if #available(macOS 12.0, iOS 15.0, *) {
+                            ImageCompressionDemoView()
+                        } else {
+                            Text("Requires macOS 12+ / iOS 15+")
+                        }
                     }
                 } else {
                     Text("Select a section")
