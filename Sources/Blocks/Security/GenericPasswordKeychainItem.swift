@@ -16,7 +16,31 @@ extension Dictionary {
 }
 
 /// A convenience class to manage _generic password_ keychain items.
+///
+/// Items are stored with the default accessibility (`kSecAttrAccessibleWhenUnlocked`),
+/// which is compatible with both ``Storage`` modes.
+///
+/// The keychain treats a local item and a synchronizable item with the same label and
+/// account as two distinct items. An instance only ever reads, writes, or deletes the
+/// item matching its own ``storage`` mode. See <doc:DataManagement> for a discussion of
+/// the security tradeoffs between the two modes.
 public final class GenericPasswordKeychainItem {
+    /// Where a keychain item is stored, and whether it syncs across the user's devices.
+    public enum Storage {
+        /// The secret stays on this device only.
+        ///
+        /// It is never uploaded anywhere, but it is lost if the device is lost, wiped,
+        /// or replaced.
+        case localOnly
+
+        /// The secret syncs via iCloud Keychain, end-to-end encrypted, to all devices
+        /// signed into the same Apple ID with iCloud Keychain enabled.
+        ///
+        /// It survives the loss of any single device, at the cost of a wider exposure
+        /// surface: every synced device, and the Apple ID account itself.
+        case iCloud
+    }
+
     /// The label of the keychain item.
     ///
     /// On macOS, as of version 14.1, the Keychain Access app calls this *Name*.
@@ -25,20 +49,25 @@ public final class GenericPasswordKeychainItem {
     /// The account of the keychain item.
     public let account: String
 
-    public init(label: String, account: String) {
+    /// The storage mode of the keychain item.
+    public let storage: Storage
+
+    public init(label: String, account: String, storage: Storage = .localOnly) {
         self.label = label
         self.account = account
+        self.storage = storage
     }
 
-    private var baseDictionary: [String: AnyObject] {
+    var baseDictionary: [String: AnyObject] {
         [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: account as CFString,
-            kSecAttrLabel as String: label as CFString
+            kSecAttrLabel as String: label as CFString,
+            kSecAttrSynchronizable as String: (storage == .iCloud ? kCFBooleanTrue : kCFBooleanFalse) as AnyObject
         ]
     }
 
-    private var query: [String: AnyObject] {
+    var query: [String: AnyObject] {
         baseDictionary.adding(key: kSecMatchLimit as String, value: kSecMatchLimitOne)
     }
 
