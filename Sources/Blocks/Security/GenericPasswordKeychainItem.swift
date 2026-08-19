@@ -26,7 +26,7 @@ extension Dictionary {
 /// the security tradeoffs between the two modes.
 public final class GenericPasswordKeychainItem {
     /// Where a keychain item is stored, and whether it syncs across the user's devices.
-    public enum Storage {
+    public enum Storage: Sendable {
         /// The secret stays on this device only.
         ///
         /// It is never uploaded anywhere, but it is lost if the device is lost, wiped,
@@ -63,7 +63,7 @@ public final class GenericPasswordKeychainItem {
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: account as CFString,
             kSecAttrLabel as String: label as CFString,
-            kSecAttrSynchronizable as String: (storage == .iCloud ? kCFBooleanTrue : kCFBooleanFalse) as AnyObject
+            kSecAttrSynchronizable as String: (storage == .iCloud) as AnyObject
         ]
     }
 
