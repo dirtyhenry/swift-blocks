@@ -19,6 +19,7 @@ final class GenericPasswordKeychainItemTests: XCTestCase {
         XCTAssertEqual(dictionary[kSecAttrSynchronizable as String] as? Bool, false)
     }
 
+    #if !os(tvOS)
     func testICloudBaseDictionary() {
         let item = GenericPasswordKeychainItem(label: "Label", account: "Account", storage: .iCloud)
         let dictionary = item.baseDictionary
@@ -36,5 +37,6 @@ final class GenericPasswordKeychainItemTests: XCTestCase {
         XCTAssertEqual(query[kSecMatchLimit as String] as? String, kSecMatchLimitOne as String)
         XCTAssertEqual(query[kSecAttrSynchronizable as String] as? Bool, true)
     }
+    #endif
 }
 #endif

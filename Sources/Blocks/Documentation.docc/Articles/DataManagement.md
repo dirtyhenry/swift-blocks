@@ -27,6 +27,11 @@ As a rule of thumb, default to `.localOnly` for device-scoped secrets (for
 example, per-device tokens), and choose `.iCloud` for user-scoped secrets the
 user would otherwise have to re-enter on each of their devices.
 
+`.iCloud` is unavailable on tvOS: tvOS never syncs app keychain items in either
+direction — items stored there never leave the device, and items synced from
+other devices never appear there — so `.localOnly` is the only mode on that
+platform.
+
 Items are stored with the default accessibility
 (`kSecAttrAccessibleWhenUnlocked`), which is compatible with both modes.
 

@@ -33,12 +33,28 @@ public final class GenericPasswordKeychainItem {
         /// or replaced.
         case localOnly
 
+        #if !os(tvOS)
         /// The secret syncs via iCloud Keychain, end-to-end encrypted, to all devices
         /// signed into the same Apple ID with iCloud Keychain enabled.
         ///
         /// It survives the loss of any single device, at the cost of a wider exposure
         /// surface: every synced device, and the Apple ID account itself.
+        ///
+        /// Unavailable on tvOS: tvOS accepts `kSecAttrSynchronizable` but never syncs
+        /// app keychain items in either direction, so this mode would silently behave
+        /// like ``localOnly`` there. See
+        /// [Apple's documentation](https://developer.apple.com/documentation/security/ksecattrsynchronizable).
         case iCloud
+        #endif
+
+        var isSynchronizable: Bool {
+            switch self {
+            case .localOnly: false
+            #if !os(tvOS)
+            case .iCloud: true
+            #endif
+            }
+        }
     }
 
     /// The label of the keychain item.
@@ -63,7 +79,7 @@ public final class GenericPasswordKeychainItem {
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: account as CFString,
             kSecAttrLabel as String: label as CFString,
-            kSecAttrSynchronizable as String: (storage == .iCloud) as AnyObject
+            kSecAttrSynchronizable as String: storage.isSynchronizable as AnyObject
         ]
     }
 
