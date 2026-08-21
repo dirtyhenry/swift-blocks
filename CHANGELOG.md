@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.11.0
+
+### Minor Changes
+
+- 6438dec: Add a `storage` option to `GenericPasswordKeychainItem` to opt into
+  iCloud Keychain synchronization (`.localOnly` remains the default), and
+  document the security trade-offs between the two modes. The `.iCloud` mode is
+  unavailable on tvOS, which never syncs app keychain items.
+
+### Patch Changes
+
+- f6f896c: Add `ai-demo` command to BlocksCLI that rewrites product copy through
+  the on-device `FoundationModels` system language model. The command requires
+  macOS 26 with an Apple Intelligence-eligible device.
+
 ## 0.10.0
 
 ### Minor Changes
