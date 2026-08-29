@@ -1,6 +1,25 @@
 import Foundation
 
 public enum CLIUtils {
+    /// Reads a line of input with interactive editing support.
+    ///
+    /// When stdin is a terminal, uses ``LineEditor`` for arrow key navigation,
+    /// word movement, and other readline-style keybindings. Falls back to
+    /// `Swift.readLine()` when stdin is not a terminal (e.g. piped input).
+    ///
+    /// - Parameter prompt: The message displayed to the user, prompting them for input.
+    /// - Returns: The user's input, or `nil` on EOF (Ctrl-D on empty line).
+    /// - Throws: ``LineEditorError/interrupted`` if the user presses Ctrl-C.
+    public static func editLine(prompt: String) throws -> String? {
+        #if canImport(Darwin) || canImport(Glibc)
+        if isatty(STDIN_FILENO) != 0, isatty(STDOUT_FILENO) != 0 {
+            return try LineEditor.readLine(prompt: prompt)
+        }
+        #endif
+        print(prompt, terminator: "")
+        return Swift.readLine()
+    }
+
     /// Reads a line of input from the user, optionally in a secure manner.
     ///
     /// This method provides a way to get user input from the command line.
