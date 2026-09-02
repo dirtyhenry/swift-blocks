@@ -47,3 +47,6 @@ jobs:
           VALIDATE_JSON_PRETTIER: false
           VALIDATE_MARKDOWN: false
           VALIDATE_MARKDOWN_PRETTIER: false
+          # Trivy flags the test-only Dockerfile (no USER/HEALTHCHECK), which
+          # is not a production image — same rationale as disabling Checkov.
+          VALIDATE_TRIVY: false
