@@ -31,7 +31,7 @@ public final class MockTransport: Transport {
                       headerFields: nil
                   )
             else {
-                throw SimpleMessageError(message: "`MockTransport` implementaion looks buggy, please review it.")
+                throw SimpleMessageError(message: "`MockTransport` implementation looks buggy, please review it.")
             }
 
             actualResponse = httpResponse

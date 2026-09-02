@@ -158,7 +158,7 @@
 
 ### Feat
 
-- **poc**: add a little experiement using os logging
+- **poc**: add a little experiment using os logging
 - **cli**: add new barcode generation command
 - **transport**: add Linux compatibility
 - **transport**: add RetryTransport

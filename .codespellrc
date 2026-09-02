@@ -1,0 +1,5 @@
+[codespell]
+# inout: Swift keyword; anumber: test fixture key; reenable: accepted spelling
+ignore-words-list = inout,anumber,reenable
+# Lock files contain package names (e.g. the rouge gem) that look like typos
+skip = *.lock

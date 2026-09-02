@@ -20,7 +20,7 @@
  *  @param aCellIdentifier     the cell identifier
  *  @param aConfigureCellBlock the block to configure cells
  *
- *  @return a newly instanciated data source
+ *  @return a newly instantiated data source
  */
 - (id)initWithItems:(NSArray *)anItems
      cellIdentifier:(NSString *)aCellIdentifier
