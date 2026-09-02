@@ -52,7 +52,7 @@ public struct JSONFeed: Codable {
     /// The primary language for the feed.
     public var language: String?
 
-    /// Says whether or not the feed is finished — that is, wheter or not it will ever update again.
+    /// Says whether or not the feed is finished — that is, whether or not it will ever update again.
     public var isExpired: Bool?
 
     /// Endpoints that can be used to subscribe to real-time notifications from the publisher of this feed.

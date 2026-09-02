@@ -2,7 +2,7 @@ import Foundation
 
 /// This structure constructs minimalist ICalendar documents according to RFC 5545.
 ///
-/// Names and descriptions at calendar levels are optionnaly supported.
+/// Names and descriptions at calendar levels are optionally supported.
 /// Cf. https://datatracker.ietf.org/doc/html/draft-daboo-icalendar-extensions-06
 /// and https://stackoverflow.com/questions/17152251/specifying-name-description-and-refresh-interval-in-ical-ics-format
 public struct ICalendarObject {

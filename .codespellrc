@@ -1,0 +1,4 @@
+[codespell]
+# inout: Swift keyword; anumber: test fixture key; reenable: accepted spelling;
+# rouge: Ruby gem name in Gemfile.lock
+ignore-words-list = inout,anumber,reenable,rouge
