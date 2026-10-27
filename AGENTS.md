@@ -65,7 +65,8 @@ toolchain:
 - **PlainDate** - Type for handling dates without time components, supporting
   ranges and arithmetic
 - **Security** - Keychain management, PKCE implementation for OAuth flows
-- **Web Protocols** - JSON Feed, Sitemap, OpenGraph, Front Matter parsing and writing
+- **Web Protocols** - JSON Feed, Sitemap, OpenGraph, Front Matter parsing and
+  writing
 - **Calendar** - iCalendar format support
 
 **BlocksUI** (Sources/BlocksUI/) SwiftUI components shipped as a separate
