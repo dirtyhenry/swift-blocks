@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.12.0
+
+### Minor Changes
+
+- 89f31fc: Add `sanitizedFilename(maxLength:fallback:)` to `StringProtocol`. It
+  makes a safe filename from a title for macOS and Obsidian. Unlike `slugify()`,
+  it keeps accents, emoji and spaces.
+- 94226e1: Add `FrontMatterEncoder`. It writes a flat `Encodable` value as a
+  YAML front matter block for Markdown files. It does not use a YAML library.
+- 145cf63: Add `ProcessRunner` and the `ProcessRunning` protocol to run an
+  executable with an argument array, without a shell, capturing stdout and
+  stderr separately, with optional stdin input, timeout, and an `async` variant.
+  `stream` delivers the output as it is produced, for long-running commands.
+
+  The minimum macOS version is raised to 10.15.4.
+
 ## 0.11.0
 
 ### Minor Changes
