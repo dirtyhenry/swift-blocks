@@ -12,6 +12,7 @@ struct BlocksCLI: AsyncParsableCommand {
         var commands: [ParsableCommand.Type] = [
             CurlLikeCommand.self,
             ExecCommand.self,
+            FilenameCommand.self,
             GenerateTestCommand.self,
             ReadBarcodeCommand.self,
             GenerateBarcodeCommand.self,

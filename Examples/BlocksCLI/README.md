@@ -44,6 +44,7 @@ swift run blocks-cli exec --help
 | `password`           | Reads a password without echoing it                                            | `CLIUtils.readLine(prompt:secure:)`                         |
 | `lint-copy`          | Replaces straight apostrophes with typographic ones                            | `CopyUtils.lint(input:)`                                    |
 | `slugify`            | Turns text into a URL slug                                                     | `String.slugify()`                                          |
+| `filename`           | Turns a title into a safe filename that is easy to read                        | `String.sanitizedFilename()`                                |
 | `list-simulators`    | Lists or filters the available Xcode simulators                                | `CLIUtils.shell(_:)`                                        |
 | `gen-tests`          | Prints a `swift test` command for every test target in a package dump          | `PackageDump`                                               |
 | `new-note`           | Prints a new Markdown note with front matter                                   | `FrontMatterEncoder`                                        |
@@ -125,6 +126,32 @@ blocks-cli password
 blocks-cli lint-copy "It's the user's call"
 # It’s the user’s call
 ```
+
+### `filename`
+
+This command makes a safe filename from a title. The filename keeps accents,
+emoji and spaces. The result is easy to read.
+
+```sh
+blocks-cli filename 'Swift: Codable / JSON #1' --extension md
+# Swift Codable JSON 1.md
+```
+
+To compare the filename with the slug of the same title, use `--compare`:
+
+```sh
+blocks-cli filename --compare 'Café ☕️ notes'
+# filename: Café ☕️ notes
+# slug:     cafe-notes
+```
+
+Use these options to change the result:
+
+- `--extension`: An extension to add to the filename, such as `md`.
+- `--max-length`: The maximum length of the filename, in UTF-8 bytes. The
+  default is 200.
+
+Use `filename` for files that people read. Use `slugify` for URLs.
 
 ### `slugify`
 
