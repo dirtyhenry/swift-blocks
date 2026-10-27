@@ -8,6 +8,7 @@
 - **API Management**. Some helpers to deal with common pitfalls of the native
   support of JSON API via Swift's `Codable`.
 - **Web tooling**. Create JSON Feeds, sitemaps.
+- <doc:MarkdownFrontMatter> Write YAML front matter for Markdown files.
 - **Data Management**. Convert data to hexadecimal or base 64 at ease.
 - **iCalendar Objects**. Create ical documents.
 - <doc:StyledText> Compose colored and formatted text for command-line interfaces.
@@ -29,6 +30,7 @@
 - <doc:Transport>
 - <doc:APIManagement>
 - <doc:WebTooling>
+- <doc:MarkdownFrontMatter>
 - <doc:DataManagement>
 - <doc:Calendar>
 - <doc:StyledText>
