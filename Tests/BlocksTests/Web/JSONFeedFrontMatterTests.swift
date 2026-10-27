@@ -1,9 +1,9 @@
 @testable import Blocks
 import XCTest
 
-final class FrontMatterTests: XCTestCase {
-    func makeSampleFrontMatter() -> FrontMatter {
-        FrontMatter(
+final class JSONFeedFrontMatterTests: XCTestCase {
+    func makeSampleJSONFeedFrontMatter() -> JSONFeedFrontMatter {
+        JSONFeedFrontMatter(
             feed: .init(
                 id: "my-post",
                 url: URL(string: "https://example.org/my-post")!,
@@ -21,13 +21,13 @@ final class FrontMatterTests: XCTestCase {
         )
     }
 
-    func testFrontMatterEncoding() {
-        let sut = makeSampleFrontMatter()
+    func testJSONFeedFrontMatterEncoding() {
+        let sut = makeSampleJSONFeedFrontMatter()
         let json = JSON.stringify(sut, encoder: JSONFeed.createEncoder())
         XCTAssertEqual(json.count, 275)
     }
 
-    func testFrontMatterDecoding() throws {
+    func testJSONFeedFrontMatterDecoding() throws {
         let frontMatter = """
         {
           "id": "my-post",
@@ -46,7 +46,7 @@ final class FrontMatterTests: XCTestCase {
         """
 
         let sut = try JSONFeed.createDecoder().decode(
-            FrontMatter.self, from: Data(frontMatter.utf8)
+            JSONFeedFrontMatter.self, from: Data(frontMatter.utf8)
         )
         XCTAssertEqual(sut.feed.title, "My Post")
         XCTAssertEqual(sut.openGraph?.title, "My Post")

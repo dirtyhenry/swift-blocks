@@ -4,3 +4,4 @@
 
 - ``JSONFeed``
 - ``Sitemap``
+- <doc:MarkdownFrontMatter>

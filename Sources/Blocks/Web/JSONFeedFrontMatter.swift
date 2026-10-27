@@ -1,5 +1,8 @@
+/// The metadata of a blog post as a JSON object: a JSON Feed item and its Open Graph data.
+///
+/// To write YAML front matter for a Markdown file, use ``FrontMatterEncoder``.
 @dynamicMemberLookup
-struct FrontMatter: Codable {
+struct JSONFeedFrontMatter: Codable {
     let feed: JSONFeed.Item
     let openGraph: OpenGraph?
 

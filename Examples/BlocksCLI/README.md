@@ -46,6 +46,7 @@ swift run blocks-cli exec --help
 | `slugify`            | Turns text into a URL slug                                                     | `String.slugify()`                                          |
 | `list-simulators`    | Lists or filters the available Xcode simulators                                | `CLIUtils.shell(_:)`                                        |
 | `gen-tests`          | Prints a `swift test` command for every test target in a package dump          | `PackageDump`                                               |
+| `new-note`           | Prints a new Markdown note with front matter                                   | `FrontMatterEncoder`                                        |
 | `list-ips`           | Lists the private IPv4 addresses of this machine                               | —                                                           |
 | `merge-translations` | Merges two JSON translation files                                              | —                                                           |
 | `gen-barcode`        | Creates a QR or Aztec barcode image                                            | — (Core Image)                                              |
@@ -154,6 +155,45 @@ blocks-cli gen-tests package.json
 ```sh
 blocks-cli list-ips
 blocks-cli list-ips --json
+```
+
+### `new-note`
+
+This command prints a new Markdown note. The note starts with a front matter
+block. `FrontMatterEncoder` writes this block.
+
+To make a note, give its title:
+
+```sh
+blocks-cli new-note 'Swift: "Codable" tips #1' --tag swift --tag 'yaml: fun'
+```
+
+The command prints this text:
+
+```text
+---
+title: "Swift: \"Codable\" tips #1"
+date: 2026-10-27
+tags: ["swift", "yaml: fun"]
+draft: false
+---
+
+# Swift: "Codable" tips #1
+```
+
+The title and the tags can contain quotation marks, colons, `#` and emoji.
+
+Use these options to change the front matter:
+
+- `--date`: The date of the note, as `YYYY-MM-DD`. The default is today.
+- `--tag`: A tag. Use this option one time for each tag.
+- `--source`: The URL of the source of the note.
+- `--draft`: Mark the note as a draft.
+
+To keep the note, send the output to a file:
+
+```sh
+blocks-cli new-note 'My note' > my-note.md
 ```
 
 ### `merge-translations`
