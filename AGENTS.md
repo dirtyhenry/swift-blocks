@@ -65,7 +65,8 @@ toolchain:
 - **PlainDate** - Type for handling dates without time components, supporting
   ranges and arithmetic
 - **Security** - Keychain management, PKCE implementation for OAuth flows
-- **Web Protocols** - JSON Feed, Sitemap, OpenGraph, Front Matter parsing and writing
+- **Web Protocols** - JSON Feed, Sitemap, OpenGraph, Front Matter parsing and
+  writing
 - **Calendar** - iCalendar format support
 
 **BlocksUI** (Sources/BlocksUI/) SwiftUI components shipped as a separate
@@ -99,6 +100,26 @@ Each transport wrapper adds specific behavior while conforming to the same
 - Test resources in Tests/BlocksTests/Resources/
 - Example apps for integration testing (BlocksApp, BlocksAppTCA)
 - CI runs on macOS, iOS, and Linux via GitHub Actions
+
+## New Features
+
+Each new feature must have:
+
+- **A demo in the examples.** Add the demo to the command-line tool
+  (`Examples/BlocksCLI`) or to the app (`Examples/BlocksApp`). For a CLI demo,
+  also update `Examples/BlocksCLI/README.md`.
+- **Documentation written in ASD-STE100** (Simplified Technical English). This
+  applies to the DocC articles, the public doc comments and the example
+  documentation. Use these rules:
+  - Write short sentences: 20 words or less for instructions, 25 words or less
+    for descriptions.
+  - Use the active voice.
+  - Write instructions in the imperative. Write one instruction in each
+    sentence.
+  - Use words from the ASD-STE100 dictionary. For example, write "make sure",
+    not "ensure", and write "use", not "utilize".
+  - Do not use -ing forms as nouns or in titles.
+- **A changeset** in `.changeset/` that describes the change.
 
 ## Key Development Patterns
 
