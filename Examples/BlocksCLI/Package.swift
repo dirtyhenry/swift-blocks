@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "BlocksCLI",
     platforms: [
-        .macOS(.v10_15),
+        .macOS("10.15.4"),
         .iOS(.v13) // CLI not intended to work on iOS but Xcode will fail without this.
     ],
     products: [

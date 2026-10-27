@@ -59,6 +59,11 @@ Use this decision tree to pick the right shell API:
 3. **Is the command non-interactive and you just need its output?**
    → Use ``CLIUtils/shell(_:)``
 
+To run an executable with untrusted arguments, to read stdout and stderr
+separately, or to stream output as it is produced, use ``ProcessRunner``
+instead. See <doc:RunningProcesses#Choose-the-Right-API> for a comparison of all
+the ways to run a command.
+
 ## Topics
 
 ### CLI Utilities

@@ -12,6 +12,8 @@
 - **iCalendar Objects**. Create ical documents.
 - <doc:StyledText> Compose colored and formatted text for command-line interfaces.
 - <doc:InteractiveShell> Run external commands with full terminal access.
+- <doc:RunningProcesses> Run executables without a shell and capture stdout
+  and stderr separately.
 
 ## Links
 
@@ -31,3 +33,4 @@
 - <doc:Calendar>
 - <doc:StyledText>
 - <doc:InteractiveShell>
+- <doc:RunningProcesses>
