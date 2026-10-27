@@ -73,7 +73,7 @@ let targets: [Target] = [
 let package = Package(
     name: "swift-blocks",
     platforms: [
-        .macOS(.v10_15), // Limiting factor: XCTest's fulfillment
+        .macOS("10.15.4"), // Limiting factor: FileHandle.write(contentsOf:)
         .iOS(.v13), // Limiting factor: XCTest's fulfillment
         .tvOS(.v15),
         .watchOS(.v8)

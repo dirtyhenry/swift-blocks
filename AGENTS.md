@@ -89,7 +89,7 @@ Each transport wrapper adds specific behavior while conforming to the same
 
 ### Platform Support
 
-- Primary platforms: macOS 10.15+, iOS 13+, tvOS 15+, watchOS 8+
+- Primary platforms: macOS 10.15.4+, iOS 13+, tvOS 15+, watchOS 8+
 - Linux support with conditional compilation for platform-specific features
 - Uses `#if os(Linux)` and `#if canImport()` for cross-platform compatibility
 
