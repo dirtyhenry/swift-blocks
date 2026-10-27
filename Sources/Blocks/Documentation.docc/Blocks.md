@@ -10,6 +10,7 @@
 - **Web tooling**. Create JSON Feeds, sitemaps.
 - <doc:MarkdownFrontMatter> Write YAML front matter for Markdown files.
 - **Data Management**. Convert data to hexadecimal or base 64 at ease.
+- <doc:FilenamesAndSlugs> Make a filename or a URL slug from a title.
 - **iCalendar Objects**. Create ical documents.
 - <doc:StyledText> Compose colored and formatted text for command-line interfaces.
 - <doc:InteractiveShell> Run external commands with full terminal access.
@@ -32,6 +33,7 @@
 - <doc:WebTooling>
 - <doc:MarkdownFrontMatter>
 - <doc:DataManagement>
+- <doc:FilenamesAndSlugs>
 - <doc:Calendar>
 - <doc:StyledText>
 - <doc:InteractiveShell>
