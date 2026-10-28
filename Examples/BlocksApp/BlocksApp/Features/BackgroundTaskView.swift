@@ -19,12 +19,19 @@ final class BackgroundRunnerSingleton {
     private let logger = Logger(subsystem: "net.mickf.blocks", category: "BackgroundXP")
     private let pollingInterval: Int = 5
 
+    private var isStarted = false
     private var backgroundTaskIdentifier: UIBackgroundTaskIdentifier?
     private var cancellableTask: Task<Bool, Never>?
 
     private init() {}
 
+    /// Starts the tasks. The tasks run until the app ends, so later calls do nothing.
     func start() {
+        guard !isStarted else {
+            logger.info("Background activity already started.")
+            return
+        }
+        isStarted = true
         observeTermination()
         startNormalTask()
         startBackgroundTask()
@@ -53,6 +60,7 @@ final class BackgroundRunnerSingleton {
                 self.cancelBackgroundTask()
             }
             await countTo(id: "background", limit: 1000)
+            endBackgroundTask()
             return true
         }
     }
@@ -60,9 +68,14 @@ final class BackgroundRunnerSingleton {
     private func cancelBackgroundTask() {
         logger.info("Background task expired.")
         cancellableTask?.cancel()
-        if let identifier = backgroundTaskIdentifier {
-            UIApplication.shared.endBackgroundTask(identifier)
-        }
+        endBackgroundTask()
+    }
+
+    /// Ends the background task one time, when it completes or when it expires.
+    private func endBackgroundTask() {
+        guard let identifier = backgroundTaskIdentifier else { return }
+        backgroundTaskIdentifier = nil
+        UIApplication.shared.endBackgroundTask(identifier)
     }
 
     private func countTo(id: String, limit: Int) async {
