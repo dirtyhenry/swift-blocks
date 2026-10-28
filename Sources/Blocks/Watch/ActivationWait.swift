@@ -14,11 +14,11 @@ protocol PairingSession: AnyObject {
 
 /// The activation state of a session, as `ActivationWait` sees it.
 enum PairingActivation: Sendable {
-    /// The session is not activated, and no activation failed.
+    /// The session is not activated.
     case pending
     /// The session is activated.
     case activated(isPaired: Bool)
-    /// The last activation failed.
+    /// An activation failed. The session delivers this value only once, when the activation fails.
     case failed(any Error)
 }
 

@@ -52,60 +52,47 @@ public enum WatchPairingUtil {
     /// Reports the result of a session activation to the callers that wait.
     ///
     /// Call this function from `session(_:activationDidCompleteWith:error:)` in the delegate of the
-    /// app. When `error` is not `nil`, the callers of ``isPaired(timeoutAfter:)`` throw
+    /// app. When `error` is not `nil`, the callers of ``isPaired(timeoutAfter:)`` that wait now throw
     /// ``WatchActivationFailedError`` immediately. They do not wait for the timeout.
+    ///
+    /// The utility does not keep the error. A call that starts after the failure waits for the next
+    /// activation, because the app can activate the session again.
     public static func activationDidComplete(with error: (any Error)?) {
-        lastActivationError.set(error)
-        NotificationCenter.default.post(name: activationDidCompleteNotification, object: nil)
+        NotificationCenter.default.post(
+            name: activationDidCompleteNotification,
+            object: nil,
+            userInfo: error.map { [activationErrorKey: $0] }
+        )
     }
 }
-
-/// The error of the last activation, `nil` when it succeeded or when the app did not report it.
-private let lastActivationError = LockedError()
 
 private let activationDidCompleteNotification = Notification.Name("WatchPairingUtil.activationDidComplete")
 
-/// An error that any thread can read and write.
-private final class LockedError: @unchecked Sendable {
-    private let lock = NSLock()
-    private var error: (any Error)?
-
-    func set(_ error: (any Error)?) {
-        lock.lock()
-        defer { lock.unlock() }
-        self.error = error
-    }
-
-    func get() -> (any Error)? {
-        lock.lock()
-        defer { lock.unlock() }
-        return error
-    }
-}
+private let activationErrorKey = "error"
 
 extension WCSession: PairingSession {
     var pairingActivation: PairingActivation {
-        if activationState == .activated {
-            return .activated(isPaired: isPaired)
-        }
-        if let error = lastActivationError.get() {
-            return .failed(error)
-        }
-        return .pending
+        activationState == .activated ? .activated(isPaired: isPaired) : .pending
     }
 
     func observeActivation(
         _ handler: @escaping @Sendable (PairingActivation) -> Void
     ) -> ActivationObservation {
         // A failed activation does not change `activationState`, so the app reports it through
-        // `WatchPairingUtil.activationDidComplete(with:)`, which posts this notification. The block
-        // reads `WCSession.default` because a `@Sendable` block cannot capture the session.
+        // `WatchPairingUtil.activationDidComplete(with:)`, which posts this notification. Only the
+        // callers that wait get the error. The block reads `WCSession.default` because a `@Sendable`
+        // block cannot capture the session.
         let token = NotificationCenter.default.addObserver(
             forName: activationDidCompleteNotification,
             object: nil,
             queue: nil
-        ) { _ in
-            handler(WCSession.default.pairingActivation)
+        ) { notification in
+            let activation = WCSession.default.pairingActivation
+            if case .pending = activation, let error = notification.userInfo?[activationErrorKey] as? any Error {
+                handler(.failed(error))
+            } else {
+                handler(activation)
+            }
         }
         // `activationState` is documented as KVO-observable. `.initial` delivers the current state
         // synchronously, so no activation can slip between a check and the observation.

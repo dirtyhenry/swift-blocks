@@ -15,8 +15,14 @@ private final class FakeSession: PairingSession, @unchecked Sendable {
         update(.activated(isPaired: isPaired))
     }
 
+    /// Delivers the failure to the current observers only. Like `WCSession`, the session stays not activated.
     func failActivation(with error: any Error) {
-        update(.failed(error))
+        lock.lock()
+        let handlers = Array(handlers.values)
+        lock.unlock()
+        for handler in handlers {
+            handler(.failed(error))
+        }
     }
 
     private func update(_ activation: PairingActivation) {
@@ -110,17 +116,15 @@ final class ActivationWaitTests: XCTestCase {
         XCTAssertEqual(session.observerCount, 0)
     }
 
-    func testThrowsActivationFailedWhenActivationAlreadyFailed() async {
+    func testCallAfterFailedActivationWaitsForNextActivation() async throws {
         let session = FakeSession()
         session.failActivation(with: URLError(.notConnectedToInternet))
-        do {
-            _ = try await ActivationWait.isPaired(of: session, timeoutAfter: 5)
-            XCTFail("Expected an activation failure")
-        } catch is WatchActivationFailedError {
-            // Expected.
-        } catch {
-            XCTFail("Unexpected error: \(error)")
+        Task {
+            try? await Task.sleep(nanoseconds: 100_000_000)
+            session.activate(isPaired: true)
         }
+        let isPaired = try await ActivationWait.isPaired(of: session, timeoutAfter: 5)
+        XCTAssertTrue(isPaired)
         XCTAssertEqual(session.observerCount, 0)
     }
 
