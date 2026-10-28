@@ -4,7 +4,8 @@ import BlocksUI
 import OSLog
 import SwiftUI
 
-class BackgroundRunnerSingleton {
+@MainActor
+final class BackgroundRunnerSingleton {
     static let readMe = """
     When clicking this button, 3 tasks are created:
 
@@ -48,7 +49,7 @@ class BackgroundRunnerSingleton {
 
     private func startBackgroundTask() {
         cancellableTask = Task {
-            self.backgroundTaskIdentifier = await UIApplication.shared.beginBackgroundTask {
+            self.backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask {
                 self.cancelBackgroundTask()
             }
             await countTo(id: "background", limit: 1000)
@@ -83,25 +84,19 @@ class BackgroundRunnerSingleton {
     private func pollDummyAPI() {
         let url = URL(string: "https://jsonplaceholder.typicode.com/todos/1")!
 
-        let task = URLSession.shared.dataTask(with: url) { data, _, error in
-            if let error {
-                print("Error: \(error.localizedDescription)")
-            } else if let data {
+        Task {
+            while !Task.isCancelled {
+                logger.info("Polling \(url, privacy: .public)")
                 do {
+                    let (data, _) = try await URLSession.shared.data(from: url)
                     _ = try JSONSerialization.jsonObject(with: data, options: [])
-                    self.logger.info("Polling received data.")
+                    logger.info("Polling received data.")
                 } catch {
-                    print("Error parsing JSON: \(error.localizedDescription)")
+                    print("Error: \(error.localizedDescription)")
                 }
-            }
-
-            // Poll again after 1 second
-            DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(self.pollingInterval)) {
-                self.pollDummyAPI()
+                try? await Task.sleep(for: .seconds(pollingInterval))
             }
         }
-        logger.info("Polling \(url, privacy: .public)")
-        task.resume()
     }
 }
 
@@ -113,9 +108,7 @@ struct BackgroundTaskView: View {
             Text(BackgroundRunnerSingleton.readMe)
             TaskStateButton("Start background activity", action: {
                 state = .running
-                Task {
-                    BackgroundRunnerSingleton.shared.start()
-                }
+                BackgroundRunnerSingleton.shared.start()
             }, state: state)
                 .buttonStyle(.borderedProminent)
         }

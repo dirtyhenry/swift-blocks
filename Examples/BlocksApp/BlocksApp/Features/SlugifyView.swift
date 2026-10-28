@@ -133,7 +133,7 @@ struct SlugifyView: View {
 
         // Reset the confirmation after a delay
         Task {
-            try await Task.sleep(for: .seconds(2))
+            try? await Task.sleep(for: .seconds(2))
             await MainActor.run {
                 showingCopyConfirmation = false
             }
