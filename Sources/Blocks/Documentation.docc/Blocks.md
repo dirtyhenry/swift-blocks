@@ -16,6 +16,7 @@
 - <doc:InteractiveShell> Run external commands with full terminal access.
 - <doc:RunningProcesses> Run executables without a shell and capture stdout
   and stderr separately.
+- <doc:WatchPairing> Find out whether an Apple Watch is paired with the iPhone.
 
 ## Links
 
@@ -38,3 +39,4 @@
 - <doc:StyledText>
 - <doc:InteractiveShell>
 - <doc:RunningProcesses>
+- <doc:WatchPairing>

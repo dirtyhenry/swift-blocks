@@ -1,0 +1,9 @@
+{
+  "id" : "16b49609-32c3-4e35-bc8b-90deb934eb9e",
+  "targets" : [
+    {
+      "id" : "963F516C-6265-46E4-B180-B121BABA87EB",
+      "name" : "BlocksApp"
+    }
+  ]
+}

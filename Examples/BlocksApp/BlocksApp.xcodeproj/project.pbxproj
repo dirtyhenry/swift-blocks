@@ -8,10 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		001E3A702A37081800C90416 /* Blocks in Frameworks */ = {isa = PBXBuildFile; productRef = 001E3A6F2A37081800C90416 /* Blocks */; };
-		B10C53C1000000000000B0C2 /* BlocksUI in Frameworks */ = {isa = PBXBuildFile; productRef = B10C53C1000000000000B0C1 /* BlocksUI */; };
 		002136DD2B57C2570031AE9A /* PlainDateDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002136DC2B57C2570031AE9A /* PlainDateDemoView.swift */; };
 		002136DF2B57DDD40031AE9A /* TaskStateDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002136DE2B57DDD40031AE9A /* TaskStateDemoView.swift */; };
-		0030C2522A99047F00AB2087 /* WatchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0030C2512A99047F00AB2087 /* WatchState.swift */; };
+		0030C2522A99047F00AB2087 /* WatchPairingDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0030C2512A99047F00AB2087 /* WatchPairingDemoView.swift */; };
 		0030C2542A99077400AB2087 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0030C2532A99077400AB2087 /* Settings.bundle */; };
 		00333CCB2C45682900A58365 /* SlugifyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00333CCA2C45682900A58365 /* SlugifyView.swift */; };
 		0038EF682C00F1F0004BF4FB /* LoggingPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0038EF672C00F1F0004BF4FB /* LoggingPlaygroundView.swift */; };
@@ -26,6 +25,7 @@
 		00A37E302B1911A800FA4B5F /* FileSystemExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */; };
 		00A37E322B19135400FA4B5F /* ObjectiveBlocks in Frameworks */ = {isa = PBXBuildFile; productRef = 00A37E312B19135400FA4B5F /* ObjectiveBlocks */; };
 		00D1E2482A36327100E8D275 /* BlocksApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D1E2472A36327100E8D275 /* BlocksApp.swift */; };
+		00D1E2482A36327100E8D299 /* WatchSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D1E2472A36327100E8D299 /* WatchSessionDelegate.swift */; };
 		00D1E24A2A36327100E8D275 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D1E2492A36327100E8D275 /* ContentView.swift */; };
 		00D1E24C2A36327100E8D275 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00D1E24B2A36327100E8D275 /* Assets.xcassets */; };
 		00D1E24F2A36327100E8D275 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00D1E24E2A36327100E8D275 /* Preview Assets.xcassets */; };
@@ -33,6 +33,7 @@
 		00D1E2632A36327200E8D275 /* BlocksAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D1E2622A36327200E8D275 /* BlocksAppUITests.swift */; };
 		00D1E2652A36327200E8D275 /* BlocksAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D1E2642A36327200E8D275 /* BlocksAppUITestsLaunchTests.swift */; };
 		00E4FFCD2A364A8F002341EC /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 00E4FFCC2A364A8F002341EC /* Config.xcconfig */; };
+		B10C53C1000000000000B0C2 /* BlocksUI in Frameworks */ = {isa = PBXBuildFile; productRef = B10C53C1000000000000B0C1 /* BlocksUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,7 +56,7 @@
 /* Begin PBXFileReference section */
 		002136DC2B57C2570031AE9A /* PlainDateDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainDateDemoView.swift; sourceTree = "<group>"; };
 		002136DE2B57DDD40031AE9A /* TaskStateDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStateDemoView.swift; sourceTree = "<group>"; };
-		0030C2512A99047F00AB2087 /* WatchState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchState.swift; sourceTree = "<group>"; };
+		0030C2512A99047F00AB2087 /* WatchPairingDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPairingDemoView.swift; sourceTree = "<group>"; };
 		0030C2532A99077400AB2087 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		00333CCA2C45682900A58365 /* SlugifyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlugifyView.swift; sourceTree = "<group>"; };
 		0038EF672C00F1F0004BF4FB /* LoggingPlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingPlaygroundView.swift; sourceTree = "<group>"; };
@@ -71,6 +72,7 @@
 		00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSystemExplorerView.swift; sourceTree = "<group>"; };
 		00D1E2442A36327100E8D275 /* BlocksApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlocksApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00D1E2472A36327100E8D275 /* BlocksApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlocksApp.swift; sourceTree = "<group>"; };
+		00D1E2472A36327100E8D299 /* WatchSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSessionDelegate.swift; sourceTree = "<group>"; };
 		00D1E2492A36327100E8D275 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		00D1E24B2A36327100E8D275 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		00D1E24E2A36327100E8D275 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -127,7 +129,7 @@
 				008D62CB2A56C35800254FD9 /* ImagePickerView.swift */,
 				008D62CD2A56C96E00254FD9 /* MailComposeView.swift */,
 				007314A62AF00BFC0092F234 /* FontsView.swift */,
-				0030C2512A99047F00AB2087 /* WatchState.swift */,
+				0030C2512A99047F00AB2087 /* WatchPairingDemoView.swift */,
 				003995742AFBF4680051BFCE /* BackgroundTaskView.swift */,
 				00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */,
 				002136DC2B57C2570031AE9A /* PlainDateDemoView.swift */,
@@ -168,6 +170,7 @@
 				008D62CA2A56C2AF00254FD9 /* Features */,
 				006E38742A370C0600B4142B /* Info.plist */,
 				00D1E2472A36327100E8D275 /* BlocksApp.swift */,
+				00D1E2472A36327100E8D299 /* WatchSessionDelegate.swift */,
 				00D1E2492A36327100E8D275 /* ContentView.swift */,
 				00D1E24B2A36327100E8D275 /* Assets.xcassets */,
 				00D1E24D2A36327100E8D275 /* Preview Content */,
@@ -349,9 +352,10 @@
 				00333CCB2C45682900A58365 /* SlugifyView.swift in Sources */,
 				00D1E24A2A36327100E8D275 /* ContentView.swift in Sources */,
 				007314A72AF00BFC0092F234 /* FontsView.swift in Sources */,
-				0030C2522A99047F00AB2087 /* WatchState.swift in Sources */,
+				0030C2522A99047F00AB2087 /* WatchPairingDemoView.swift in Sources */,
 				0038EF682C00F1F0004BF4FB /* LoggingPlaygroundView.swift in Sources */,
 				00D1E2482A36327100E8D275 /* BlocksApp.swift in Sources */,
+				00D1E2482A36327100E8D299 /* WatchSessionDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -515,6 +519,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BlocksApp/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Here is the content of NSCameraUsageDescription from Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -551,6 +556,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BlocksApp/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Here is the content of NSCameraUsageDescription from Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

@@ -45,11 +45,11 @@ struct SlugifyView: View {
 
                         TextField("Type your text here...", text: $input, axis: .vertical)
                             .textFieldStyle(.roundedBorder)
-                        #if os(iOS)
+                            #if os(iOS)
                             .lineLimit(3 ... 6)
-                        #else
+                            #else
                             .lineLimit(2 ... 8)
-                        #endif
+                            #endif
                             .disableAutocorrection(true)
                     }
                     .padding(20)
@@ -120,11 +120,11 @@ struct SlugifyView: View {
         }
         .navigationTitle("Slugify")
         #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.inline)
         #endif
-            .onChange(of: input) { _, newValue in
-                slug = newValue.slugify()
-            }
+        .onChange(of: input) { _, newValue in
+            slug = newValue.slugify()
+        }
     }
 
     private func copySlug() {

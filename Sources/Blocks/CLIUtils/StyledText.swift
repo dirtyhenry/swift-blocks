@@ -74,8 +74,12 @@ public struct StyledText: Sendable, CustomStringConvertible {
         guard hasStyle else { return rawText }
 
         var codes: [Int] = modifiers.sorted(by: { $0.openCode < $1.openCode }).map(\.openCode)
-        if let fg = foreground { codes.append(fg.foregroundCode) }
-        if let bg = background { codes.append(bg.backgroundCode) }
+        if let fg = foreground {
+            codes.append(fg.foregroundCode)
+        }
+        if let bg = background {
+            codes.append(bg.backgroundCode)
+        }
 
         let sequence = codes.map(String.init).joined(separator: ";")
         return "\u{001B}[\(sequence)m\(rawText)\u{001B}[0m"

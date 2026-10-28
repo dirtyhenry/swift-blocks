@@ -213,7 +213,9 @@ public extension CLIUtils {
         }
 
         guard spawnResult == 0 else {
-            if captureOutput { close(pipeFDs[0]) }
+            if captureOutput {
+                close(pipeFDs[0])
+            }
             throw SimpleMessageError(
                 message: "Failed to spawn process: \(spawnResult)"
             )

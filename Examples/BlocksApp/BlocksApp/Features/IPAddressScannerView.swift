@@ -80,7 +80,7 @@ struct IPAddressScannerView: View {
         }
         .navigationTitle("IP Scanner")
         #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.inline)
         #endif
     }
 

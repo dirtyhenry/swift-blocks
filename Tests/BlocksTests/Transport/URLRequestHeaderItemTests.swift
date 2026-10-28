@@ -1,8 +1,8 @@
 import Blocks
+import XCTest
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
-import XCTest
 
 final class URLRequestHeaderItemTests: XCTestCase {
     func testBasic() throws {
