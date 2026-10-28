@@ -8,6 +8,7 @@ struct SlugifyView: View {
     @State private var input: String = ""
     @State private var slug: String = "".slugify()
     @State private var showingCopyConfirmation = false
+    @State private var confirmationResetTask: Task<Void, Never>?
 
     private let pasteboard = Pasteboard()
 
@@ -131,12 +132,12 @@ struct SlugifyView: View {
         pasteboard.copy(text: slug)
         showingCopyConfirmation = true
 
-        // Reset the confirmation after a delay
-        Task {
+        // Reset the confirmation after a delay. A new copy restarts the delay.
+        confirmationResetTask?.cancel()
+        confirmationResetTask = Task {
             try? await Task.sleep(for: .seconds(2))
-            await MainActor.run {
-                showingCopyConfirmation = false
-            }
+            guard !Task.isCancelled else { return }
+            showingCopyConfirmation = false
         }
     }
 }
