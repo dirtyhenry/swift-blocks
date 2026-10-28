@@ -6,6 +6,7 @@ struct IPAddressScannerView: View {
     @State private var addresses: [String] = []
     @State private var scanState: TaskState = .notStarted
     @State private var copiedAddress: String?
+    @State private var confirmationResetTask: Task<Void, Never>?
 
     private let pasteboard = Pasteboard()
 
@@ -113,10 +114,8 @@ struct IPAddressScannerView: View {
         scanState = .running
         Task {
             try? await Task.sleep(for: .milliseconds(300))
-            await MainActor.run {
-                addresses = getPrivateIPv4Addresses()
-                scanState = .completed
-            }
+            addresses = getPrivateIPv4Addresses()
+            scanState = .completed
         }
     }
 
@@ -124,13 +123,12 @@ struct IPAddressScannerView: View {
         pasteboard.copy(text: address)
         copiedAddress = address
 
-        Task {
+        // A new copy restarts the delay.
+        confirmationResetTask?.cancel()
+        confirmationResetTask = Task {
             try? await Task.sleep(for: .seconds(2))
-            await MainActor.run {
-                if copiedAddress == address {
-                    copiedAddress = nil
-                }
-            }
+            guard !Task.isCancelled else { return }
+            copiedAddress = nil
         }
     }
 }

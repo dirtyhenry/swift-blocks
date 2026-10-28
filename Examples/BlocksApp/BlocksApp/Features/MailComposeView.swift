@@ -20,7 +20,10 @@ struct MailComposeView: UIViewControllerRepresentable {
         Coordinator(view: self)
     }
 
-    class Coordinator: NSObject, UINavigationControllerDelegate, MFMailComposeViewControllerDelegate {
+    /// MessageUI calls the delegate on the main thread but does not mark the protocol `@MainActor`.
+    /// The `@preconcurrency` conformance lets main actor methods satisfy it, with a check at run time.
+    @MainActor
+    final class Coordinator: NSObject, UINavigationControllerDelegate, @preconcurrency MFMailComposeViewControllerDelegate {
         let view: MailComposeView
 
         init(view: MailComposeView) {

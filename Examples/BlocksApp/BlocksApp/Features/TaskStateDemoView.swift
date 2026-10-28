@@ -70,7 +70,8 @@ struct TaskStateDemoView: View {
                             action: {
                                 Task {
                                     state = .running
-                                    try await Task.sleep(nanoseconds: UInt64(durationInMs * 1_000_000))
+                                    try? await Task.sleep(nanoseconds: UInt64(durationInMs * 1_000_000))
+                                    guard !Task.isCancelled else { return }
                                     state = shouldSucceed ? .completed : .failed(errorDescription: "Dummy error")
                                 }
                             },
