@@ -1,6 +1,7 @@
 import Blocks
 import SwiftUI
 
+@MainActor
 class WatchState: ObservableObject {
     enum State: String {
         case pending = "⏳ Pending"
@@ -12,22 +13,22 @@ class WatchState: ObservableObject {
     @Published var state: State = .pending
 
     func start() {
+        #if os(iOS)
+        // In a real app, call this one time from the app delegate.
+        WatchPairingUtil.shared.activateSession()
+
         Task {
-            #if os(iOS)
-            // FIXME: Reenable
-//            let value = try? await UIDevice.current.isPairedWithWatch(timeoutAfter: 3)
-//
-//            await MainActor.run {
-//                switch value {
-//                case .none:
-//                    state = .unknown
-//                case .some(true):
-//                    state = .paired
-//                case .some(false):
-//                    state = .unpaired
-//                }
-//            }
-            #endif
+            let value = try? await UIDevice.current.isPairedWithWatch(timeoutAfter: 3)
+
+            switch value {
+            case .none:
+                state = .unknown
+            case .some(true):
+                state = .paired
+            case .some(false):
+                state = .unpaired
+            }
         }
+        #endif
     }
 }
