@@ -19,23 +19,25 @@ delegate for an app that does not talk to a watch app:
 import Blocks
 import WatchConnectivity
 
-final class WatchSessionDelegate: NSObject, WCSessionDelegate {
+// The class has no mutable state, so it can be `Sendable`. Watch Connectivity calls the delegate
+// methods on a background queue, so they are `nonisolated`.
+final class WatchSessionDelegate: NSObject, WCSessionDelegate, Sendable {
     static let shared = WatchSessionDelegate()
 
-    func activate() {
+    nonisolated func activate() {
         guard WCSession.isSupported() else { return }
         WCSession.default.delegate = self
         WCSession.default.activate()
     }
 
-    func session(_: WCSession, activationDidCompleteWith _: WCSessionActivationState, error: Error?) {
+    nonisolated func session(_: WCSession, activationDidCompleteWith _: WCSessionActivationState, error: Error?) {
         // Report a failed activation to the callers that wait.
         WatchPairingUtil.activationDidComplete(with: error)
     }
 
-    func sessionDidBecomeInactive(_: WCSession) {}
+    nonisolated func sessionDidBecomeInactive(_: WCSession) {}
 
-    func sessionDidDeactivate(_ session: WCSession) {
+    nonisolated func sessionDidDeactivate(_ session: WCSession) {
         // After the user switches to another watch, the app must activate the session again.
         session.activate()
     }

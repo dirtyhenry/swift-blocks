@@ -7,12 +7,12 @@ import WatchConnectivity
 ///
 /// Call ``activate()`` one time, at launch. This is the minimal delegate for an app that does not
 /// talk to a watch app and only wants to know whether a watch is paired.
-final class WatchSessionDelegate: NSObject, WCSessionDelegate {
+final class WatchSessionDelegate: NSObject, WCSessionDelegate, Sendable {
     static let shared = WatchSessionDelegate()
 
     private let logger = Logger(subsystem: "net.mickf.blocks", category: "Watch")
 
-    func activate() {
+    nonisolated func activate() {
         guard WCSession.isSupported() else { return }
         WCSession.default.delegate = self
         WCSession.default.activate()
@@ -20,7 +20,7 @@ final class WatchSessionDelegate: NSObject, WCSessionDelegate {
 
     // The delegate methods run on a background serial queue.
 
-    func session(_: WCSession, activationDidCompleteWith state: WCSessionActivationState, error: Error?) {
+    nonisolated func session(_: WCSession, activationDidCompleteWith state: WCSessionActivationState, error: Error?) {
         if let error {
             logger.error("Watch session activation failed (state \(state.rawValue)): \(error.localizedDescription)")
         } else {
@@ -30,9 +30,9 @@ final class WatchSessionDelegate: NSObject, WCSessionDelegate {
         WatchPairingUtil.activationDidComplete(with: error)
     }
 
-    func sessionDidBecomeInactive(_: WCSession) {}
+    nonisolated func sessionDidBecomeInactive(_: WCSession) {}
 
-    func sessionDidDeactivate(_ session: WCSession) {
+    nonisolated func sessionDidDeactivate(_ session: WCSession) {
         // After the user switches to another watch, the app must activate the session again.
         session.activate()
     }
