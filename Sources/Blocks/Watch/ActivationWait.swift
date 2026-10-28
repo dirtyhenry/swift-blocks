@@ -1,15 +1,25 @@
 import Foundation
 
-/// The part of a Watch Connectivity session that pairing detection needs.
+/// The part of a Watch Connectivity session that `ActivationWait` needs.
 ///
 /// `WCSession` conforms to this protocol on iOS. Tests use a fake, so the wait logic runs on every platform.
 protocol PairingSession: AnyObject {
     /// Calls `handler` now and each time the activation state changes.
     ///
-    /// The handler gets `nil` while the session is not activated. It can run on any thread.
+    /// The handler can run on any thread.
     func observeActivation(
-        _ handler: @escaping @Sendable (_ isPaired: Bool?) -> Void
+        _ handler: @escaping @Sendable (PairingActivation) -> Void
     ) -> ActivationObservation
+}
+
+/// The activation state of a session, as `ActivationWait` sees it.
+enum PairingActivation: Sendable {
+    /// The session is not activated, and no activation failed.
+    case pending
+    /// The session is activated.
+    case activated(isPaired: Bool)
+    /// The last activation failed.
+    case failed(any Error)
 }
 
 /// A token that stops an activation observation.
@@ -22,17 +32,35 @@ public struct WatchActivationTimedOutError: Error, Equatable {
     public init() {}
 }
 
+/// An error thrown when the app did not set a delegate on the session.
+///
+/// Without a delegate, the app cannot activate the session, so a wait can only time out.
+public struct WatchSessionHasNoDelegateError: Error, Equatable {
+    public init() {}
+}
+
+/// An error thrown when the session activation fails.
+public struct WatchActivationFailedError: Error {
+    /// The error that the session gave to `session(_:activationDidCompleteWith:error:)`.
+    public let underlyingError: any Error
+
+    public init(underlyingError: any Error) {
+        self.underlyingError = underlyingError
+    }
+}
+
 enum ActivationWait {
     private enum Outcome: Sendable {
         case paired(Bool)
+        case failed(any Error)
         case timedOut
         case cancelled
     }
 
     /// Waits for `session` to be activated and returns whether a watch is paired.
     ///
-    /// Three events race to finish the wait: the activation, the timeout and the cancellation of the
-    /// calling task. A ``OneShot`` makes sure that exactly one of them resumes the caller.
+    /// Three events race to finish the wait: the end of the activation (success or failure), the
+    /// timeout and the cancellation of the calling task. A ``OneShot`` makes sure that exactly one of them resumes the caller.
     static func isPaired(
         of session: some PairingSession,
         timeoutAfter maxDuration: TimeInterval
@@ -48,9 +76,15 @@ enum ActivationWait {
                 }
 
                 // The first delivery is synchronous: an activated session resumes the caller right here.
-                let observation = session.observeActivation { isPaired in
-                    guard let isPaired else { return }
-                    slot.take()?.resume(returning: .paired(isPaired))
+                let observation = session.observeActivation { activation in
+                    switch activation {
+                    case .pending:
+                        return
+                    case let .activated(isPaired):
+                        slot.take()?.resume(returning: .paired(isPaired))
+                    case let .failed(error):
+                        slot.take()?.resume(returning: .failed(error))
+                    }
                 }
                 slot.onTake(observation.invalidate)
 
@@ -67,6 +101,8 @@ enum ActivationWait {
         switch outcome {
         case let .paired(isPaired):
             return isPaired
+        case let .failed(error):
+            throw WatchActivationFailedError(underlyingError: error)
         case .timedOut:
             throw WatchActivationTimedOutError()
         case .cancelled:

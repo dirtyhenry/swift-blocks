@@ -1,101 +1,121 @@
 #if os(iOS)
-import OSLog
 import UIKit
 import WatchConnectivity
 
-@available(iOS 14.0, *)
-let logger = Logger(subsystem: "net.mickf.Blocks", category: "Watch")
-
-/// A utility that tells whether an Apple Watch is paired with this iPhone.
+/// Tells whether an Apple Watch is paired with this iPhone.
 ///
-/// Watch Connectivity reports the pairing only after the default session is activated. Activate the
-/// session one time, at launch:
-///
-/// - If your app has no `WCSessionDelegate`, call ``activateSession()`` from the app delegate.
-/// - If your app has its own delegate, activate the session as you already do. This utility only
-///   observes the activation state; it does not need to be the delegate.
+/// `WCSession.isPaired` is valid only after the host app activates the default session.
+/// This utility does not activate the session and does not set its delegate: those are the
+/// responsibility of the app. Set a delegate on `WCSession.default` and call `activate()` one time,
+/// at launch. See <doc:WatchPairing> for a minimal delegate.
 ///
 /// Then read ``isPaired`` for an immediate answer, or await ``isPaired(timeoutAfter:)`` to wait for
-/// the activation. The utility holds no state, so concurrent calls do not interfere with each other.
+/// the activation. Each call observes the session on its own, so concurrent calls do not interfere
+/// with each other.
+///
+/// Watch Connectivity tells only the delegate when an activation fails. To report the failure to
+/// the callers that wait, call ``activationDidComplete(with:)`` from
+/// `session(_:activationDidCompleteWith:error:)`.
 @available(iOS 14.0, *)
-public final class WatchPairingUtil: NSObject, Sendable {
-    public static let shared = WatchPairingUtil()
-
-    override private init() {
-        super.init()
-    }
-
-    /// Sets ``shared`` as the delegate of the default session and activates it.
-    ///
-    /// Call this one time, at launch. Do not call it when your app has its own `WCSessionDelegate`.
-    public func activateSession() {
-        guard WCSession.isSupported() else { return }
-        let session = WCSession.default
-        session.delegate = self
-        session.activate()
-    }
-
+public enum WatchPairingUtil {
     /// Whether a watch is paired. `nil` while the session is not activated.
-    public var isPaired: Bool? {
+    ///
+    /// `false` on devices that do not support Watch Connectivity, such as iPad.
+    public static var isPaired: Bool? {
         guard WCSession.isSupported() else { return false }
-        return WCSession.default.pairingState
+        guard case let .activated(isPaired) = WCSession.default.pairingActivation else { return nil }
+        return isPaired
     }
 
     /// Waits for the session activation, at most `maxDuration` seconds, and returns whether a watch is paired.
     ///
-    /// Returns immediately when the session is already activated.
+    /// Returns immediately when the session is already activated. Returns `false` on devices that do
+    /// not support Watch Connectivity.
     ///
-    /// - Throws: ``WatchActivationTimedOutError`` after `maxDuration`, `CancellationError` when the
-    ///   calling task is cancelled.
-    public func isPaired(
+    /// - Throws: ``WatchSessionHasNoDelegateError`` immediately when the session is not activated and
+    ///   has no delegate, ``WatchActivationFailedError`` when the activation fails and the app reported it with
+    ///   ``activationDidComplete(with:)``, ``WatchActivationTimedOutError`` after `maxDuration`,
+    ///   `CancellationError` when the calling task is cancelled.
+    public static func isPaired(
         timeoutAfter maxDuration: TimeInterval
     ) async throws -> Bool {
         guard WCSession.isSupported() else { return false }
+        let session = WCSession.default
+        // The app sets the delegate before it calls `activate()`. Without a delegate, no activation
+        // is in progress, and the wait could only time out.
+        if session.activationState == .notActivated, session.delegate == nil {
+            throw WatchSessionHasNoDelegateError()
+        }
         return try await ActivationWait.isPaired(of: WCSession.default, timeoutAfter: maxDuration)
+    }
+
+    /// Reports the result of a session activation to the callers that wait.
+    ///
+    /// Call this function from `session(_:activationDidCompleteWith:error:)` in the delegate of the
+    /// app. When `error` is not `nil`, the callers of ``isPaired(timeoutAfter:)`` throw
+    /// ``WatchActivationFailedError`` immediately. They do not wait for the timeout.
+    public static func activationDidComplete(with error: (any Error)?) {
+        lastActivationError.set(error)
+        NotificationCenter.default.post(name: activationDidCompleteNotification, object: nil)
     }
 }
 
-@available(iOS 14.0, *)
-extension WatchPairingUtil: WCSessionDelegate {
-    // All delegate methods run on the Watch Connectivity background serial queue.
+/// The error of the last activation, `nil` when it succeeded or when the app did not report it.
+private let lastActivationError = LockedError()
 
-    public func session(
-        _: WCSession,
-        activationDidCompleteWith state: WCSessionActivationState,
-        error: Error?
-    ) {
-        if let error {
-            logger.error(
-                "Session activation failed (state \(state.rawValue)): \(error.localizedDescription, privacy: .public)"
-            )
-        } else {
-            logger.debug("Session activation did complete (state \(state.rawValue))")
-        }
+private let activationDidCompleteNotification = Notification.Name("WatchPairingUtil.activationDidComplete")
+
+/// An error that any thread can read and write.
+private final class LockedError: @unchecked Sendable {
+    private let lock = NSLock()
+    private var error: (any Error)?
+
+    func set(_ error: (any Error)?) {
+        lock.lock()
+        defer { lock.unlock() }
+        self.error = error
     }
 
-    public func sessionDidBecomeInactive(_: WCSession) {}
-
-    public func sessionDidDeactivate(_ session: WCSession) {
-        // Apple: after a watch switch, the iOS app must activate the session again.
-        session.activate()
+    func get() -> (any Error)? {
+        lock.lock()
+        defer { lock.unlock() }
+        return error
     }
 }
 
 extension WCSession: PairingSession {
-    /// `nil` while the session is not activated.
-    var pairingState: Bool? {
-        activationState == .activated ? isPaired : nil
+    var pairingActivation: PairingActivation {
+        if activationState == .activated {
+            return .activated(isPaired: isPaired)
+        }
+        if let error = lastActivationError.get() {
+            return .failed(error)
+        }
+        return .pending
     }
 
     func observeActivation(
-        _ handler: @escaping @Sendable (_ isPaired: Bool?) -> Void
+        _ handler: @escaping @Sendable (PairingActivation) -> Void
     ) -> ActivationObservation {
+        // A failed activation does not change `activationState`, so the app reports it through
+        // `WatchPairingUtil.activationDidComplete(with:)`, which posts this notification. The block
+        // reads `WCSession.default` because a `@Sendable` block cannot capture the session.
+        let token = NotificationCenter.default.addObserver(
+            forName: activationDidCompleteNotification,
+            object: nil,
+            queue: nil
+        ) { _ in
+            handler(WCSession.default.pairingActivation)
+        }
         // `activationState` is documented as KVO-observable. `.initial` delivers the current state
         // synchronously, so no activation can slip between a check and the observation.
         let observation = observe(\.activationState, options: [.initial, .new]) { session, _ in
-            handler(session.pairingState)
+            handler(session.pairingActivation)
         }
-        return ActivationObservation(invalidate: observation.invalidate)
+        return ActivationObservation {
+            observation.invalidate()
+            NotificationCenter.default.removeObserver(token)
+        }
     }
 }
 
@@ -107,7 +127,7 @@ public extension UIDevice {
     func isPairedWithWatch(
         timeoutAfter maxDuration: TimeInterval
     ) async throws -> Bool {
-        try await WatchPairingUtil.shared.isPaired(timeoutAfter: maxDuration)
+        try await WatchPairingUtil.isPaired(timeoutAfter: maxDuration)
     }
 }
 #endif

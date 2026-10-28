@@ -7,6 +7,12 @@ struct BlocksApp: App {
 
     let logger = Logger(subsystem: "net.mickf.blocks", category: "App")
 
+    init() {
+        #if os(iOS)
+        WatchSessionDelegate.shared.activate()
+        #endif
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()

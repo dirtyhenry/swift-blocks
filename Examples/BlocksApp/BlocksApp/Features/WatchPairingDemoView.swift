@@ -13,18 +13,11 @@ final class WatchPairingModel: ObservableObject {
     @Published private(set) var status: Status = .checking
     @Published private(set) var responseTime: Duration?
 
-    private var isSessionActivated = false
     private var checkTask: Task<Void, Never>?
 
     /// Starts a new check. Cancels the check in progress, so that only the last check updates the status.
     func check() {
         #if os(iOS)
-        // A real app calls this one time, from the app delegate.
-        if !isSessionActivated {
-            WatchPairingUtil.shared.activateSession()
-            isSessionActivated = true
-        }
-
         checkTask?.cancel()
         status = .checking
         responseTime = nil
@@ -70,7 +63,7 @@ struct WatchPairingDemoView: View {
                 }
             } footer: {
                 Text("""
-                Watch Connectivity reports the pairing after its session is activated. \
+                The app activates the Watch Connectivity session at launch. \
                 The check waits up to 3 seconds for the activation.
                 """)
             }

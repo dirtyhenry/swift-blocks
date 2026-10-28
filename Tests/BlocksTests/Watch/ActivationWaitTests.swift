@@ -4,20 +4,28 @@ import XCTest
 /// A session whose activation the test controls.
 private final class FakeSession: PairingSession, @unchecked Sendable {
     private let lock = NSLock()
-    private var isPaired: Bool?
-    private var handlers: [UUID: @Sendable (Bool?) -> Void] = [:]
+    private var activation: PairingActivation
+    private var handlers: [UUID: @Sendable (PairingActivation) -> Void] = [:]
 
     init(isPaired: Bool? = nil) {
-        self.isPaired = isPaired
+        activation = isPaired.map { .activated(isPaired: $0) } ?? .pending
     }
 
     func activate(isPaired: Bool) {
+        update(.activated(isPaired: isPaired))
+    }
+
+    func failActivation(with error: any Error) {
+        update(.failed(error))
+    }
+
+    private func update(_ activation: PairingActivation) {
         lock.lock()
-        self.isPaired = isPaired
+        self.activation = activation
         let handlers = Array(handlers.values)
         lock.unlock()
         for handler in handlers {
-            handler(isPaired)
+            handler(activation)
         }
     }
 
@@ -27,11 +35,11 @@ private final class FakeSession: PairingSession, @unchecked Sendable {
         return handlers.count
     }
 
-    func observeActivation(_ handler: @escaping @Sendable (Bool?) -> Void) -> ActivationObservation {
+    func observeActivation(_ handler: @escaping @Sendable (PairingActivation) -> Void) -> ActivationObservation {
         let id = UUID()
         lock.lock()
         handlers[id] = handler
-        let current = isPaired
+        let current = activation
         lock.unlock()
         handler(current)
         return ActivationObservation { [weak self] in
@@ -79,6 +87,37 @@ final class ActivationWaitTests: XCTestCase {
             let elapsed = Date().timeIntervalSince(start)
             XCTAssertGreaterThanOrEqual(elapsed, 0.2)
             XCTAssertLessThan(elapsed, 1)
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+        XCTAssertEqual(session.observerCount, 0)
+    }
+
+    func testThrowsActivationFailedWhenActivationFails() async {
+        let session = FakeSession()
+        Task {
+            try? await Task.sleep(nanoseconds: 100_000_000)
+            session.failActivation(with: URLError(.notConnectedToInternet))
+        }
+        do {
+            _ = try await ActivationWait.isPaired(of: session, timeoutAfter: 5)
+            XCTFail("Expected an activation failure")
+        } catch let error as WatchActivationFailedError {
+            XCTAssertEqual((error.underlyingError as? URLError)?.code, .notConnectedToInternet)
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
+        XCTAssertEqual(session.observerCount, 0)
+    }
+
+    func testThrowsActivationFailedWhenActivationAlreadyFailed() async {
+        let session = FakeSession()
+        session.failActivation(with: URLError(.notConnectedToInternet))
+        do {
+            _ = try await ActivationWait.isPaired(of: session, timeoutAfter: 5)
+            XCTFail("Expected an activation failure")
+        } catch is WatchActivationFailedError {
+            // Expected.
         } catch {
             XCTFail("Unexpected error: \(error)")
         }
