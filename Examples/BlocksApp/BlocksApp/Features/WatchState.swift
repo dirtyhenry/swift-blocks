@@ -8,6 +8,7 @@ class WatchState: ObservableObject {
         case paired = "✔ Paired"
         case unpaired = "✘ Unpaired"
         case unknown = "🤷‍♂️ Unknown"
+        case unavailable = "🚫 Watch Connectivity is iOS-only"
     }
 
     @Published var state: State = .pending
@@ -29,6 +30,8 @@ class WatchState: ObservableObject {
                 state = .unpaired
             }
         }
+        #else
+        state = .unavailable
         #endif
     }
 }

@@ -116,13 +116,12 @@ public struct TaskStateButton: View {
 
     // MARK: - Private Methods
 
+    @ViewBuilder
     private func defaultState() -> some View {
-        Group {
-            if systemImage == nil {
-                Text(defaultTitleKey)
-            } else {
-                Label(defaultTitleKey, systemImage: systemImage!)
-            }
+        if systemImage == nil {
+            Text(defaultTitleKey)
+        } else {
+            Label(defaultTitleKey, systemImage: systemImage!)
         }
     }
 

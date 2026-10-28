@@ -58,11 +58,17 @@ func isPrivateIPv4(_ ip: String) -> Bool {
     let (a, b) = (components[0], components[1])
 
     // 10.0.0.0/8
-    if a == 10 { return true }
+    if a == 10 {
+        return true
+    }
     // 172.16.0.0/12
-    if a == 172, (16 ... 31).contains(b) { return true }
+    if a == 172, (16 ... 31).contains(b) {
+        return true
+    }
     // 192.168.0.0/16
-    if a == 192, b == 168 { return true }
+    if a == 192, b == 168 {
+        return true
+    }
 
     return false
 }

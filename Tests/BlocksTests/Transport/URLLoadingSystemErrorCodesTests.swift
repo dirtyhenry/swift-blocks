@@ -1,8 +1,8 @@
 import Foundation
+import XCTest
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
-import XCTest
 
 final class URLLoadingSystemErrorCodesTests: XCTestCase {
     // TODO: Explore how to benefit from these extra error info keys
