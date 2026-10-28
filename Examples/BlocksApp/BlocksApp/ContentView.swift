@@ -5,96 +5,87 @@ import UniformTypeIdentifiers
 struct ContentView: View {
     enum Section: String, Identifiable, CaseIterable {
         case formPlayground = "Form Playground"
-        case taskStateDemo = "TaskState demo"
-        case misc = "Misc"
+        case taskStateDemo = "TaskState"
         case fonts = "Fonts"
+        case plainDateDemo = "PlainDate"
+        case watchPairing = "Watch Pairing"
         #if os(iOS)
-        case bg = "Background test"
+        case backgroundTasks = "Background Tasks"
         #endif
-        case fileSystemExplorer = "FileSystem Explorer"
-        case ipAddressScanner = "IP Address Scanner"
-        case plainDateDemo = "PlainDate demo"
-        case loggingPlayground = "Logging Playground"
-        case slugifyPlayground = "Slugify Playground"
-        case transportDemo = "Transport demo"
+        case fileSystemExplorer = "File System"
+        case ipAddressScanner = "IP Address"
+        case mailAndCamera = "Mail & Camera"
+        case loggingPlayground = "Logging"
+        case slugifyPlayground = "Slugify"
+        case transportDemo = "Transport"
 
         var id: String {
             rawValue
         }
-    }
 
-    @ObservedObject var model: WatchState
+        var systemImage: String {
+            switch self {
+            case .formPlayground: "list.bullet.rectangle"
+            case .taskStateDemo: "button.horizontal"
+            case .fonts: "textformat"
+            case .plainDateDemo: "calendar"
+            case .watchPairing: "applewatch"
+            #if os(iOS)
+            case .backgroundTasks: "moon.zzz"
+            #endif
+            case .fileSystemExplorer: "folder"
+            case .ipAddressScanner: "network"
+            case .mailAndCamera: "envelope"
+            case .loggingPlayground: "doc.text.magnifyingglass"
+            case .slugifyPlayground: "link"
+            case .transportDemo: "arrow.up.arrow.down.circle"
+            }
+        }
+
+        static let groups: [(title: String, sections: [Section])] = [
+            ("Components", [.formPlayground, .taskStateDemo, .fonts, .plainDateDemo]),
+            ("System", {
+                var sections: [Section] = [.watchPairing]
+                #if os(iOS)
+                sections.append(.backgroundTasks)
+                #endif
+                sections += [.fileSystemExplorer, .ipAddressScanner, .mailAndCamera]
+                return sections
+            }()),
+            ("Utilities", [.loggingPlayground, .slugifyPlayground, .transportDemo])
+        ]
+    }
 
     @State var isShowingCamera: Bool = false
     @State var isShowingComposer: Bool = false
 
     @State var selectedSectionId: Section.ID?
 
-    init(model: WatchState) {
-        self.model = model
-    }
-
     var body: some View {
         NavigationSplitView {
-            Text("🧱 Welcome to Blocks!")
-            List(Section.allCases, selection: $selectedSectionId) { section in
-                Text(section.id)
-            }
-            #if os(macOS)
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-            #endif
-            .toolbar {
-                #if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                #endif
-                ToolbarItem {
-                    Button("Hey") {
-                        print("Hey")
+            List(selection: $selectedSectionId) {
+                ForEach(Section.groups, id: \.title) { group in
+                    SwiftUI.Section(group.title) {
+                        ForEach(group.sections) { section in
+                            Label(section.rawValue, systemImage: section.systemImage)
+                        }
                     }
                 }
             }
+            .navigationTitle("Blocks")
+            #if os(macOS)
+            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
+            #endif
         } detail: {
             Group {
                 if let selectedSectionId, let section = Section(rawValue: selectedSectionId) {
                     switch section {
-                    case .misc:
-                        VStack {
-                            Text("Is a watch paired with this iPhone?")
-                            Text(model.state.rawValue)
-                            Spacer().frame(height: 16)
-                            #if os(iOS) || os(tvOS)
-                            Button("Photo", role: nil) {
-                                isShowingCamera = true
-                            }.fullScreenCover(isPresented: $isShowingCamera) {
-                                // In order to use this, `NSCameraUsageDescription` must be set.
-                                ImagePickerView(sourceType: .camera, mediaTypes: [UTType.image.identifier])
-                                    .edgesIgnoringSafeArea(.all)
-                            }
-                            Spacer().frame(height: 16)
-                            #endif
-
-                            #if canImport(MessageUI)
-                            if MailComposeView.canSendMail() {
-                                Button("Mail", role: nil) {
-                                    isShowingComposer = true
-                                }.fullScreenCover(isPresented: $isShowingComposer) {
-                                    MailComposeView()
-                                        .edgesIgnoringSafeArea(.all)
-                                }
-                            } else {
-                                Text("Can not send mail in-app.")
-                            }
-                            #endif
-
-                            Link("Alternative mailto", destination: mailtoURL())
-                        }
-                        .padding()
+                    case .mailAndCamera:
+                        mailAndCameraView
                     case .fonts:
                         FontsView()
                     #if os(iOS)
-                    case .bg:
+                    case .backgroundTasks:
                         BackgroundTaskView()
                     #endif
                     case .fileSystemExplorer:
@@ -115,18 +106,52 @@ struct ContentView: View {
                         TransportDemoView()
                     case .formPlayground:
                         FormPlaygroundView()
+                    case .watchPairing:
+                        WatchPairingDemoView()
                     }
                 } else {
-                    Text("Select a section")
+                    ContentUnavailableView("Select a Demo", systemImage: "square.grid.2x2")
                 }
             }
             #if os(macOS)
             .scenePadding()
             #endif
         }
-        .onAppear {
-            model.start()
+    }
+
+    var mailAndCameraView: some View {
+        Form {
+            #if os(iOS) || os(tvOS)
+            SwiftUI.Section("Camera") {
+                Button("Take a Photo") {
+                    isShowingCamera = true
+                }.fullScreenCover(isPresented: $isShowingCamera) {
+                    // In order to use this, `NSCameraUsageDescription` must be set.
+                    ImagePickerView(sourceType: .camera, mediaTypes: [UTType.image.identifier])
+                        .edgesIgnoringSafeArea(.all)
+                }
+            }
+            #endif
+
+            SwiftUI.Section("Mail") {
+                #if canImport(MessageUI)
+                if MailComposeView.canSendMail() {
+                    Button("Compose In-App") {
+                        isShowingComposer = true
+                    }.fullScreenCover(isPresented: $isShowingComposer) {
+                        MailComposeView()
+                            .edgesIgnoringSafeArea(.all)
+                    }
+                } else {
+                    Text("This device cannot send mail in-app.")
+                        .foregroundStyle(.secondary)
+                }
+                #endif
+
+                Link("Open a mailto: Link", destination: mailtoURL())
+            }
         }
+        .navigationTitle("Mail & Camera")
     }
 
     func mailtoURL() -> URL {
@@ -147,8 +172,6 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView(model: WatchState())
-    }
+#Preview {
+    ContentView()
 }

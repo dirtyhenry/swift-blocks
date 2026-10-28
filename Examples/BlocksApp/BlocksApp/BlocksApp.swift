@@ -9,7 +9,7 @@ struct BlocksApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(model: WatchState())
+            ContentView()
         }.onChange(of: scenePhase) {
             switch scenePhase {
             case .active:
