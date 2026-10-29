@@ -19,6 +19,7 @@ struct ContentView: View {
         case slugifyPlayground = "Slugify"
         case transportDemo = "Transport"
         case imageCompression = "Image Compression"
+        case queryClientDemo = "Query Client"
 
         var id: String {
             rawValue
@@ -41,6 +42,7 @@ struct ContentView: View {
             case .slugifyPlayground: "link"
             case .transportDemo: "arrow.up.arrow.down.circle"
             case .imageCompression: "photo"
+            case .queryClientDemo: "arrow.triangle.2.circlepath"
             }
         }
 
@@ -54,7 +56,7 @@ struct ContentView: View {
                 sections += [.fileSystemExplorer, .ipAddressScanner, .mailAndCamera]
                 return sections
             }()),
-            ("Utilities", [.loggingPlayground, .slugifyPlayground, .transportDemo, .imageCompression])
+            ("Utilities", [.loggingPlayground, .slugifyPlayground, .transportDemo, .imageCompression, .queryClientDemo])
         ]
     }
 
@@ -106,6 +108,8 @@ struct ContentView: View {
                         SlugifyView()
                     case .transportDemo:
                         TransportDemoView()
+                    case .queryClientDemo:
+                        QueryClientDemoView()
                     case .formPlayground:
                         FormPlaygroundView()
                     case .watchPairing:

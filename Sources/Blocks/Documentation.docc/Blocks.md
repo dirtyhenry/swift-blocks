@@ -5,6 +5,7 @@
 ## Overview
 
 - <doc:Transport> A set of tools and techniques to write simple and low-footprint networking code, that makes  composition and tests easy to write.
+- <doc:QueryHowTo> Fetch async data, keep it in a cache and refresh it, with deduplication and retries.
 - **API Management**. Some helpers to deal with common pitfalls of the native
   support of JSON API via Swift's `Codable`.
 - **Web tooling**. Create JSON Feeds, sitemaps.
@@ -32,6 +33,8 @@
 ### Essentials
 
 - <doc:Transport>
+- <doc:QueryHowTo>
+- <doc:QueryExplanation>
 - <doc:APIManagement>
 - <doc:WebTooling>
 - <doc:MarkdownFrontMatter>

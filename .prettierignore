@@ -1,6 +1,1 @@
-APIManagement.md
-Blocks.md
-Calendar.md
-DataManagement.md
-Networking.md
-WebTooling.md
+Sources/Blocks/Documentation.docc/**/*.md
