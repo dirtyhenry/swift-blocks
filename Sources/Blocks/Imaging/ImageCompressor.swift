@@ -4,22 +4,22 @@ import CoreGraphics
 import Foundation
 import ImageIO
 
-/// Stateless namespace for JPEG image compression with target byte size.
+/// Operations that compress an image to JPEG data of a target size.
 @available(macOS 10.15, iOS 13.0, tvOS 15.0, watchOS 8.0, *)
 public enum ImageCompressor {
-    /// Configuration for image compression.
+    /// The configuration of a compression.
     public struct Configuration: Sendable {
-        /// Target byte size for the compressed output.
+        /// The target size of the compressed data, in bytes.
         public var targetByteSize: Int
-        /// Acceptable tolerance around the target size (0.0–1.0). Defaults to 0.05 (5%).
+        /// The permitted difference from the target size, as a fraction (0.0–1.0). The default is 0.05 (5%).
         public var tolerance: Double
-        /// Maximum binary search iterations. Defaults to 8.
+        /// The maximum number of steps of the quality search. The default is 8.
         public var maxIterations: Int
-        /// Minimum JPEG quality floor (0.0–1.0). Defaults to 0.1.
+        /// The lowest JPEG quality that the compression can use (0.0–1.0). The default is 0.1.
         public var minimumQuality: CGFloat
-        /// Optional maximum width for pre-resize.
+        /// The maximum width of the output, in pixels. If the value is `nil`, the width has no limit.
         public var maxWidth: Int?
-        /// Optional maximum height for pre-resize.
+        /// The maximum height of the output, in pixels. If the value is `nil`, the height has no limit.
         public var maxHeight: Int?
 
         public init(
@@ -39,19 +39,25 @@ public enum ImageCompressor {
         }
     }
 
-    /// The result of a compression operation.
+    /// The result of a compression.
     public struct Result: Sendable {
         /// The compressed JPEG data.
         public let data: Data
-        /// The JPEG quality used for the final compression.
+        /// The JPEG quality of the compressed data.
         public let quality: CGFloat
-        /// The size of the compressed data in bytes.
+        /// The size of the compressed data, in bytes.
         public let byteSize: Int
-        /// Whether the image was resized before compression.
+        /// A Boolean value that is `true` if the compression made the image smaller before the encoding.
         public let didResize: Bool
     }
 
-    /// Compresses an image to fit within the target byte size using binary search on JPEG quality.
+    /// Compresses an image to JPEG data that is not larger than the target size.
+    ///
+    /// The function first makes the image smaller to fit in `maxWidth` and `maxHeight`. Then it
+    /// does a binary search on the JPEG quality.
+    ///
+    /// If the data at `minimumQuality` is larger than the target, the function returns this data.
+    /// Compare `byteSize` with the target to find this case.
     public static func compress(
         _ source: ImageSource,
         configuration: Configuration
@@ -59,48 +65,50 @@ public enum ImageCompressor {
         var current = source
         var didResize = false
 
-        if let maxWidth = configuration.maxWidth, let maxHeight = configuration.maxHeight {
-            let resized = try ImageResizer.resize(current, maxWidth: maxWidth, maxHeight: maxHeight)
+        if configuration.maxWidth != nil || configuration.maxHeight != nil {
+            let resized = try ImageResizer.resize(
+                current,
+                maxWidth: configuration.maxWidth ?? .max,
+                maxHeight: configuration.maxHeight ?? .max
+            )
             didResize = resized.cgImage !== current.cgImage
             current = resized
         }
 
-        var low = configuration.minimumQuality
-        var high: CGFloat = 1.0
-        var bestData = try encodeJPEG(current, quality: high)
-        var bestQuality = high
-
-        if bestData.count <= configuration.targetByteSize {
-            return Result(data: bestData, quality: bestQuality, byteSize: bestData.count, didResize: didResize)
+        let fullQualityData = try encodeJPEG(current, quality: 1.0)
+        if fullQualityData.count <= configuration.targetByteSize {
+            return Result(data: fullQualityData, quality: 1.0, byteSize: fullQualityData.count, didResize: didResize)
         }
 
         let targetSize = configuration.targetByteSize
         let toleranceBytes = Int(Double(targetSize) * configuration.tolerance)
         let lowerBound = targetSize - toleranceBytes
-        let upperBound = targetSize + toleranceBytes
+
+        var low = configuration.minimumQuality
+        var high: CGFloat = 1.0
+        var best: (data: Data, quality: CGFloat)?
 
         for _ in 0 ..< configuration.maxIterations {
             let mid = (low + high) / 2.0
             let encoded = try encodeJPEG(current, quality: mid)
 
-            if encoded.count >= lowerBound, encoded.count <= upperBound {
-                return Result(data: encoded, quality: mid, byteSize: encoded.count, didResize: didResize)
-            }
-
             if encoded.count > targetSize {
                 high = mid
             } else {
+                best = (encoded, mid)
+                if encoded.count >= lowerBound {
+                    break
+                }
                 low = mid
-                bestData = encoded
-                bestQuality = mid
             }
         }
 
-        let finalData = try encodeJPEG(current, quality: low)
-        return Result(data: finalData, quality: low, byteSize: finalData.count, didResize: didResize)
+        let minimumQuality = configuration.minimumQuality
+        let (data, quality) = try best ?? (encodeJPEG(current, quality: minimumQuality), minimumQuality)
+        return Result(data: data, quality: quality, byteSize: data.count, didResize: didResize)
     }
 
-    /// Encodes an image as JPEG data at the given quality (0.0–1.0).
+    /// Encodes an image as JPEG data with the given quality (0.0–1.0).
     public static func encodeJPEG(_ source: ImageSource, quality: CGFloat) throws -> Data {
         let data = NSMutableData()
 

@@ -32,10 +32,32 @@ final class NetworkConditionMonitorTests: XCTestCase {
         XCTAssertEqual(config.targetByteSize, 300_000)
     }
 
-    func testMonitorInitialConditionIsOffline() async {
+    func testMonitorInitialConditionIsOffline() {
         let monitor = NetworkConditionMonitor()
-        let condition = await monitor.currentCondition
-        XCTAssertEqual(condition, .offline)
+        XCTAssertEqual(monitor.currentCondition, .offline)
+    }
+
+    func testEachStreamFirstGivesTheCurrentCondition() async {
+        let monitor = NetworkConditionMonitor()
+        var first = monitor.conditions.makeAsyncIterator()
+        var second = monitor.conditions.makeAsyncIterator()
+
+        let firstValue = await first.next()
+        let secondValue = await second.next()
+        XCTAssertEqual(firstValue, .offline)
+        XCTAssertEqual(secondValue, .offline)
+    }
+
+    func testStopFinishesTheStreams() async {
+        let monitor = NetworkConditionMonitor()
+        var before = monitor.conditions.makeAsyncIterator()
+        monitor.stop()
+        var after = monitor.conditions.makeAsyncIterator()
+
+        let beforeValues = await [before.next(), before.next()]
+        let afterValues = await [after.next(), after.next()]
+        XCTAssertEqual(beforeValues, [.offline, nil])
+        XCTAssertEqual(afterValues, [.offline, nil])
     }
 
     func testCompressionPresetConfigurations() {

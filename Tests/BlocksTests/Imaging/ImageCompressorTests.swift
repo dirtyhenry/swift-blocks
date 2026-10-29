@@ -53,6 +53,36 @@ final class ImageCompressorTests: XCTestCase {
         XCTAssertTrue(result.didResize)
     }
 
+    func testCompressResizesWithOnlyMaxWidth() throws {
+        let source = try ImagingTestHelpers.makeGradientImage(width: 2000, height: 1000)
+        let config = ImageCompressor.Configuration(targetByteSize: 500_000, maxWidth: 500)
+        let result = try ImageCompressor.compress(source, configuration: config)
+        XCTAssertTrue(result.didResize)
+        let output = try ImageSource(data: result.data)
+        XCTAssertEqual(output.width, 500)
+        XCTAssertEqual(output.height, 250)
+    }
+
+    func testCompressResizesWithOnlyMaxHeight() throws {
+        let source = try ImagingTestHelpers.makeGradientImage(width: 2000, height: 1000)
+        let config = ImageCompressor.Configuration(targetByteSize: 500_000, maxHeight: 100)
+        let result = try ImageCompressor.compress(source, configuration: config)
+        let output = try ImageSource(data: result.data)
+        XCTAssertEqual(output.width, 200)
+        XCTAssertEqual(output.height, 100)
+    }
+
+    func testCompressDoesNotExceedReachableTarget() throws {
+        let source = try ImagingTestHelpers.makeGradientImage(width: 1000, height: 1000)
+        let low = try ImageCompressor.encodeJPEG(source, quality: 0.1).count
+        let high = try ImageCompressor.encodeJPEG(source, quality: 1.0).count
+        let targetSize = (low + high) / 2
+        let config = ImageCompressor.Configuration(targetByteSize: targetSize, tolerance: 0)
+        let result = try ImageCompressor.compress(source, configuration: config)
+        XCTAssertLessThanOrEqual(result.byteSize, targetSize)
+        XCTAssertEqual(result.byteSize, result.data.count)
+    }
+
     func testCompressSmallImageReturnsHighQuality() throws {
         let source = try ImagingTestHelpers.makeGradientImage(width: 50, height: 50)
         let config = ImageCompressor.Configuration(targetByteSize: 1_000_000)

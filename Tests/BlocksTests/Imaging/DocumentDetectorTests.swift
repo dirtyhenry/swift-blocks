@@ -35,6 +35,23 @@ final class DocumentDetectorTests: XCTestCase {
             XCTAssertGreaterThan(result.confidence, 0)
         }
     }
+
+    func testCropWithoutPerspectiveCorrectionKeepsTheDocument() async throws {
+        // The document is in the top part of the image, so a crop with an inverted y axis
+        // would contain the dark background.
+        let source = try ImagingTestHelpers.makeDocumentImage(
+            width: 800,
+            height: 1200,
+            documentRect: CGRect(x: 150, y: 500, width: 500, height: 600)
+        )
+        let options = DocumentDetector.Options(applyPerspectiveCorrection: false)
+        let result = try await DocumentDetector.detectDocument(in: source, options: options)
+        let detection = try XCTUnwrap(result, "Vision did not detect the synthetic document")
+
+        let pixels = try ImagingTestHelpers.pixels(of: detection.image.cgImage)
+        let brightPixels = stride(from: 0, to: pixels.count, by: 4).filter { pixels[$0] > 200 }.count
+        XCTAssertGreaterThan(Double(brightPixels) / Double(pixels.count / 4), 0.8)
+    }
 }
 
 #endif

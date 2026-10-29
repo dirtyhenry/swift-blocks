@@ -33,6 +33,43 @@ final class ImageResizerTests: XCTestCase {
         XCTAssertEqual(resized.height, 1000)
     }
 
+    func testResizeGrayscaleImage() throws {
+        let colorSpace = CGColorSpaceCreateDeviceGray()
+        let context = try XCTUnwrap(CGContext(
+            data: nil,
+            width: 400,
+            height: 200,
+            bitsPerComponent: 8,
+            bytesPerRow: 0,
+            space: colorSpace,
+            bitmapInfo: CGImageAlphaInfo.none.rawValue
+        ))
+        context.setFillColor(gray: 0.5, alpha: 1)
+        context.fill(CGRect(x: 0, y: 0, width: 400, height: 200))
+        let source = try ImageSource(cgImage: XCTUnwrap(context.makeImage()))
+
+        let resized = try ImageResizer.resize(source, maxWidth: 100, maxHeight: 100)
+        XCTAssertEqual(resized.width, 100)
+        XCTAssertEqual(resized.height, 50)
+    }
+
+    func testResizeKeepsRGBColorSpace() throws {
+        let displayP3 = try XCTUnwrap(CGColorSpace(name: CGColorSpace.displayP3))
+        let context = try XCTUnwrap(CGContext(
+            data: nil,
+            width: 400,
+            height: 200,
+            bitsPerComponent: 8,
+            bytesPerRow: 0,
+            space: displayP3,
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        ))
+        let source = try ImageSource(cgImage: XCTUnwrap(context.makeImage()))
+
+        let resized = try ImageResizer.resize(source, scale: 0.5)
+        XCTAssertEqual(resized.cgImage.colorSpace?.name, CGColorSpace.displayP3)
+    }
+
     func testResizeByScale() throws {
         let source = try ImagingTestHelpers.makeImage(width: 2000, height: 1000)
         let resized = try ImageResizer.resize(source, scale: 0.5)

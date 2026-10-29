@@ -4,14 +4,14 @@ import CoreGraphics
 import CoreImage
 import Vision
 
-/// Stateless namespace for Vision-based document detection and perspective correction.
+/// Operations that find a document in an image with Vision and correct its perspective.
 @available(macOS 12.0, iOS 15.0, *)
 public enum DocumentDetector {
-    /// Options controlling document detection behavior.
+    /// The options of a document detection.
     public struct Options: Sendable {
-        /// Whether to apply perspective correction to the detected document. Defaults to `true`.
+        /// A Boolean value that is `true` to correct the perspective of the document. The default is `true`.
         public var applyPerspectiveCorrection: Bool
-        /// Minimum confidence threshold for detection (0.0–1.0). Defaults to 0.5.
+        /// The minimum confidence of a detection (0.0–1.0). The default is 0.5.
         public var minimumConfidence: Float
 
         public init(
@@ -23,7 +23,9 @@ public enum DocumentDetector {
         }
     }
 
-    /// A quadrilateral defined by four corners in normalized image coordinates (0.0–1.0).
+    /// A quadrilateral with four corners in normalized image coordinates (0.0–1.0).
+    ///
+    /// The origin is at the bottom-left corner of the image, as in Vision.
     public struct Quadrilateral: Sendable {
         public let topLeft: CGPoint
         public let topRight: CGPoint
@@ -31,19 +33,19 @@ public enum DocumentDetector {
         public let bottomRight: CGPoint
     }
 
-    /// The result of a document detection operation.
+    /// The result of a document detection.
     public struct DetectionResult: Sendable {
-        /// The cropped (and optionally perspective-corrected) document image.
+        /// The image of the document, cropped and, if the options tell so, with a corrected perspective.
         public let image: ImageSource
-        /// The detection confidence (0.0–1.0).
+        /// The confidence of the detection (0.0–1.0).
         public let confidence: Float
-        /// The detected document boundary in normalized coordinates.
+        /// The boundary of the document, in normalized coordinates.
         public let quadrilateral: Quadrilateral
     }
 
-    /// Detects a document in the given image.
+    /// Finds a document in the given image.
     ///
-    /// Returns `nil` if no document is detected above the confidence threshold.
+    /// Returns `nil` if the confidence of the detection is less than `minimumConfidence`.
     public static func detectDocument(
         in source: ImageSource,
         options: Options = Options()
@@ -139,7 +141,9 @@ public enum DocumentDetector {
         let minY = min(quad.bottomLeft.y, quad.bottomRight.y) * height
         let maxY = max(quad.topLeft.y, quad.topRight.y) * height
 
-        let cropRect = CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
+        // Vision has its origin at the bottom left, but `CGImage.cropping(to:)` has its origin at
+        // the top left.
+        let cropRect = CGRect(x: minX, y: height - maxY, width: maxX - minX, height: maxY - minY)
 
         guard let cropped = source.cgImage.cropping(to: cropRect) else {
             throw ImagingError.documentDetectionFailed("Failed to crop to document bounds")

@@ -2,7 +2,7 @@
 
 import CoreGraphics
 
-/// Predefined compression configurations for common use cases.
+/// Compression configurations for usual cases.
 @available(macOS 10.15, iOS 13.0, tvOS 15.0, watchOS 8.0, *)
 public enum CompressionPreset: Sendable {
     /// High quality: 2MB target, 4096px max dimension.
@@ -11,7 +11,7 @@ public enum CompressionPreset: Sendable {
     case balanced
     /// Compact: 300KB target, 1024px max dimension.
     case compact
-    /// Custom configuration.
+    /// A configuration that you supply.
     case custom(ImageCompressor.Configuration)
 
     /// The compression configuration for this preset.
@@ -47,7 +47,7 @@ import Network
 
 @available(macOS 10.15, iOS 13.0, tvOS 15.0, watchOS 8.0, *)
 public extension CompressionPreset {
-    /// Returns a suitable compression preset for the given network condition.
+    /// Returns the compression preset that agrees with the given network condition.
     static func preset(for condition: NetworkCondition) -> CompressionPreset {
         switch condition {
         case .excellent:

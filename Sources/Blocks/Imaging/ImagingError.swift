@@ -2,7 +2,7 @@
 
 import Foundation
 
-/// Errors that can occur during image processing operations.
+/// The errors of the imaging operations.
 public enum ImagingError: LocalizedError, Sendable {
     case invalidImageData
     case resizeFailed
@@ -13,13 +13,13 @@ public enum ImagingError: LocalizedError, Sendable {
     public var errorDescription: String? {
         switch self {
         case .invalidImageData:
-            "The provided data could not be decoded as an image."
+            "The data is not a valid image."
         case .resizeFailed:
-            "Failed to resize the image."
+            "The image resize failed."
         case .compressionFailed:
-            "Failed to compress the image."
+            "The image compression failed."
         case .contextCreationFailed:
-            "Failed to create a graphics context."
+            "The graphics context creation failed."
         case let .documentDetectionFailed(reason):
             "Document detection failed: \(reason)"
         }

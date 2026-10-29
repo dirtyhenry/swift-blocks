@@ -2,12 +2,11 @@ import Blocks
 import SwiftUI
 import UniformTypeIdentifiers
 
-@available(macOS 12.0, iOS 15.0, *)
 struct ImageCompressionDemoView: View {
     let readme: LocalizedStringKey = """
-    Demonstrates `ImageResizer`, `ImageCompressor`, and `DocumentDetector` from the Imaging module.
+    This demo shows `ImageResizer`, `ImageCompressor` and `DocumentDetector` from the Imaging module.
 
-    Pick an image, configure compression, and see the result in real time.
+    Select an image and a preset. Then compress the image and examine the result.
     """
 
     enum PresetOption: String, CaseIterable, Identifiable {
@@ -15,7 +14,9 @@ struct ImageCompressionDemoView: View {
         case balanced = "Balanced"
         case compact = "Compact"
 
-        var id: String { rawValue }
+        var id: String {
+            rawValue
+        }
 
         var preset: CompressionPreset {
             switch self {
@@ -57,12 +58,10 @@ struct ImageCompressionDemoView: View {
                         }
                         .buttonStyle(.borderedProminent)
 
-                        #if os(macOS)
                         Button("Open File…") {
                             isShowingFilePicker = true
                         }
                         .buttonStyle(.bordered)
-                        #endif
                     }
 
                     if !sourceInfo.isEmpty {
@@ -113,14 +112,12 @@ struct ImageCompressionDemoView: View {
                     .buttonStyle(.borderedProminent)
                     .disabled(sourceImage == nil || isProcessing)
 
-                    #if os(macOS)
                     if compressedData != nil {
                         Button("Save Compressed…") {
                             isShowingSavePanel = true
                         }
                         .buttonStyle(.bordered)
                     }
-                    #endif
                 }
 
                 // Result section
@@ -140,7 +137,10 @@ struct ImageCompressionDemoView: View {
                 }
 
                 if let compressedData, let compressedImage = CGImage.from(jpegData: compressedData) {
-                    imagePreview(compressedImage, label: "Compressed: \(compressedImage.width)×\(compressedImage.height)")
+                    imagePreview(
+                        compressedImage,
+                        label: "Compressed: \(compressedImage.width)×\(compressedImage.height)"
+                    )
                 }
 
                 if sourceImage != nil {
@@ -154,7 +154,6 @@ struct ImageCompressionDemoView: View {
             .padding()
         }
         .navigationTitle("Image Compression")
-        #if os(macOS)
         .fileImporter(
             isPresented: $isShowingFilePicker,
             allowedContentTypes: [.image],
@@ -172,10 +171,8 @@ struct ImageCompressionDemoView: View {
                 errorMessage = error.localizedDescription
             }
         }
-        #endif
     }
 
-    @ViewBuilder
     private func imagePreview(_ cgImage: CGImage, label: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(label)
@@ -185,12 +182,12 @@ struct ImageCompressionDemoView: View {
             let nsImage = NSImage(cgImage: cgImage, size: NSSize(width: cgImage.width, height: cgImage.height))
             Image(nsImage: nsImage)
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .scaledToFit()
                 .frame(maxHeight: 200)
             #else
             Image(uiImage: UIImage(cgImage: cgImage))
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .scaledToFit()
                 .frame(maxHeight: 200)
             #endif
         }
@@ -210,13 +207,19 @@ struct ImageCompressionDemoView: View {
         resetResult()
     }
 
-    #if os(macOS)
     private func handleFileImport(_ result: Result<[URL], Error>) {
         resetResult()
         switch result {
         case let .success(urls):
             guard let url = urls.first else { return }
             do {
+                // On iOS, the file is outside of the sandbox of the app.
+                let isAccessing = url.startAccessingSecurityScopedResource()
+                defer {
+                    if isAccessing {
+                        url.stopAccessingSecurityScopedResource()
+                    }
+                }
                 let data = try Data(contentsOf: url)
                 let source = try ImageSource(data: data)
                 sourceImage = source.cgImage
@@ -229,7 +232,6 @@ struct ImageCompressionDemoView: View {
             errorMessage = error.localizedDescription
         }
     }
-    #endif
 
     private func compress() {
         guard let sourceImage else { return }
@@ -238,6 +240,9 @@ struct ImageCompressionDemoView: View {
         resultInfo = ""
         compressedData = nil
 
+        let detectDocument = detectDocument
+        let config = selectedPreset.preset.configuration
+
         Task {
             do {
                 var source = ImageSource(cgImage: sourceImage)
@@ -245,14 +250,18 @@ struct ImageCompressionDemoView: View {
                 if detectDocument {
                     if let detection = try await DocumentDetector.detectDocument(in: source) {
                         source = detection.image
-                        resultInfo += "Document detected (confidence: \(String(format: "%.0f%%", detection.confidence * 100)))\n"
+                        let confidence = String(format: "%.0f%%", detection.confidence * 100)
+                        resultInfo += "Document detected (confidence: \(confidence))\n"
                     } else {
                         resultInfo += "No document detected, using original\n"
                     }
                 }
 
-                let config = selectedPreset.preset.configuration
-                let result = try ImageCompressor.compress(source, configuration: config)
+                // The compression is synchronous and slow: keep it off the main actor.
+                let input = source
+                let result = try await Task.detached {
+                    try ImageCompressor.compress(input, configuration: config)
+                }.value
 
                 compressedData = result.data
                 resultInfo += """
@@ -266,7 +275,9 @@ struct ImageCompressionDemoView: View {
             isProcessing = false
         }
     }
+}
 
+extension ImageCompressionDemoView {
     static func makeSampleImage() -> CGImage? {
         let width = 3000
         let height = 2000
@@ -282,10 +293,15 @@ struct ImageCompressionDemoView: View {
         ) else { return nil }
 
         // Sky gradient background
-        for y in 0 ..< height {
-            let t = CGFloat(y) / CGFloat(height)
-            context.setFillColor(red: 0.3 + t * 0.4, green: 0.5 + t * 0.3, blue: 0.9 - t * 0.3, alpha: 1)
-            context.fill(CGRect(x: 0, y: y, width: width, height: 1))
+        for row in 0 ..< height {
+            let progress = CGFloat(row) / CGFloat(height)
+            context.setFillColor(
+                red: 0.3 + progress * 0.4,
+                green: 0.5 + progress * 0.3,
+                blue: 0.9 - progress * 0.3,
+                alpha: 1
+            )
+            context.fill(CGRect(x: 0, y: row, width: width, height: 1))
         }
 
         // White "document" rectangle in center
@@ -295,19 +311,19 @@ struct ImageCompressionDemoView: View {
 
         // Text-like lines on the document
         context.setFillColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
-        for i in 0 ..< 12 {
-            let lineWidth = i % 3 == 2 ? 1200 : 1800
-            context.fill(CGRect(x: 600, y: 350 + i * 100, width: lineWidth, height: 12))
+        for line in 0 ..< 12 {
+            let lineWidth = line % 3 == 2 ? 1200 : 1800
+            context.fill(CGRect(x: 600, y: 350 + line * 100, width: lineWidth, height: 12))
         }
 
         return context.makeImage()
     }
 }
 
-#if os(macOS)
-@available(macOS 12.0, *)
 struct JPEGDocument: FileDocument {
-    static var readableContentTypes: [UTType] { [.jpeg] }
+    static var readableContentTypes: [UTType] {
+        [.jpeg]
+    }
 
     let data: Data?
 
@@ -326,7 +342,6 @@ struct JPEGDocument: FileDocument {
         return FileWrapper(regularFileWithContents: data)
     }
 }
-#endif
 
 private extension CGImage {
     static func from(jpegData data: Data) -> CGImage? {
@@ -335,7 +350,6 @@ private extension CGImage {
     }
 }
 
-@available(macOS 12.0, iOS 15.0, *)
 #Preview {
     NavigationStack {
         ImageCompressionDemoView()
