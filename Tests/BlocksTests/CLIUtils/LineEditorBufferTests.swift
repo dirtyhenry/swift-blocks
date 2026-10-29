@@ -153,6 +153,34 @@ final class LineEditorBufferTests: XCTestCase {
         XCTAssertEqual(buf.cursor, 6)
     }
 
+    func testDeleteWhitespaceWordBackward() {
+        var buf = buffer("git commit --amend")
+        buf.deleteWhitespaceWordBackward()
+        XCTAssertEqual(buf.toString(), "git commit ")
+        XCTAssertEqual(buf.cursor, 11)
+    }
+
+    // MARK: - Grapheme Clusters
+
+    func testCombiningMarkJoinsThePreviousCharacter() {
+        var buf = LineEditor.Buffer()
+        buf.insert("e")
+        buf.insert("\u{0301}")
+        XCTAssertEqual(buf.characters.count, 1)
+        XCTAssertEqual(buf.cursor, 1)
+        XCTAssertEqual(buf.displayCursor, 1)
+    }
+
+    func testEmojiSequenceIsOneCharacter() {
+        var buf = LineEditor.Buffer()
+        // Family: man, ZWJ, woman, ZWJ, girl
+        for scalar in "👨\u{200D}👩\u{200D}👧".unicodeScalars {
+            buf.insert(Character(scalar))
+        }
+        XCTAssertEqual(buf.characters.count, 1)
+        XCTAssertEqual(buf.displayCursor, 2)
+    }
+
     // MARK: - Display Width
 
     func testDisplayCursorASCII() {
@@ -169,6 +197,16 @@ final class LineEditorBufferTests: XCTestCase {
         // "hi你" = 2 ASCII (width 1 each) + 1 CJK (width 2) = 4
         let buf = buffer("hi你")
         XCTAssertEqual(buf.displayCursor, 4)
+    }
+
+    func testDisplayCursorEmoji() {
+        XCTAssertEqual(buffer("a😀").displayCursor, 3)
+        XCTAssertEqual(buffer("🇫🇷").displayCursor, 2)
+        XCTAssertEqual(buffer("❤\u{FE0F}").displayCursor, 2)
+    }
+
+    func testDisplayWidthIgnoresANSIStyles() {
+        XCTAssertEqual(LineEditor.Buffer.displayWidth(ofVisible: "\u{1B}[1;32m>\u{1B}[0m "), 2)
     }
 
     // MARK: - Empty Buffer

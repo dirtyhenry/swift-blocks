@@ -5,25 +5,17 @@ import Foundation
 struct ReadLineCommand: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "readline",
-        abstract: "Read a line of input from the cli."
+        abstract: "Read a line that you can edit with the arrow keys and the usual shell keys."
     )
 
-    @Flag(help: "Read input securely (hidden from terminal).")
-    var secure = false
+    @Option(help: "The text to show before the input.")
+    var prompt = "Enter some text: "
 
     mutating func run() throws {
-        if secure {
-            guard let input = CLIUtils.readLine(prompt: "Enter secret input (hidden): ", secure: true) else {
-                print("No input was entered.")
-                return
-            }
-            print("You entered: \(input)")
-        } else {
-            guard let input = try CLIUtils.editLine(prompt: "Enter some text: ") else {
-                print("No input was entered.")
-                return
-            }
-            print("You entered: \(input)")
+        guard let input = try CLIUtils.editLine(prompt: prompt) else {
+            print("No input was entered.")
+            return
         }
+        print("You entered: \(input)")
     }
 }

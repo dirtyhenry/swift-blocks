@@ -42,6 +42,7 @@ swift run blocks-cli exec --help
 | `curl`               | Fetches a URL, curl-style                                                      | `Transport`                                                 |
 | `print-colors`       | Shows the styles available for terminal output                                 | `StyledText`, `CLIUtils.write`, `CLIUtils.interactiveShell` |
 | `password`           | Reads a password without echoing it                                            | `CLIUtils.readLine(prompt:secure:)`                         |
+| `readline`           | Reads a line that you can edit with the arrow keys                             | `CLIUtils.editLine(prompt:)`                                |
 | `lint-copy`          | Replaces straight apostrophes with typographic ones                            | `CopyUtils.lint(input:)`                                    |
 | `slugify`            | Turns text into a URL slug                                                     | `String.slugify()`                                          |
 | `filename`           | Turns a title into a safe filename that is easy to read                        | `String.sanitizedFilename()`                                |
@@ -118,6 +119,22 @@ blocks-cli print-colors
 
 ```sh
 blocks-cli password
+```
+
+### `readline`
+
+Reads a line with `CLIUtils.editLine(prompt:)`. Move the cursor with the arrow keys, Home and End.
+Edit the line with the usual shell keys, for example Ctrl-W or Ctrl-U.
+
+```sh
+blocks-cli readline
+blocks-cli readline --prompt "$(printf '\033[1;32m>\033[0m ')"
+```
+
+If the input comes from a pipe, the command reads it as `readLine()` does:
+
+```sh
+echo "Hello" | blocks-cli readline
 ```
 
 ### `lint-copy`

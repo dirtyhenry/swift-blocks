@@ -2,4 +2,4 @@
 "swift-blocks": minor
 ---
 
-Add `LineEditor`, a readline-style interactive line editor with arrow key navigation, word movement, and editing keybindings
+Add `CLIUtils.editLine(prompt:)`. It reads a line that the user can edit with the arrow keys and the usual shell keys.
