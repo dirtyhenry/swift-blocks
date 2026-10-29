@@ -14,6 +14,7 @@
 - **iCalendar Objects**. Create ical documents.
 - <doc:StyledText> Compose colored and formatted text for command-line interfaces.
 - <doc:InteractiveShell> Run external commands with full terminal access.
+- <doc:ReadingALine> Read a line that the user can edit with the arrow keys.
 - <doc:RunningProcesses> Run executables without a shell and capture stdout
   and stderr separately.
 - <doc:WatchPairing> Find out whether an Apple Watch is paired with the iPhone.
@@ -39,6 +40,7 @@
 - <doc:Calendar>
 - <doc:StyledText>
 - <doc:InteractiveShell>
+- <doc:ReadingALine>
 - <doc:RunningProcesses>
 - <doc:WatchPairing>
 - <doc:ImageCompression>

@@ -1,6 +1,25 @@
 import Foundation
 
 public enum CLIUtils {
+    /// Reads a line of input that the user can edit with the keyboard.
+    ///
+    /// If the standard input and the standard output are terminals, the user can move the cursor
+    /// and edit the line with the usual shell keys. See <doc:ReadingALine>. If not, for example when
+    /// the input comes from a pipe, the function uses `Swift.readLine()`.
+    ///
+    /// - Parameter prompt: The text to show before the input. It can contain ANSI styles and line breaks.
+    /// - Returns: The line, or `nil` at the end of the input. Ctrl-D on an empty line ends the input.
+    /// - Throws: ``LineEditorError/interrupted`` if the user presses Ctrl-C.
+    public static func editLine(prompt: String) throws -> String? {
+        #if canImport(Darwin) || canImport(Glibc)
+        if isatty(STDIN_FILENO) != 0, isatty(STDOUT_FILENO) != 0 {
+            return try LineEditor.readLine(prompt: prompt)
+        }
+        #endif
+        print(prompt, terminator: "")
+        return Swift.readLine()
+    }
+
     /// Reads a line of input from the user, optionally in a secure manner.
     ///
     /// This method provides a way to get user input from the command line.
