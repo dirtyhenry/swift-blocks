@@ -451,7 +451,8 @@ extension LineEditor {
     /// Reads a line from the standard input, which must be a terminal.
     static func readLine(prompt: String) throws -> String? {
         // Write the text that `print` keeps in its buffer before the editor writes directly.
-        fflush(stdout)
+        // `nil` flushes all the output streams. It avoids `stdout`, which is not concurrency-safe on Linux.
+        fflush(nil)
 
         guard let terminalMode = TerminalMode.enableRaw() else {
             throw LineEditorError.readFailed
