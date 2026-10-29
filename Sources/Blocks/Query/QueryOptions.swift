@@ -6,7 +6,8 @@ public struct QueryOptions: Sendable {
     /// Default: 0 (immediately stale).
     public var staleTime: TimeInterval
 
-    /// How long unused data remains in the cache (in seconds).
+    /// How long data remains in the cache after it is fetched (in seconds).
+    /// After this time, the client fetches again and waits for the result.
     /// Default: 300 (5 minutes).
     public var cacheTime: TimeInterval
 
@@ -15,6 +16,7 @@ public struct QueryOptions: Sendable {
     public var retryCount: Int
 
     /// Computes the delay before retry attempt `n` (0-indexed).
+    /// A negative or non-finite delay is treated as 0.
     /// Default: exponential backoff capped at 30s.
     public var retryDelay: @Sendable (Int) -> TimeInterval
 

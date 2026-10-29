@@ -48,7 +48,10 @@ public actor QueryCache {
     }
 
     /// Stores data in the cache.
+    ///
+    /// Also removes the expired entries, so that the cache does not grow without limit.
     public func set(_ key: AnyQueryKey, data: some Sendable, staleTime: TimeInterval, cacheTime: TimeInterval) {
+        evictExpired()
         entries[key] = CacheEntry(
             data: data,
             createdAt: Date(),

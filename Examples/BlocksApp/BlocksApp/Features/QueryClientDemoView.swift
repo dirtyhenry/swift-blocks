@@ -1,26 +1,29 @@
 import Blocks
 import SwiftUI
 
-@available(iOS 15.0.0, macOS 12.0, *)
 struct QueryClientDemoView: View {
-    let readme: LocalizedStringKey = """
-    `QueryClient` caches async data and deduplicates in-flight requests.
+    typealias Quote = DummyJSONClient.RandomQuote.Response
 
-    Tap **Fetch Quote** to load from the network. Subsequent taps return \
-    cached data instantly and refresh in the background \
-    (stale-while-revalidate). **Invalidate** clears the cache.
+    let readme: LocalizedStringKey = """
+    `QueryClient` caches async data and sends one request for concurrent queries with the same key.
+
+    Tap **Fetch Quote**. For 5 seconds, the data is fresh: the client returns the cached quote and \
+    sends no request. After 5 seconds, the data is stale: the client returns the cached quote \
+    immediately and fetches a new one in the background. **Invalidate** clears the cache.
     """
+
+    static let key = "random-quote"
 
     let client = QueryClient(
         defaultOptions: QueryOptions(staleTime: 5, cacheTime: 60)
     )
 
-    @State var quote: String?
-    @State var author: String?
+    @State var quote: Quote?
     @State var status: QueryStatus = .idle
     @State var isFetching = false
-    @State var fetchCount = 0
-    @State var cacheHit = false
+    @State var isStale = false
+    @State var requestCount = 0
+    @State var errorMessage: String?
 
     var body: some View {
         VStack(spacing: 24) {
@@ -55,50 +58,50 @@ struct QueryClientDemoView: View {
             Spacer()
         }
         .padding()
-        .navigationTitle("QueryClient demo")
+        .navigationTitle("Query Client")
     }
 
     var statusBadges: some View {
         HStack(spacing: 12) {
             badge("Status", value: statusLabel, color: statusColor)
             badge("Fetching", value: isFetching ? "Yes" : "No", color: isFetching ? .orange : .secondary)
-            badge("Cache", value: cacheHit ? "Hit" : "Miss", color: cacheHit ? .green : .secondary)
-            badge("Fetches", value: "\(fetchCount)", color: .secondary)
+            badge("Data", value: isStale ? "Stale" : "Fresh", color: isStale ? .orange : .green)
+            badge("Requests", value: "\(requestCount)", color: .secondary)
         }
     }
 
     var quoteCard: some View {
         VStack(spacing: 8) {
             if let quote {
-                Text("\u{201C}\(quote)\u{201D}")
+                Text("\u{201C}\(quote.quote)\u{201D}")
                     .font(.body)
                     .italic()
                     .multilineTextAlignment(.center)
-                if let author {
-                    Text("— \(author)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                Text("— \(quote.author)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            } else if let errorMessage {
+                Text(errorMessage)
+                    .foregroundStyle(.red)
             } else {
                 Text("No quote loaded yet")
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             }
         }
         .frame(maxWidth: .infinity)
         .padding()
-        .background(Color(.lightGray))
-        .cornerRadius(12)
+        .background(.quaternary, in: RoundedRectangle(cornerRadius: 12))
     }
 
     func badge(_ title: String, value: String, color: Color) -> some View {
         VStack(spacing: 2) {
             Text(title)
                 .font(.caption2)
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
             Text(value)
                 .font(.caption)
                 .bold()
-                .foregroundColor(color)
+                .foregroundStyle(color)
         }
     }
 
@@ -121,44 +124,51 @@ struct QueryClientDemoView: View {
     }
 
     func fetchQuote() async {
-        let dataBefore = await client.getQueryData("random-quote", as: DummyJSONClient.RandomQuote.Response.self)
-        cacheHit = dataBefore != nil
+        errorMessage = nil
+        if quote == nil {
+            status = .loading
+        }
 
         do {
-            let transport = DummyJSONClient.defaultTransport
-            let response: DummyJSONClient.RandomQuote.Response = try await client.query(
-                key: "random-quote",
-                transport: transport,
-                endpoint: DummyJSONClient().randomQuote()
-            )
-            quote = response.quote
-            author = response.author
+            // The client calls this closure only when it sends a request, so it counts the requests.
+            quote = try await client.query(key: Self.key) {
+                await MainActor.run { requestCount += 1 }
+                return try await DummyJSONClient.defaultTransport.load(DummyJSONClient().randomQuote())
+            }
             status = .success
         } catch {
             status = .error
+            errorMessage = error.localizedDescription
         }
 
-        fetchCount += 1
+        await followBackgroundRefetch()
+    }
 
-        if let state = await client.state(for: "random-quote", as: DummyJSONClient.RandomQuote.Response.self) {
+    /// Shows the state of the query until the background refetch, if any, completes.
+    func followBackgroundRefetch() async {
+        while let state = await client.state(for: Self.key, as: Quote.self) {
             isFetching = state.isFetching
+            isStale = state.isStale
+            if let data = state.data {
+                quote = data
+            }
+            guard state.isFetching else { return }
+            try? await Task.sleep(for: .milliseconds(100))
         }
     }
 
     func invalidate() async {
-        await client.invalidate("random-quote")
+        await client.invalidate(Self.key)
         quote = nil
-        author = nil
         status = .idle
         isFetching = false
-        cacheHit = false
+        isStale = false
+        errorMessage = nil
     }
 }
 
 #Preview {
-    if #available(iOS 15.0.0, macOS 12.0, *) {
-        NavigationStack {
-            QueryClientDemoView()
-        }
+    NavigationStack {
+        QueryClientDemoView()
     }
 }

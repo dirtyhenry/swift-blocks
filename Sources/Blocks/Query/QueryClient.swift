@@ -58,14 +58,19 @@ public actor QueryClient {
         return try await executeFetch(key: anyKey, options: opts, fetch: fetch)
     }
 
-    /// Prefetches data into the cache without returning it.
+    /// Starts a fetch in the background to put data in the cache. Does not wait for the result.
+    ///
+    /// If the cache has fresh data for the key, the client does not fetch.
     public func prefetch(
         key: some QueryKey,
         options: QueryOptions? = nil,
         fetch: @Sendable @escaping () async throws -> some Sendable
-    ) {
+    ) async {
         let opts = options ?? defaultOptions
         let anyKey = AnyQueryKey(key)
+        if let entry = await cache.getEntry(anyKey), !entry.isStale(at: Date()) {
+            return
+        }
         startBackgroundRefetchIfIdle(key: anyKey, options: opts, fetch: fetch)
     }
 
@@ -92,15 +97,30 @@ public actor QueryClient {
     /// `isStale` is recomputed from the cache entry at read time so callers
     /// observe staleness even when no other operation has updated the state
     /// since the entry crossed its `staleTime`.
+    ///
+    /// When the cache entry has expired (after `cacheTime`), the state no longer
+    /// contains its data: the method returns `nil`, or a loading state if a fetch
+    /// is in flight.
     public func state<T: Sendable>(for key: some QueryKey, as _: T.Type) async -> QueryState<T>? {
         let anyKey = AnyQueryKey(key)
+        let entry = await cache.getEntry(anyKey)
+        // Read the snapshot after the suspension above, so that it is current.
         guard let snapshot = states[anyKey] as? QueryState<T> else { return nil }
-        let isStale: Bool = if let entry = await cache.getEntry(anyKey) {
-            entry.isStale(at: Date())
-        } else {
-            snapshot.data != nil ? true : snapshot.isStale
+
+        guard let entry else {
+            guard snapshot.data != nil else { return snapshot }
+            if inFlight[anyKey] != nil {
+                states[anyKey] = QueryState<T>(status: .loading, isFetching: true)
+            } else {
+                states.removeValue(forKey: anyKey)
+            }
+            return states[anyKey] as? QueryState<T>
         }
-        if isStale == snapshot.isStale { return snapshot }
+
+        let isStale = entry.isStale(at: Date())
+        if isStale == snapshot.isStale {
+            return snapshot
+        }
         return QueryState<T>(
             status: snapshot.status,
             data: snapshot.data,
@@ -196,7 +216,8 @@ public actor QueryClient {
         let fetchTask = Task<any Sendable, any Error> {
             try await fetchWithRetry(options: options, fetch: fetch)
         }
-        inFlight[key] = InFlightFetch(task: fetchTask)
+        let fetchID = UUID()
+        inFlight[key] = InFlightFetch(id: fetchID, task: fetchTask)
 
         Task { [weak self] in
             let result: Result<any Sendable, any Error>
@@ -206,7 +227,7 @@ public actor QueryClient {
             } catch {
                 result = .failure(error)
             }
-            await self?.settleFetch(key: key, result: result, options: options, cacheType: T.self)
+            await self?.settleFetch(key: key, fetchID: fetchID, result: result, options: options, cacheType: T.self)
         }
     }
 
@@ -239,8 +260,7 @@ public actor QueryClient {
     }
 
     private func removeWaiter(key: AnyQueryKey, id: UUID) {
-        guard let fetch = inFlight[key] else { return }
-        guard let continuation = fetch.waiters.removeValue(forKey: id) else { return }
+        guard let fetch = inFlight[key], let continuation = fetch.waiters.removeValue(forKey: id) else { return }
         continuation.resume(throwing: QueryError.cancelled)
         // Intentionally do not cancel `fetch.task` — other waiters or background completion may still need the result.
     }
@@ -255,14 +275,17 @@ public actor QueryClient {
 
     private func settleFetch<T: Sendable>(
         key: AnyQueryKey,
+        fetchID: UUID,
         result: Result<any Sendable, any Error>,
         options: QueryOptions,
         cacheType _: T.Type
     ) async {
-        guard let fetch = inFlight.removeValue(forKey: key) else {
-            // Already invalidated. Waiters were resumed there.
+        // The fetch was invalidated: its waiters were resumed then, and a newer fetch
+        // for the same key can be in flight. Do not touch it, and do not cache the result.
+        guard let fetch = inFlight[key], fetch.id == fetchID else {
             return
         }
+        inFlight.removeValue(forKey: key)
         let waiters = fetch.waiters
 
         switch result {
@@ -296,8 +319,14 @@ public actor QueryClient {
             continuation.resume(with: result)
         }
     }
+}
 
-    private nonisolated func fetchWithRetry<T: Sendable>(
+// MARK: - Retry
+
+@available(iOS 15.0.0, *)
+@available(macOS 12.0, *)
+private extension QueryClient {
+    nonisolated func fetchWithRetry<T: Sendable>(
         options: QueryOptions,
         fetch: @Sendable @escaping () async throws -> T
     ) async throws -> T {
@@ -312,7 +341,7 @@ public actor QueryClient {
             } catch {
                 lastError = error
                 if attempt < retries {
-                    let delay = max(0, options.retryDelay(attempt))
+                    let delay = Self.sanitizedDelay(options.retryDelay(attempt))
                     do {
                         try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
                     } catch is CancellationError {
@@ -323,6 +352,14 @@ public actor QueryClient {
         }
         throw QueryError.allRetriesFailed(attempts: retries + 1, lastError: lastError!)
     }
+
+    /// Clamps a retry delay to a value that `Task.sleep(nanoseconds:)` accepts.
+    ///
+    /// A negative or non-finite delay becomes 0. The maximum delay is one billion seconds.
+    nonisolated static func sanitizedDelay(_ delay: TimeInterval) -> TimeInterval {
+        guard delay.isFinite else { return 0 }
+        return min(max(0, delay), 1_000_000_000)
+    }
 }
 
 // MARK: - InFlightFetch
@@ -330,10 +367,12 @@ public actor QueryClient {
 @available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
 private final class InFlightFetch {
+    let id: UUID
     let task: Task<any Sendable, any Error>
     var waiters: [UUID: CheckedContinuation<any Sendable, any Error>] = [:]
 
-    init(task: Task<any Sendable, any Error>) {
+    init(id: UUID, task: Task<any Sendable, any Error>) {
+        self.id = id
         self.task = task
     }
 }

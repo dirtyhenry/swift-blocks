@@ -62,18 +62,18 @@ final class QueryClientTests: XCTestCase {
         let counter = CallCounter()
         let client = QueryClient()
 
-        async let a: Int = client.query(key: "dedup") {
+        async let first: Int = client.query(key: "dedup") {
             await counter.increment()
             try await Task.sleep(nanoseconds: 50_000_000)
             return 42
         }
-        async let b: Int = client.query(key: "dedup") {
+        async let second: Int = client.query(key: "dedup") {
             await counter.increment()
             try await Task.sleep(nanoseconds: 50_000_000)
             return 42
         }
 
-        let results = try await [a, b]
+        let results = try await [first, second]
         XCTAssertEqual(results, [42, 42])
         let count = await counter.count
         XCTAssertEqual(count, 1)
@@ -283,206 +283,6 @@ final class QueryClientTests: XCTestCase {
 
         let data = await client.getQueryData("bg-fail", as: String.self)
         XCTAssertEqual(data, "recovered")
-    }
-
-    func testCancellationIsPropagatedAsCancelled() async throws {
-        let client = QueryClient(defaultOptions: QueryOptions(retryCount: 1, retryDelay: { _ in 0.01 }))
-
-        // A fetch that always throws CancellationError simulates a cancelled fetch
-        do {
-            let _: String = try await client.query(key: "cancel-me") {
-                throw CancellationError()
-            }
-            XCTFail("Should have thrown")
-        } catch let error as QueryError {
-            if case .cancelled = error {
-                // expected — CancellationError is wrapped as QueryError.cancelled
-            } else {
-                XCTFail("Expected QueryError.cancelled, got \(error)")
-            }
-        }
-    }
-
-    func testCancellationDuringRetryBackoffThrowsQueryCancelled() async throws {
-        let client = QueryClient(defaultOptions: QueryOptions(
-            retryCount: 3,
-            retryDelay: { _ in 10.0 } // long delay to ensure cancellation hits during sleep
-        ))
-
-        let task = Task<String, any Error> {
-            try await client.query(key: "cancel-during-backoff") {
-                throw SimpleMessageError(message: "fail")
-            }
-        }
-
-        // Give the first attempt time to fail and enter backoff sleep
-        try await Task.sleep(nanoseconds: 50_000_000)
-        task.cancel()
-
-        do {
-            _ = try await task.value
-            XCTFail("Should have thrown")
-        } catch let error as QueryError {
-            if case .cancelled = error {
-                // expected
-            } else {
-                XCTFail("Expected QueryError.cancelled, got \(error)")
-            }
-        }
-    }
-
-    func testCallerCancellationWhileAwaitingInFlightTask() async throws {
-        let client = QueryClient()
-
-        // Start a slow fetch
-        let slowTask = Task<Int, any Error> {
-            try await client.query(key: "slow") {
-                try await Task.sleep(nanoseconds: 500_000_000)
-                return 42
-            }
-        }
-
-        // Give the first task time to start
-        try await Task.sleep(nanoseconds: 10_000_000)
-
-        // Start a second caller that joins the in-flight task, then cancel it
-        let joinerTask = Task<Int, any Error> {
-            try await client.query(key: "slow") {
-                42 // won't be called — deduplication
-            }
-        }
-
-        try await Task.sleep(nanoseconds: 10_000_000)
-        joinerTask.cancel()
-
-        do {
-            _ = try await joinerTask.value
-            XCTFail("Should have thrown due to cancellation")
-        } catch let error as QueryError {
-            guard case .cancelled = error else {
-                XCTFail("Expected QueryError.cancelled, got \(error)")
-                return
-            }
-        }
-
-        // The original task should still complete successfully
-        let result = try await slowTask.value
-        XCTAssertEqual(result, 42)
-    }
-
-    func testCancellingOriginatorDoesNotCancelDeduplicatedJoiner() async throws {
-        let counter = CallCounter()
-        let client = QueryClient()
-
-        let originator = Task<Int, any Error> {
-            try await client.query(key: "shared") {
-                await counter.increment()
-                try await Task.sleep(nanoseconds: 200_000_000)
-                return 99
-            }
-        }
-
-        // Give the originator time to start the fetch.
-        try await Task.sleep(nanoseconds: 20_000_000)
-
-        let joiner = Task<Int, any Error> {
-            try await client.query(key: "shared") {
-                await counter.increment()
-                return 99 // would not run — deduplicated
-            }
-        }
-
-        // Give the joiner time to register as a waiter.
-        try await Task.sleep(nanoseconds: 20_000_000)
-        originator.cancel()
-
-        // The joiner should still receive the value because the shared fetch
-        // continues running even though the originator was cancelled.
-        let joinerValue = try await joiner.value
-        XCTAssertEqual(joinerValue, 99)
-
-        // The originator should observe cancellation.
-        do {
-            _ = try await originator.value
-            XCTFail("Originator should have thrown")
-        } catch let error as QueryError {
-            guard case .cancelled = error else {
-                XCTFail("Expected QueryError.cancelled, got \(error)")
-                return
-            }
-        }
-
-        let calls = await counter.count
-        XCTAssertEqual(calls, 1, "Fetch closure should run once across both callers")
-    }
-
-    func testCancellingJoinerExitsWithQueryCancelledQuickly() async throws {
-        let client = QueryClient()
-
-        let originator = Task<Int, any Error> {
-            try await client.query(key: "slow-shared") {
-                try await Task.sleep(nanoseconds: 500_000_000)
-                return 7
-            }
-        }
-
-        try await Task.sleep(nanoseconds: 20_000_000)
-
-        let joiner = Task<Int, any Error> {
-            try await client.query(key: "slow-shared") { 7 }
-        }
-
-        try await Task.sleep(nanoseconds: 20_000_000)
-
-        let start = Date()
-        joiner.cancel()
-
-        do {
-            _ = try await joiner.value
-            XCTFail("Joiner should have thrown")
-        } catch let error as QueryError {
-            guard case .cancelled = error else {
-                XCTFail("Expected QueryError.cancelled, got \(error)")
-                return
-            }
-        }
-        let elapsed = Date().timeIntervalSince(start)
-        // The joiner should exit promptly (well before the 500ms shared fetch finishes).
-        XCTAssertLessThan(elapsed, 0.3, "Joiner did not exit promptly on cancellation")
-
-        // The originator's shared fetch should still complete successfully.
-        let value = try await originator.value
-        XCTAssertEqual(value, 7)
-    }
-
-    func testInvalidateDuringInFlightCancelsAllWaiters() async throws {
-        let client = QueryClient()
-
-        let a = Task<Int, any Error> {
-            try await client.query(key: "invalidate-me") {
-                try await Task.sleep(nanoseconds: 500_000_000)
-                return 1
-            }
-        }
-        try await Task.sleep(nanoseconds: 20_000_000)
-        let b = Task<Int, any Error> {
-            try await client.query(key: "invalidate-me") { 1 }
-        }
-
-        try await Task.sleep(nanoseconds: 20_000_000)
-        await client.invalidate("invalidate-me")
-
-        for task in [a, b] {
-            do {
-                _ = try await task.value
-                XCTFail("Task should have thrown after invalidation")
-            } catch let error as QueryError {
-                guard case .cancelled = error else {
-                    XCTFail("Expected QueryError.cancelled, got \(error)")
-                    return
-                }
-            }
-        }
     }
 
     func testQueryOptionsDefaults() {

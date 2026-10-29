@@ -1,149 +1,135 @@
-# Understanding QueryClient
+# The design of QueryClient
 
-How QueryClient works under the hood, why it exists, and how its design
-compares to TanStack Query.
+Learn how QueryClient works, why it exists and how it compares to TanStack Query.
 
-## Why a query layer?
+## Why a query layer
 
-Networking in Swift apps tends to follow one of two paths: either every call
-site manages its own caching and loading state, or a heavyweight framework takes
-over the entire data flow. QueryClient sits between these extremes — a
-lightweight coordination layer that handles the repetitive parts (caching,
-deduplication, retries, staleness tracking) while staying out of the way for
-everything else.
+In many Swift apps, each call site manages its own cache and its own loading state. Other apps
+give all the data flow to a large framework. QueryClient is between these two approaches. It is a
+small coordination layer for the repetitive parts: the cache, the deduplication, the retries and
+the staleness. It does not control the rest of the app.
 
-The goal is not to replicate TanStack Query feature-for-feature. It is to bring
-its most valuable ideas — stale-while-revalidate, request deduplication, and the
-status/fetching separation — into Swift's concurrency model with zero
-dependencies.
+QueryClient does not copy all the features of TanStack Query. It takes the most useful ideas:
+stale-while-revalidate, request deduplication and the separation of the status and the fetch
+activity. It uses Swift concurrency and has no dependencies.
 
-## Core ideas borrowed from TanStack Query
+## Ideas from TanStack Query
 
 ### Stale-while-revalidate
 
-TanStack Query's signature behavior: return cached data instantly, then silently
-refresh in the background. This eliminates loading spinners on repeat visits
-while keeping data fresh.
+TanStack Query returns the cached data immediately, then refreshes it in the background. Thus the
+user does not see a loading indicator for data that the app already has, and the data stays
+current.
 
-QueryClient implements the same flow:
+QueryClient uses the same flow:
 
-1. A `query(key:fetch:)` call checks the cache.
-2. If cached data exists and `staleTime` hasn't elapsed, it returns immediately.
-3. If cached data exists but is stale, it returns the stale data **and** kicks
-   off a background refetch.
-4. If no cached data exists, it awaits the fetch directly.
+1. A `query(key:fetch:)` call examines the cache.
+2. If the cache has data and the `staleTime` is not over, the call returns the data.
+3. If the cache has data but the data is stale, the call returns the data **and** starts a fetch
+   in the background.
+4. If the cache has no data, the call waits for a fetch.
 
-The `staleTime` and `cacheTime` options control this behavior. `staleTime`
-determines how long data is considered fresh (default: 0, meaning immediately
-stale). `cacheTime` determines how long data stays in the cache at all (default:
-5 minutes).
+The `staleTime` and `cacheTime` options control this flow. `staleTime` is the time during which
+the data is fresh. The default is 0: the data is stale immediately. `cacheTime` is the time during
+which the cache keeps the data after the fetch. The default is 5 minutes.
 
-### The status vs. isFetching separation
+### Status and fetch activity
 
-This is the insight that makes stale-while-revalidate work at the UI level. In
-many networking layers, "loading" is a single boolean. TanStack Query splits
-this into two dimensions:
+In many network layers, one Boolean tells if the data loads. TanStack Query uses two values:
 
-- **status**: the overall state of the query (`.idle`, `.loading`, `.success`,
-  `.error`)
-- **isFetching**: whether a network request is currently in flight
+- **status**: the state of the query (`.idle`, `.loading`, `.success`, `.error`)
+- **isFetching**: `true` while a request is in progress
 
-A query can be `.success` with `isFetching == true` — it has data, but is
-refreshing in the background. This lets UIs show content with a subtle refresh
-indicator instead of replacing everything with a spinner.
+A query can have the `.success` status while `isFetching` is `true`. It has data, and it refreshes
+the data in the background. Thus the user interface can show the data with a small refresh
+indicator, and not a full loading indicator.
 
-`QueryState<T>` captures both dimensions, plus `isStale`, `data`, `error`, and
-`dataUpdatedAt`.
+`QueryState<T>` contains these two values, and also `isStale`, `data`, `error` and `dataUpdatedAt`.
 
 ### Request deduplication
 
-If two parts of an app call `query(key:fetch:)` with the same key while a fetch
-is already in flight, the second caller awaits the existing task instead of
-starting a duplicate request. This falls out naturally from tracking in-flight
-`Task` instances by key.
+Sometimes two parts of an app call `query(key:fetch:)` with the same key while a fetch is in
+progress. Then the second caller waits for the result of the fetch in progress, and the client
+does not send a second request.
 
-## Where QueryClient diverges from TanStack Query
+If one caller is cancelled, only this caller stops. The fetch continues for the other callers.
+
+## Differences from TanStack Query
 
 ### No reactivity layer
 
-TanStack Query is built around observability — components subscribe to query
-state and re-render automatically. QueryClient deliberately stops short of this.
-It is an actor that you `await` on, not an observable object. Consumers can
-build their own observation (via `AsyncStream`, Combine, `@Observable`, etc.) on
-top of the `state(for:as:)` method.
+In TanStack Query, the components observe the state of the queries and update automatically.
+QueryClient does not do this. It is an actor that you `await`, not an observable object. To observe
+a query, build your own observation (with `AsyncStream`, Combine, `@Observable`, or other tools)
+on `state(for:as:)`.
 
-This keeps the core free of any UI framework dependency and avoids opinionated
-choices about state propagation.
+Thus the core does not depend on a user interface framework, and does not select a method to
+send the state changes.
 
 ### No mutations
 
-TanStack Query bundles mutations alongside queries, with features like
-optimistic updates and mutation lifecycle hooks. QueryClient handles queries
-only. The `setQueryData(_:data:)` method enables manual cache writes (useful for
-optimistic updates), but orchestrating mutations is left to the caller.
+TanStack Query has mutations, with optimistic updates and lifecycle hooks. QueryClient has
+queries only. Use `setQueryData(_:data:)` to write the cache, for example for an optimistic
+update. The caller controls the mutations.
 
-### No garbage collection
+### No garbage collector
 
-TanStack Query runs a background garbage collector that removes inactive queries
-after their `cacheTime` expires. QueryClient uses lazy eviction instead: expired
-entries are skipped on read and can be explicitly purged with `evictExpired()`.
-This avoids background timers and keeps the actor model simple.
+TanStack Query has a garbage collector that removes the inactive queries after their cache time.
+QueryClient has no timer. When it stores data, the cache removes the expired entries. A read
+ignores an expired entry. To remove the expired entries at a different time, call
+`evictExpired()`.
 
-### No query observers or window focus refetching
+### No observers and no refetch on window focus
 
-Browser-specific features like refetching on window focus or network reconnect
-are not included. These are application-level concerns on Apple platforms
-(responding to `UIApplication.willEnterForegroundNotification`, `NWPathMonitor`,
-etc.) and are better handled by the consuming app.
+QueryClient does not refetch when the window gets the focus or when the network connects again.
+On Apple platforms, the app controls these events, for example with
+`UIApplication.willEnterForegroundNotification` or `NWPathMonitor`.
 
 ## Internal architecture
 
-### Actors all the way down
+### Actors
 
-Both `QueryCache` and `QueryClient` are actors. This provides thread safety
-without locks and maps cleanly to Swift's structured concurrency model.
+`QueryCache` and `QueryClient` are actors. Thus they are thread-safe without locks, and they
+agree with the Swift concurrency model.
 
-`QueryCache` owns a `Dictionary<AnyQueryKey, CacheEntry>`. It was deliberately
-built with `Dictionary` rather than `NSCache` — `NSCache` is unavailable on
-Linux and its eviction behavior is unpredictable. Query caches are
-low-cardinality (hundreds of keys, not millions), so a dictionary with
-time-based expiration is the right tool.
+`QueryCache` contains a `Dictionary<AnyQueryKey, CacheEntry>`. It does not use `NSCache`, because
+`NSCache` is not available on Linux and its eviction is not predictable. A query cache contains
+hundreds of keys, not millions. Thus a dictionary with time-based expiration is sufficient.
 
-`QueryClient` owns the cache actor, a dictionary of in-flight `Task` instances,
-and a dictionary of `QueryState` snapshots. All mutation happens through the
-actor's serialized context.
+`QueryClient` contains the cache actor, a dictionary of the fetches in progress and a dictionary
+of `QueryState` values. All the changes occur in the serial context of the actor.
+
+Each fetch in progress has an identifier. When a fetch completes after an invalidation, the
+client ignores its result. Thus an old fetch cannot complete a newer fetch for the same key, and
+cannot write to the cache.
 
 ### Type erasure
 
-Cache entries store `any Sendable` values. This lets a single cache hold queries
-of different types. `AnyQueryKey` type-erases the key for storage while
-preserving the ability to unwrap back to the original type (e.g., for prefix
-matching on `QueryKeyPath`).
+The cache entries contain `any Sendable` values. Thus one cache can contain queries of different
+types. `AnyQueryKey` removes the type of the key for the storage. You can get the original key
+again, for example to compare the prefix of a `QueryKeyPath`.
 
-### Retry mechanism
+### Retries
 
-Retries are handled inside `QueryClient` rather than delegating to
-`RetryTransport`. This is intentional — query-level retries apply to the fetch
-closure regardless of whether it uses `Transport` underneath. The retry logic
-mirrors `RetryTransport`'s approach (attempt counting with configurable delay)
-but operates at a higher level.
+`QueryClient` retries the fetches itself. It does not use `RetryTransport`, because the retries
+apply to all fetch closures, also to closures that do not use `Transport`. The retries work as in
+`RetryTransport`: the client counts the attempts and waits for a delay that you can configure.
 
 ### Transport bridge
 
-The `query(key:options:transport:endpoint:)` extension connects QueryClient to
-the existing `Transport` + `Endpoint` system. It's a thin wrapper that captures
-`transport.load(endpoint)` as the fetch closure. This extension is excluded on
-Linux (matching `Transport`'s own platform constraints).
+The `query(key:options:transport:endpoint:)` extension connects QueryClient to `Transport` and
+`Endpoint`. It uses `transport.load(endpoint)` as the fetch closure. This extension is not
+available on Linux, as `Transport`.
 
-## Key types at a glance
+## Key types
 
 | Type | Role |
 |------|------|
-| `QueryKey` | Protocol for cache keys (`Hashable & Sendable`) |
-| `QueryKeyPath` | Array-based hierarchical key with prefix matching |
-| `AnyQueryKey` | Type-erased key for internal storage |
-| `QueryState<T>` | Full state snapshot (status, data, error, fetching, stale) |
+| `QueryKey` | Protocol for the cache keys (`Hashable & Sendable`) |
+| `QueryKeyPath` | Hierarchical key, made of an array, with prefix matching |
+| `AnyQueryKey` | Key without its type, for the storage |
+| `QueryState<T>` | Full state (status, data, error, fetch activity, staleness) |
 | `QueryOptions` | Configuration (staleTime, cacheTime, retryCount, retryDelay) |
-| `QueryCache` | Actor-based dictionary cache with TTL |
-| `QueryClient` | Coordinator actor (fetch, dedup, invalidate, retry) |
-| `QueryError` | Error cases (cancelled, allRetriesFailed, typeMismatch) |
+| `QueryCache` | Dictionary cache with expiration, in an actor |
+| `QueryClient` | Coordinator actor (fetch, deduplication, invalidation, retries) |
+| `QueryError` | Errors (cancelled, allRetriesFailed, typeMismatch) |

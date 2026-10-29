@@ -1,18 +1,17 @@
-# QueryClient
+# Fetch and cache async data
 
-Fetch, cache, and revalidate async data with automatic deduplication and
-retry.
+Fetch async data, keep it in a cache and refresh it, with deduplication and retries.
 
 ## Overview
 
-QueryClient is a lightweight caching layer for async data. It handles stale
-data, deduplicates concurrent requests for the same key, and retries on failure
-— so call sites stay focused on what to fetch, not how to manage it.
+``QueryClient`` is a small cache layer for async data. It knows when the data is stale. It sends
+one request for concurrent queries with the same key. It retries failed fetches. Thus the call
+sites tell what to fetch, and the client manages the rest.
 
-## Fetching data
+## Fetch data
 
-Pass a key and an async closure. The client caches the result and returns it on
-subsequent calls without re-fetching (subject to staleness rules).
+Give a key and an async closure. The client keeps the result in its cache. The next calls return
+the cached result and do not fetch again, until the data becomes stale.
 
 ```swift
 let client = QueryClient()
@@ -22,12 +21,12 @@ let user: User = try await client.query(key: "current-user") {
 }
 ```
 
-The key can be any `String` or any type conforming to ``QueryKey``.
+The key can be a `String` or a value of a type that conforms to ``QueryKey``.
 
-## Using hierarchical keys
+## Use hierarchical keys
 
-Use ``QueryKeyPath`` when keys have a natural hierarchy. This enables
-prefix-based invalidation later.
+Use ``QueryKeyPath`` if your keys have a hierarchy. Then you can invalidate all the keys that
+start with a prefix.
 
 ```swift
 let post: Post = try await client.query(
@@ -43,18 +42,22 @@ let comments: [Comment] = try await client.query(
 }
 ```
 
-## Configuring staleness and cache lifetime
+## Configure the stale time and the cache time
 
-By default, data is immediately stale (`staleTime: 0`) and stays in the cache
-for 5 minutes (`cacheTime: 300`). Override these per-client or per-query.
+- `staleTime` is the time during which the data is fresh. The default is 0: the data is stale
+  immediately.
+- `cacheTime` is the time during which the cache keeps the data after the fetch. The default is
+  300 seconds (5 minutes).
+
+Set the options for all the queries of a client, or for one query:
 
 ```swift
-// Client-wide: data stays fresh for 30 seconds
+// For all the queries: the data is fresh for 30 seconds.
 let client = QueryClient(
     defaultOptions: QueryOptions(staleTime: 30, cacheTime: 600)
 )
 
-// Per-query override: this data stays fresh for 5 minutes
+// For one query: the data is fresh for 5 minutes.
 let config: Config = try await client.query(
     key: "app-config",
     options: QueryOptions(staleTime: 300)
@@ -63,12 +66,14 @@ let config: Config = try await client.query(
 }
 ```
 
-When `staleTime` is 0, every call after the first returns cached data instantly
-and triggers a background refetch — this is the stale-while-revalidate pattern.
+When the data is fresh, the client returns it and does not fetch. When the data is stale, the
+client returns it immediately and fetches new data in the background. This pattern is
+"stale-while-revalidate". When the cache time is over, the client removes the data. The next call
+waits for a new fetch.
 
-## Prefetching data
+## Prefetch data
 
-Populate the cache ahead of time without waiting for the result.
+Put data in the cache before you need it. The method does not wait for the result.
 
 ```swift
 await client.prefetch(key: "user-profile") {
@@ -76,70 +81,75 @@ await client.prefetch(key: "user-profile") {
 }
 ```
 
-The data will be ready when `query(key:fetch:)` is called later.
+If the cache has fresh data for the key, the client does not fetch.
 
-## Reading and writing the cache manually
+## Read and write the cache
 
-Write data directly into the cache (useful for optimistic updates):
+Write data in the cache, for example for an optimistic update:
 
 ```swift
 await client.setQueryData("current-user", data: updatedUser)
 ```
 
-Read cached data without triggering a fetch:
+Read the cached data without a fetch:
 
 ```swift
 let cached = await client.getQueryData("current-user", as: User.self)
 ```
 
-## Inspecting query state
+## Examine the state of a query
 
-Check the full state of a cached query, including whether it's currently
-refetching in the background:
+Get the full state of a query. The state tells if a fetch is in progress in the background:
 
 ```swift
 if let state = await client.state(for: "current-user", as: User.self) {
     switch state.status {
     case .success:
-        // state.data is available
-        // state.isFetching indicates a background refresh
-        // state.isStale indicates the data is past its staleTime
+        // state.data contains the data.
+        // state.isFetching is true during a background refresh.
+        // state.isStale is true when the data is older than staleTime.
     case .loading:
-        // initial fetch in progress
+        // The first fetch is in progress.
     case .error:
-        // state.error has details
+        // state.error contains the error.
     case .idle:
-        // no fetch attempted yet
+        // The client did not fetch yet.
     }
 }
 ```
 
-## Invalidating cached data
+When the cache time is over, `state(for:as:)` returns `nil`, or a loading state if a fetch is in
+progress.
 
-Remove a specific key:
+## Invalidate cached data
+
+Remove one key:
 
 ```swift
 await client.invalidate("current-user")
 ```
 
-Remove all keys matching a prefix (requires ``QueryKeyPath`` keys):
+Remove all the keys that start with a prefix. This operation applies to ``QueryKeyPath`` keys only:
 
 ```swift
 await client.invalidateMatching(prefix: QueryKeyPath(["posts"]))
 ```
 
-Clear everything:
+Remove all the keys:
 
 ```swift
 await client.invalidateAll()
 ```
 
-Invalidation also cancels any in-flight fetch for the affected keys.
+The invalidation also cancels the fetches in progress for these keys. The callers that wait for
+these fetches get ``QueryError/cancelled``. The result of a cancelled fetch does not go into the
+cache.
 
-## Configuring retries
+## Configure the retries
 
-By default, failed fetches retry 3 times with exponential backoff (1s, 2s, 4s,
-capped at 30s). Customize this per-client or per-query.
+By default, the client retries a failed fetch 3 times. The delays increase exponentially: 1 s,
+2 s, 4 s, with a maximum of 30 s. Set the retries for all the queries of a client, or for one
+query:
 
 ```swift
 let client = QueryClient(
@@ -150,12 +160,13 @@ let client = QueryClient(
 )
 ```
 
-Set `retryCount: 0` to disable retries entirely.
+Set `retryCount` to 0 to disable the retries. When all the attempts fail, the client throws
+``QueryError/allRetriesFailed(attempts:lastError:)``. Use `lastError` to get the error of the
+last attempt.
 
-## Using with Transport and Endpoint
+## Use a transport and an endpoint
 
-If you already use the ``Transport`` and ``Endpoint`` abstractions, a
-convenience method bridges them directly:
+If you use ``Transport`` and ``Endpoint``, use the method that accepts them:
 
 ```swift
 let transport = StatusCodeCheckingTransport(
@@ -174,10 +185,9 @@ let user: User = try await client.query(
 )
 ```
 
-This is equivalent to calling `query(key:fetch:)` with
-`transport.load(endpoint)` as the fetch closure.
+This method calls `query(key:fetch:)` with `transport.load(endpoint)` as the fetch closure.
 
-> Note: The Transport bridge is not available on Linux.
+> Note: This method is not available on Linux.
 
 ## Topics
 

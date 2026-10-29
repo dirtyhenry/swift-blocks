@@ -9,11 +9,11 @@ final class QueryKeyTests: XCTestCase {
     }
 
     func testAnyQueryKeyEquality() {
-        let a = AnyQueryKey("hello")
-        let b = AnyQueryKey("hello")
-        let c = AnyQueryKey("world")
-        XCTAssertEqual(a, b)
-        XCTAssertNotEqual(a, c)
+        let first = AnyQueryKey("hello")
+        let second = AnyQueryKey("hello")
+        let third = AnyQueryKey("world")
+        XCTAssertEqual(first, second)
+        XCTAssertNotEqual(first, third)
     }
 
     func testAnyQueryKeyUnwrapWrongType() {
@@ -32,11 +32,11 @@ final class QueryKeyTests: XCTestCase {
     }
 
     func testQueryKeyPathEquality() {
-        let a: QueryKeyPath = ["posts", "123"]
-        let b: QueryKeyPath = ["posts", "123"]
-        let c: QueryKeyPath = ["posts", "456"]
-        XCTAssertEqual(a, b)
-        XCTAssertNotEqual(a, c)
+        let first: QueryKeyPath = ["posts", "123"]
+        let second: QueryKeyPath = ["posts", "123"]
+        let third: QueryKeyPath = ["posts", "456"]
+        XCTAssertEqual(first, second)
+        XCTAssertNotEqual(first, third)
     }
 
     func testQueryKeyPathEmptyPrefix() {
