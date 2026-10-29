@@ -17,6 +17,7 @@
 - <doc:RunningProcesses> Run executables without a shell and capture stdout
   and stderr separately.
 - <doc:WatchPairing> Find out whether an Apple Watch is paired with the iPhone.
+- <doc:ImageCompression> Compress images to a target size, with presets for the network condition.
 
 ## Links
 
@@ -40,3 +41,4 @@
 - <doc:InteractiveShell>
 - <doc:RunningProcesses>
 - <doc:WatchPairing>
+- <doc:ImageCompression>

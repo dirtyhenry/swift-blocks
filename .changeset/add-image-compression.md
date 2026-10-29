@@ -2,4 +2,4 @@
 "swift-blocks": minor
 ---
 
-Add image compression module with JPEG quality optimization, image resizing, document detection via Vision, and network-aware adaptive presets
+Add an Imaging module. It compresses images to a target size, changes their size, finds documents with Vision and selects a compression preset from the network condition.
