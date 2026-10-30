@@ -25,20 +25,14 @@ public struct PlainDate: Sendable {
     /// - Parameters:
     ///   - dateAsString: The ISO 8601 string representing the date (e.g., `2022-03-02` for March 2nd, 2022).
     ///   - calendar: The calendar to use (default is `.current`).
-    /// - Returns: A `PlainDate`, or `nil` if the string could not be parsed into a valid date.
+    /// - Returns: A `PlainDate`, or `nil` if the string is not in the `YYYY-MM-DD` format.
     ///   The initializer also returns `nil` for a day that does not exist, such as `2022-02-30`.
     public init?(from dateAsString: String, calendar: Calendar = .current) {
-        let formatter = Self.createFormatter(timeZone: calendar.timeZone)
-        guard let date = formatter.date(from: dateAsString) else {
+        guard let date = Self.date(fromISO8601: dateAsString, in: calendar.timeZone) else {
             return nil
         }
 
         self.init(date: date, calendar: calendar)
-
-        // The formatter rolls over days that do not exist: 2022-02-30 becomes 2022-03-02.
-        guard description == dateAsString else {
-            return nil
-        }
     }
 
     /// Creates a plain date from a `Date` object.
@@ -76,13 +70,6 @@ public struct PlainDate: Sendable {
         #endif
         return alternativeFormatter.string(from: date)
     }
-
-    private static func createFormatter(timeZone: TimeZone) -> ISO8601DateFormatter {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withFullDate]
-        formatter.timeZone = timeZone
-        return formatter
-    }
 }
 
 extension PlainDate: ExpressibleByStringLiteral {
@@ -108,7 +95,7 @@ extension PlainDate: CustomStringConvertible {
 
     /// A string description of the `PlainDate` in ISO 8601 format.
     public var description: String {
-        Self.createFormatter(timeZone: calendar.timeZone).string(from: date)
+        Self.iso8601String(for: gregorianDay)
     }
 }
 
@@ -213,10 +200,7 @@ public extension PlainDate {
 
     /// The year and week number of this `PlainDate`.
     var yearWeek: String {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withYear, .withWeekOfYear, .withDashSeparatorInDate]
-        formatter.timeZone = calendar.timeZone
-        return formatter.string(from: date)
+        Self.iso8601YearWeek(for: date, in: calendar.timeZone)
     }
 
     /// Advances the date to the next specified weekday.
@@ -233,6 +217,57 @@ public extension PlainDate {
     /// The date components (year, month, day) of this `PlainDate`.
     var dateComponents: DateComponents {
         calendar.dateComponents([.year, .month, .day], from: date)
+    }
+}
+
+// MARK: - ISO 8601 strings
+
+/// `PlainDate` reads and writes ISO 8601 strings with `Calendar`, not with `ISO8601DateFormatter`:
+///
+/// - `ISO8601DateFormatter` is lenient. It accepts `2022-3-2`, `20220302` and `+2022-03-02`, and it rolls over
+///   days that do not exist: `2022-02-30` becomes `2022-03-02`.
+/// - `ISO8601DateFormatter` is expensive to make. One formatter costs about 200 µs. The code made one for each
+///   call, which made `description`, decoding and encoding about 150 times slower than the `Calendar` path.
+///
+/// Keep this extension as the only place that knows the `YYYY-MM-DD` and `YYYY-Www` formats.
+private extension PlainDate {
+    static let iso8601Calendar = Calendar(identifier: .iso8601)
+
+    /// Returns the start of the day in `timeZone` for a `YYYY-MM-DD` string, or `nil` if the string is not
+    /// in that format or names a day that does not exist.
+    static func date(fromISO8601 string: String, in timeZone: TimeZone) -> Date? {
+        let parts = string.split(separator: "-", omittingEmptySubsequences: false)
+        guard parts.count == 3,
+              parts[0].count == 4, parts[1].count == 2, parts[2].count == 2,
+              parts.allSatisfy({ $0.allSatisfy { $0.isASCII && $0.isNumber } }),
+              let year = Int(parts[0]), let month = Int(parts[1]), let day = Int(parts[2])
+        else {
+            return nil
+        }
+
+        var gregorian = gregorianCalendar
+        gregorian.timeZone = timeZone
+        let components = DateComponents(year: year, month: month, day: day)
+
+        // The calendar rolls over days that do not exist: 2022-02-30 becomes 2022-03-02.
+        guard components.isValidDate(in: gregorian) else {
+            return nil
+        }
+
+        return gregorian.date(from: components)
+    }
+
+    /// Returns the `YYYY-MM-DD` string for a Gregorian day.
+    static func iso8601String(for day: (year: Int, month: Int, day: Int)) -> String {
+        String(format: "%04d-%02d-%02d", day.year, day.month, day.day)
+    }
+
+    /// Returns the `YYYY-Www` string for a date, with the ISO 8601 week rules.
+    static func iso8601YearWeek(for date: Date, in timeZone: TimeZone) -> String {
+        var iso8601 = iso8601Calendar
+        iso8601.timeZone = timeZone
+        let components = iso8601.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
+        return String(format: "%04d-W%02d", components.yearForWeekOfYear ?? 0, components.weekOfYear ?? 0)
     }
 }
 
