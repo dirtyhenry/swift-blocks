@@ -37,11 +37,13 @@ public struct PlainDate: Sendable {
 
     /// Creates a plain date from a `Date` object.
     ///
+    /// The initializer keeps the start of the day of `date` in `calendar`. It removes the time of day.
+    ///
     /// - Parameters:
     ///   - date: The `Date` to represent.
     ///   - calendar: The calendar to use (default is `.current`).
     public init(date: Date, calendar: Calendar = .current) {
-        self.date = date
+        self.date = calendar.startOfDay(for: date)
         self.calendar = calendar
     }
 

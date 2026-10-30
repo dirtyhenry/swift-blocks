@@ -102,6 +102,16 @@ final class PlainDateTests: XCTestCase {
         try XCTAssertEqual(PlainDate(stringLiteral: "2025-05-26").craftURL().absoluteString, "day://2025.05.26")
     }
 
+    func testInitFromDateRemovesTimeOfDay() throws {
+        let calendar = Calendar.parisCalendar()
+        let midnight = try XCTUnwrap(PlainDate(from: "2026-10-29", calendar: calendar))
+        let morning = PlainDate(date: midnight.date.addingTimeInterval(10 * 3600 + 42 * 60), calendar: calendar)
+
+        XCTAssertEqual(morning, midnight)
+        XCTAssertEqual(morning.hashValue, midnight.hashValue)
+        XCTAssertEqual(Array(morning ..< midnight.advanced(by: 3)).count, 3)
+    }
+
     func testComparable() {
         XCTAssertTrue(PlainDate(stringLiteral: "2025-05-26") == PlainDate(stringLiteral: "2025-05-26"))
         XCTAssertTrue(PlainDate(stringLiteral: "2025-05-26") != PlainDate(stringLiteral: "2025-05-27"))
