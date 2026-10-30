@@ -130,8 +130,13 @@ extension PlainDate: Strideable {
     }
 
     /// Advances the date by a specified number of days.
+    ///
+    /// - Precondition: The result must be in the range of dates that `calendar` can represent.
     public func advanced(by value: Int) -> PlainDate {
-        let newDate = calendar.date(byAdding: .day, value: value, to: date)!
+        guard let newDate = calendar.date(byAdding: .day, value: value, to: date) else {
+            preconditionFailure("Could not advance \(self) by \(value) days.")
+        }
+
         return PlainDate(date: newDate, calendar: calendar)
     }
 }
@@ -204,8 +209,8 @@ public extension PlainDate {
     /// The day of the week for this `PlainDate`.
     var weekday: Weekday {
         let components = calendar.dateComponents([.weekday], from: date)
-        guard let result = Weekday(rawValue: components.weekday!) else {
-            fatalError("No weekday found for \(self)")
+        guard let weekday = components.weekday, let result = Weekday(rawValue: weekday) else {
+            preconditionFailure("No weekday found for \(self)")
         }
 
         return result
