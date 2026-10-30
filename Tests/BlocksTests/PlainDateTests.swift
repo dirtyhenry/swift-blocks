@@ -46,6 +46,23 @@ final class PlainDateTests: XCTestCase {
         }
     }
 
+    func testDistanceIgnoresTimeZones() throws {
+        var tokyo = Calendar(identifier: .gregorian)
+        tokyo.timeZone = try XCTUnwrap(TimeZone(identifier: "Asia/Tokyo"))
+        var losAngeles = Calendar(identifier: .gregorian)
+        losAngeles.timeZone = try XCTUnwrap(TimeZone(identifier: "America/Los_Angeles"))
+
+        let inTokyo = try XCTUnwrap(PlainDate(from: "2026-10-29", calendar: tokyo))
+        let inLosAngeles = try XCTUnwrap(PlainDate(from: "2026-10-29", calendar: losAngeles))
+        let nextDayInLosAngeles = try XCTUnwrap(PlainDate(from: "2026-10-30", calendar: losAngeles))
+
+        XCTAssertEqual(inTokyo.distance(to: inLosAngeles), 0)
+        XCTAssertEqual(inLosAngeles.distance(to: inTokyo), 0)
+        XCTAssertEqual(inTokyo.distance(to: nextDayInLosAngeles), 1)
+        XCTAssertEqual(PlainDate(stringLiteral: "2024-02-28").distance(to: "2024-03-01"), 2)
+        XCTAssertEqual(PlainDate(stringLiteral: "1999-12-31").distance(to: "2026-10-29"), 9799)
+    }
+
     struct MockCodable: Codable {
         let dateString: PlainDate
     }

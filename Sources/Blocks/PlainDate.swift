@@ -126,8 +126,7 @@ extension PlainDate: Strideable {
 
     /// Calculates the distance in days to another `PlainDate`.
     public func distance(to other: PlainDate) -> Int {
-        let timeInterval = date.distance(to: other.date)
-        return Int(round(timeInterval / 86400.0))
+        other.isoDay.julianDayNumber - isoDay.julianDayNumber
     }
 
     /// Advances the date by a specified number of days.
@@ -163,6 +162,17 @@ extension PlainDate {
 
         static func < (lhs: ISODay, rhs: ISODay) -> Bool {
             (lhs.year, lhs.month, lhs.day) < (rhs.year, rhs.month, rhs.day)
+        }
+
+        /// The number of days since January 1st, 4713 BC, in the proleptic Julian calendar.
+        ///
+        /// The difference between two Julian day numbers is the number of days between them.
+        var julianDayNumber: Int {
+            let shift = (14 - month) / 12
+            let shiftedYear = year + 4800 - shift
+            let shiftedMonth = month + 12 * shift - 3
+            return day + (153 * shiftedMonth + 2) / 5 + 365 * shiftedYear
+                + shiftedYear / 4 - shiftedYear / 100 + shiftedYear / 400 - 32045
         }
     }
 
