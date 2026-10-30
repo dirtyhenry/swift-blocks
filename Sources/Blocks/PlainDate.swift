@@ -117,7 +117,7 @@ extension PlainDate: CustomDebugStringConvertible {
 
     /// A debug description of the `PlainDate` including calendar and time zone details.
     public var debugDescription: String {
-        "\(Self.createFormatter(timeZone: calendar.timeZone).string(from: date)) (\(calendar) \(calendar.timeZone) \(date))"
+        "\(description) (\(calendar) \(calendar.timeZone) \(date))"
     }
 }
 
