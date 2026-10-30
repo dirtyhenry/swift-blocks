@@ -237,7 +237,16 @@ public extension PlainDate {
 
 extension PlainDate: Decodable {
     public init(from decoder: Decoder) throws {
-        try self.init(stringLiteral: decoder.singleValueContainer().decode(String.self))
+        let container = try decoder.singleValueContainer()
+        let value = try container.decode(String.self)
+        guard let instance = PlainDate(from: value) else {
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Could not turn \(value) into a PlainDate."
+            )
+        }
+
+        self = instance
     }
 }
 

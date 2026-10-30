@@ -66,6 +66,15 @@ final class PlainDateTests: XCTestCase {
         XCTAssertEqual("2022-01-19", mockCodable.dateString.description)
     }
 
+    func testDecodableThrowsOnInvalidString() throws {
+        let data = try XCTUnwrap(#"{"dateString":"29/10/2026"}"#.data(using: .utf8))
+        XCTAssertThrowsError(try JSONDecoder().decode(MockCodable.self, from: data)) { error in
+            guard case DecodingError.dataCorrupted = error else {
+                return XCTFail("Unexpected error: \(error)")
+            }
+        }
+    }
+
     func testWeekdays() {
         XCTAssertEqual(PlainDate(stringLiteral: "2023-03-13").weekday, PlainDate.Weekday.monday)
         XCTAssertEqual(PlainDate(stringLiteral: "2023-03-14").weekday, PlainDate.Weekday.tuesday)
