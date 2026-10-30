@@ -281,13 +281,14 @@ public extension PlainDate {
     /// The host portion of the URL is the date in ISO 8601 format, but with hyphens replaced by periods
     /// (for example, 2025-06-02 becomes 2025.06.02). This is intended for integration with third-party
     /// apps (such as Craft) that recognize or handle this style of date-based linking.
-    func craftURL() throws -> URL {
+    func craftURL() -> URL {
         var components = URLComponents()
         components.scheme = "day"
         components.host = description.replacingOccurrences(of: "-", with: ".")
 
+        // The host has only digits and periods, thus `URLComponents` always makes a URL.
         guard let url = components.url else {
-            throw SimpleMessageError(message: "Could not generate Craft URL for date \(self).")
+            preconditionFailure("Could not generate Craft URL for date \(self).")
         }
 
         return url

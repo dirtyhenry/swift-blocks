@@ -124,8 +124,8 @@ final class PlainDateTests: XCTestCase {
         XCTAssertEqual(PlainDate(stringLiteral: "2023-03-20").yearWeek, "2023-W12")
     }
 
-    func testCraftURL() throws {
-        try XCTAssertEqual(PlainDate(stringLiteral: "2025-05-26").craftURL().absoluteString, "day://2025.05.26")
+    func testCraftURL() {
+        XCTAssertEqual(PlainDate(stringLiteral: "2025-05-26").craftURL().absoluteString, "day://2025.05.26")
     }
 
     func testInitFromStringRejectsDaysThatDoNotExist() {
