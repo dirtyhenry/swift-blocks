@@ -117,4 +117,18 @@ final class PlainDateTests: XCTestCase {
         XCTAssertTrue(PlainDate(stringLiteral: "2025-05-26") != PlainDate(stringLiteral: "2025-05-27"))
         XCTAssertTrue(PlainDate(stringLiteral: "2025-05-26") < PlainDate(stringLiteral: "2025-05-27"))
     }
+
+    func testEqualityIsConsistentWithOrderAcrossCalendars() throws {
+        let paris = try XCTUnwrap(PlainDate(from: "2026-10-29", calendar: .parisCalendar()))
+        let newYork = try XCTUnwrap(PlainDate(from: "2026-10-29", calendar: .newYorkCalendar()))
+        let nextDay = try XCTUnwrap(PlainDate(from: "2026-10-30", calendar: .newYorkCalendar()))
+
+        XCTAssertEqual(paris, newYork)
+        XCTAssertEqual(paris.hashValue, newYork.hashValue)
+        XCTAssertFalse(paris < newYork)
+        XCTAssertFalse(newYork < paris)
+        XCTAssertEqual(Set([paris, newYork]).count, 1)
+        XCTAssertTrue(paris < nextDay)
+        XCTAssertFalse(nextDay < paris)
+    }
 }

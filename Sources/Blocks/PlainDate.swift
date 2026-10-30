@@ -144,7 +144,37 @@ extension PlainDate: Strideable {
     }
 }
 
-extension PlainDate: Equatable, Hashable, Comparable {}
+extension PlainDate: Equatable, Hashable, Comparable {
+    // MARK: - Equatable, Hashable and Comparable Conformances
+
+    /// Two plain dates are equal when they have the same ISO 8601 day, also with different calendars.
+    public static func == (lhs: PlainDate, rhs: PlainDate) -> Bool {
+        lhs.gregorianDay == rhs.gregorianDay
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        let (year, month, day) = gregorianDay
+        hasher.combine(year)
+        hasher.combine(month)
+        hasher.combine(day)
+    }
+
+    public static func < (lhs: PlainDate, rhs: PlainDate) -> Bool {
+        lhs.gregorianDay < rhs.gregorianDay
+    }
+}
+
+extension PlainDate {
+    private static let gregorianCalendar = Calendar(identifier: .gregorian)
+
+    /// The year, month and day of this plain date in the Gregorian calendar, in the time zone of its calendar.
+    private var gregorianDay: (year: Int, month: Int, day: Int) {
+        var gregorian = Self.gregorianCalendar
+        gregorian.timeZone = calendar.timeZone
+        let components = gregorian.dateComponents([.year, .month, .day], from: date)
+        return (components.year ?? 0, components.month ?? 0, components.day ?? 0)
+    }
+}
 
 public extension PlainDate {
     // MARK: - Weekday and Components
