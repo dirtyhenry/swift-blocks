@@ -25,23 +25,41 @@ public struct PlainDate: Sendable {
     /// - Parameters:
     ///   - dateAsString: The ISO 8601 string representing the date (e.g., `2022-03-02` for March 2nd, 2022).
     ///   - calendar: The calendar to use (default is `.current`).
-    /// - Returns: A `PlainDate`, or `nil` if the string could not be parsed into a valid date.
+    /// - Returns: A `PlainDate`, or `nil` if the string is not in the `YYYY-MM-DD` format.
+    ///   The initializer also returns `nil` for a day that does not exist, such as `2022-02-30`.
     public init?(from dateAsString: String, calendar: Calendar = .current) {
-        let formatter = Self.createFormatter(timeZone: calendar.timeZone)
-        guard let date = formatter.date(from: dateAsString) else {
+        let parts = dateAsString.split(separator: "-", omittingEmptySubsequences: false)
+        guard parts.count == 3,
+              parts[0].count == 4, parts[1].count == 2, parts[2].count == 2,
+              parts.allSatisfy({ $0.allSatisfy { $0.isASCII && $0.isNumber } }),
+              let year = Int(parts[0]), let month = Int(parts[1]), let day = Int(parts[2])
+        else {
+            return nil
+        }
+
+        var gregorian = Self.gregorianCalendar
+        gregorian.timeZone = calendar.timeZone
+        guard let date = gregorian.date(from: DateComponents(year: year, month: month, day: day)) else {
             return nil
         }
 
         self.init(date: date, calendar: calendar)
+
+        // The calendar rolls over days that do not exist: 2022-02-30 becomes 2022-03-02.
+        guard isoDay == ISODay(year: year, month: month, day: day) else {
+            return nil
+        }
     }
 
     /// Creates a plain date from a `Date` object.
+    ///
+    /// The initializer keeps the start of the day of `date` in `calendar`. It removes the time of day.
     ///
     /// - Parameters:
     ///   - date: The `Date` to represent.
     ///   - calendar: The calendar to use (default is `.current`).
     public init(date: Date, calendar: Calendar = .current) {
-        self.date = date
+        self.date = calendar.startOfDay(for: date)
         self.calendar = calendar
     }
 
@@ -68,13 +86,6 @@ public struct PlainDate: Sendable {
         #endif
         return alternativeFormatter.string(from: date)
     }
-
-    private static func createFormatter(timeZone: TimeZone) -> ISO8601DateFormatter {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withFullDate]
-        formatter.timeZone = timeZone
-        return formatter
-    }
 }
 
 extension PlainDate: ExpressibleByStringLiteral {
@@ -100,7 +111,8 @@ extension PlainDate: CustomStringConvertible {
 
     /// A string description of the `PlainDate` in ISO 8601 format.
     public var description: String {
-        Self.createFormatter(timeZone: calendar.timeZone).string(from: date)
+        let isoDay = isoDay
+        return String(format: "%04d-%02d-%02d", isoDay.year, isoDay.month, isoDay.day)
     }
 }
 
@@ -109,7 +121,7 @@ extension PlainDate: CustomDebugStringConvertible {
 
     /// A debug description of the `PlainDate` including calendar and time zone details.
     public var debugDescription: String {
-        "\(Self.createFormatter(timeZone: calendar.timeZone).string(from: date)) (\(calendar) \(calendar.timeZone) \(date))"
+        "\(description) (\(calendar) \(calendar.timeZone) \(date))"
     }
 }
 
@@ -118,31 +130,72 @@ extension PlainDate: Strideable {
 
     /// Calculates the distance in days to another `PlainDate`.
     public func distance(to other: PlainDate) -> Int {
-        if #available(macOS 10.15, iOS 13.0, *) {
-            // 🐇 A faster working — so far — alternative.
-            let timeInterval = date.distance(to: other.date)
-            return Int(round(timeInterval / 86400.0))
-        } else {
-            // 🐢 Intellectually satisfying but a little slow.
-            let start = calendar.ordinality(of: .day, in: .era, for: date)
-            let end = calendar.ordinality(of: .day, in: .era, for: other.date)
-
-            guard let start, let end else {
-                fatalError("The distance between 2 dates could not be computed.")
-            }
-
-            return end - start
-        }
+        other.isoDay.julianDayNumber - isoDay.julianDayNumber
     }
 
     /// Advances the date by a specified number of days.
+    ///
+    /// - Precondition: The result must be in the range of dates that `calendar` can represent.
     public func advanced(by value: Int) -> PlainDate {
-        let newDate = calendar.date(byAdding: .day, value: value, to: date)!
+        guard let newDate = calendar.date(byAdding: .day, value: value, to: date) else {
+            preconditionFailure("Could not advance \(self) by \(value) days.")
+        }
+
         return PlainDate(date: newDate, calendar: calendar)
     }
 }
 
-extension PlainDate: Equatable, Hashable, Comparable {}
+extension PlainDate: Equatable, Hashable, Comparable {
+    // MARK: - Equatable, Hashable and Comparable Conformances
+
+    /// Two plain dates are equal when they have the same ISO 8601 day, also with different calendars.
+    public static func == (lhs: PlainDate, rhs: PlainDate) -> Bool {
+        lhs.isoDay == rhs.isoDay
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(isoDay)
+    }
+
+    public static func < (lhs: PlainDate, rhs: PlainDate) -> Bool {
+        lhs.isoDay < rhs.isoDay
+    }
+}
+
+extension PlainDate {
+    /// The year, month and day of a plain date in the ISO 8601 (Gregorian) calendar.
+    struct ISODay: Hashable, Comparable {
+        let year: Int
+        let month: Int
+        let day: Int
+
+        static func < (lhs: ISODay, rhs: ISODay) -> Bool {
+            (lhs.year, lhs.month, lhs.day) < (rhs.year, rhs.month, rhs.day)
+        }
+
+        /// The number of days since January 1st, 4713 BC, in the proleptic Julian calendar.
+        ///
+        /// The difference between two Julian day numbers is the number of days between them.
+        var julianDayNumber: Int {
+            let shift = (14 - month) / 12
+            let shiftedYear = year + 4800 - shift
+            let shiftedMonth = month + 12 * shift - 3
+            return day + (153 * shiftedMonth + 2) / 5 + 365 * shiftedYear
+                + shiftedYear / 4 - shiftedYear / 100 + shiftedYear / 400 - 32045
+        }
+    }
+
+    private static let gregorianCalendar = Calendar(identifier: .gregorian)
+    private static let iso8601Calendar = Calendar(identifier: .iso8601)
+
+    /// The ISO 8601 day of this plain date, in the time zone of its calendar.
+    var isoDay: ISODay {
+        var gregorian = Self.gregorianCalendar
+        gregorian.timeZone = calendar.timeZone
+        let components = gregorian.dateComponents([.year, .month, .day], from: date)
+        return ISODay(year: components.year ?? 0, month: components.month ?? 0, day: components.day ?? 0)
+    }
+}
 
 public extension PlainDate {
     // MARK: - Weekday and Components
@@ -161,8 +214,8 @@ public extension PlainDate {
     /// The day of the week for this `PlainDate`.
     var weekday: Weekday {
         let components = calendar.dateComponents([.weekday], from: date)
-        guard let result = Weekday(rawValue: components.weekday!) else {
-            fatalError("No weekday found for \(self)")
+        guard let weekday = components.weekday, let result = Weekday(rawValue: weekday) else {
+            preconditionFailure("No weekday found for \(self)")
         }
 
         return result
@@ -170,10 +223,10 @@ public extension PlainDate {
 
     /// The year and week number of this `PlainDate`.
     var yearWeek: String {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withYear, .withWeekOfYear, .withDashSeparatorInDate]
-        formatter.timeZone = calendar.timeZone
-        return formatter.string(from: date)
+        var iso8601 = Self.iso8601Calendar
+        iso8601.timeZone = calendar.timeZone
+        let components = iso8601.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
+        return String(format: "%04d-W%02d", components.yearForWeekOfYear ?? 0, components.weekOfYear ?? 0)
     }
 
     /// Advances the date to the next specified weekday.
@@ -197,7 +250,16 @@ public extension PlainDate {
 
 extension PlainDate: Decodable {
     public init(from decoder: Decoder) throws {
-        try self.init(stringLiteral: decoder.singleValueContainer().decode(String.self))
+        let container = try decoder.singleValueContainer()
+        let value = try container.decode(String.self)
+        guard let instance = PlainDate(from: value) else {
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Could not turn \(value) into a PlainDate."
+            )
+        }
+
+        self = instance
     }
 }
 
@@ -219,13 +281,14 @@ public extension PlainDate {
     /// The host portion of the URL is the date in ISO 8601 format, but with hyphens replaced by periods
     /// (for example, 2025-06-02 becomes 2025.06.02). This is intended for integration with third-party
     /// apps (such as Craft) that recognize or handle this style of date-based linking.
-    func craftURL() throws -> URL {
+    func craftURL() -> URL {
         var components = URLComponents()
         components.scheme = "day"
         components.host = description.replacingOccurrences(of: "-", with: ".")
 
+        // The host has only digits and periods, thus `URLComponents` always makes a URL.
         guard let url = components.url else {
-            throw SimpleMessageError(message: "Could not generate Craft URL for date \(self).")
+            preconditionFailure("Could not generate Craft URL for date \(self).")
         }
 
         return url
