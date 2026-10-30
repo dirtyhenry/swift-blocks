@@ -26,6 +26,7 @@ public struct PlainDate: Sendable {
     ///   - dateAsString: The ISO 8601 string representing the date (e.g., `2022-03-02` for March 2nd, 2022).
     ///   - calendar: The calendar to use (default is `.current`).
     /// - Returns: A `PlainDate`, or `nil` if the string could not be parsed into a valid date.
+    ///   The initializer also returns `nil` for a day that does not exist, such as `2022-02-30`.
     public init?(from dateAsString: String, calendar: Calendar = .current) {
         let formatter = Self.createFormatter(timeZone: calendar.timeZone)
         guard let date = formatter.date(from: dateAsString) else {
@@ -33,6 +34,11 @@ public struct PlainDate: Sendable {
         }
 
         self.init(date: date, calendar: calendar)
+
+        // The formatter rolls over days that do not exist: 2022-02-30 becomes 2022-03-02.
+        guard description == dateAsString else {
+            return nil
+        }
     }
 
     /// Creates a plain date from a `Date` object.
