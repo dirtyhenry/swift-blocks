@@ -126,21 +126,8 @@ extension PlainDate: Strideable {
 
     /// Calculates the distance in days to another `PlainDate`.
     public func distance(to other: PlainDate) -> Int {
-        if #available(macOS 10.15, iOS 13.0, *) {
-            // 🐇 A faster working — so far — alternative.
-            let timeInterval = date.distance(to: other.date)
-            return Int(round(timeInterval / 86400.0))
-        } else {
-            // 🐢 Intellectually satisfying but a little slow.
-            let start = calendar.ordinality(of: .day, in: .era, for: date)
-            let end = calendar.ordinality(of: .day, in: .era, for: other.date)
-
-            guard let start, let end else {
-                fatalError("The distance between 2 dates could not be computed.")
-            }
-
-            return end - start
-        }
+        let timeInterval = date.distance(to: other.date)
+        return Int(round(timeInterval / 86400.0))
     }
 
     /// Advances the date by a specified number of days.
