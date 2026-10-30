@@ -135,6 +135,20 @@ final class PlainDateTests: XCTestCase {
         XCTAssertNotNil(PlainDate(from: "2024-02-29"))
     }
 
+    func testInitFromStringRequiresTheISOFormat() {
+        XCTAssertNil(PlainDate(from: "2022-3-2"))
+        XCTAssertNil(PlainDate(from: "20220302"))
+        XCTAssertNil(PlainDate(from: "2022-03-02T10:00:00Z"))
+        XCTAssertNil(PlainDate(from: "+2022-03-02"))
+        XCTAssertNil(PlainDate(from: ""))
+        XCTAssertEqual(PlainDate(from: "0999-01-01")?.description, "0999-01-01")
+    }
+
+    func testYearWeekAtYearBoundaries() {
+        XCTAssertEqual(PlainDate(stringLiteral: "2021-01-03").yearWeek, "2020-W53")
+        XCTAssertEqual(PlainDate(stringLiteral: "2024-12-30").yearWeek, "2025-W01")
+    }
+
     func testInitFromDateRemovesTimeOfDay() throws {
         let calendar = Calendar.parisCalendar()
         let midnight = try XCTUnwrap(PlainDate(from: "2026-10-29", calendar: calendar))
