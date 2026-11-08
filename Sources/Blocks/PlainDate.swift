@@ -193,6 +193,37 @@ public extension PlainDate {
     }
 }
 
+public extension PlainDate {
+    // MARK: - Ranges of Days
+
+    /// The `days` days starting with this one.
+    func next(days: Int) -> Range<PlainDate> {
+        self ..< advanced(by: days)
+    }
+
+    /// The 7 days starting with this one.
+    func weekToCome() -> Range<PlainDate> {
+        next(days: 7)
+    }
+
+    // MARK: - Times of Day
+
+    /// The moment this `PlainDate` reaches a time of day, in a calendar's time zone.
+    ///
+    /// - Parameters:
+    ///   - hour: The hour, from 0 to 23.
+    ///   - minute: The minute, from 0 to 59.
+    ///   - calendar: The calendar whose time zone reads the time. Defaults to this `PlainDate`'s own.
+    /// - Returns: The moment, or `nil` when the calendar can't form it.
+    func at(hour: Int, minute: Int, calendar: Calendar? = nil) -> Date? {
+        let calendar = calendar ?? self.calendar
+        var components = dateComponents
+        components.hour = hour
+        components.minute = minute
+        return calendar.date(from: components)
+    }
+}
+
 // MARK: - Codable Conformance
 
 extension PlainDate: Decodable {

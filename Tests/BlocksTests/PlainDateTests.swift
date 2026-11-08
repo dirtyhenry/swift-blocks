@@ -36,6 +36,14 @@ final class PlainDateTests: XCTestCase {
         XCTAssertEqual(array, ["20220301", "20220302", "20220303", "20220304", "20220305", "20220306", "20220307"])
     }
 
+    func testNextDays() {
+        let monday: PlainDate = "2022-03-07"
+        XCTAssertEqual(monday.next(days: 3).map(\.description), ["2022-03-07", "2022-03-08", "2022-03-09"])
+        XCTAssertEqual(monday.weekToCome().map(\.description), [
+            "2022-03-07", "2022-03-08", "2022-03-09", "2022-03-10", "2022-03-11", "2022-03-12", "2022-03-13"
+        ])
+    }
+
     func testDistanceOfDatesIsConsistent() throws {
         let januaryFirst = try XCTUnwrap(PlainDate(from: "2022-01-01", calendar: .parisCalendar()))
 
