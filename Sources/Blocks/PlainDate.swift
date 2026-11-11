@@ -148,7 +148,7 @@ public extension PlainDate {
     // MARK: - Weekday and Components
 
     /// Represents a day of the week.
-    enum Weekday: Int {
+    enum Weekday: Int, Sendable {
         case sunday = 1
         case monday = 2
         case tuesday = 3
