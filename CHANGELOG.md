@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.13.0
+
+### Minor Changes
+
+- 7f043ac: Add an Imaging module. It compresses images to a target size, changes
+  their size, finds documents with Vision and selects a compression preset from
+  the network condition.
+- c51574f: Add `CLIUtils.editLine(prompt:)`. It reads a line that the user can
+  edit with the arrow keys and the usual shell keys.
+- e6e5f77: Add `QueryClient`. It fetches async data, keeps it in a cache and
+  refreshes it in the background. It sends one request for concurrent queries
+  with the same key, and retries the failed fetches.
+- 2307d4d: Implement `WatchPairingUtil` for Swift 6. The app activates the Watch
+  Connectivity session one time, at launch; the utility only observes it. Read
+  `isPaired` for an immediate answer, or await `isPaired(timeoutAfter:)` to wait
+  for the activation. Each call observes the activation state on its own, so
+  concurrent calls, timeouts and cancellations cannot resume a continuation
+  twice. Call `activationDidComplete(with:)` from the session delegate to make
+  the callers that wait throw `WatchActivationFailedError` when the activation
+  fails. When the session has no delegate, `isPaired(timeoutAfter:)` throws
+  `WatchSessionHasNoDelegateError` immediately instead of a timeout.
+
+### Patch Changes
+
+- 599bd4b: Make `PlainDate.Weekday` conform to `Sendable`, so it can be stored
+  in `Sendable` types under Swift 6.
+
 ## 0.12.0
 
 ### Minor Changes
