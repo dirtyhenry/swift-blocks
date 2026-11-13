@@ -230,13 +230,14 @@ actor RecordingTransport: Transport {
     struct Response {
         let data: Data
         let statusCode: Int
+        var delayNanoseconds: UInt64 = 0
 
         static func ok(_ body: String = "{\"ok\":true}") -> Response {
             Response(data: Data(body.utf8), statusCode: 200)
         }
 
-        static func unauthorized() -> Response {
-            Response(data: Data(), statusCode: 401)
+        static func unauthorized(delayNanoseconds: UInt64 = 0) -> Response {
+            Response(data: Data(), statusCode: 401, delayNanoseconds: delayNanoseconds)
         }
     }
 
@@ -254,12 +255,15 @@ actor RecordingTransport: Transport {
         try await record(urlRequest)
     }
 
-    private func record(_ urlRequest: URLRequest) throws -> (Data, HTTPURLResponse) {
+    private func record(_ urlRequest: URLRequest) async throws -> (Data, HTTPURLResponse) {
         requests.append(urlRequest)
         guard !responses.isEmpty else {
             throw SimpleMessageError(message: "RecordingTransport has no response left.")
         }
         let response = responses.removeFirst()
+        if response.delayNanoseconds > 0 {
+            try await Task.sleep(nanoseconds: response.delayNanoseconds)
+        }
         let httpResponse = HTTPURLResponse(
             url: urlRequest.url!,
             statusCode: response.statusCode,

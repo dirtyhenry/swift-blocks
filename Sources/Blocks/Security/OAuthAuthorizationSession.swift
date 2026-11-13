@@ -3,6 +3,11 @@ import Foundation
 #if canImport(AuthenticationServices) && (os(iOS) || os(macOS))
 import AuthenticationServices
 #endif
+#if os(iOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
 
 /// A session that runs an OAuth 2.0 authorization code flow with PKCE in a browser.
 ///
@@ -114,7 +119,7 @@ public struct OAuthAuthorizationSession: Sendable {
         self.configuration = configuration
     }
 
-    // MARK: - Building the request
+    // MARK: - Build the request
 
     /// Builds the authorization request with new PKCE seeds and a new random state.
     ///
@@ -174,7 +179,7 @@ public struct OAuthAuthorizationSession: Sendable {
         return DataFormatter.base64URLString(from: Data(octets))
     }
 
-    // MARK: - Reading the callback
+    // MARK: - Read the callback
 
     /// Reads the authorization code from the callback URL.
     ///
@@ -190,12 +195,12 @@ public struct OAuthAuthorizationSession: Sendable {
             queryItems.first { $0.name == name }?.value
         }
 
-        if let errorCode = value("error") {
-            throw OAuthAuthorizationError.providerError(code: errorCode, description: value("error_description"))
-        }
-
         guard value("state") == expectedState else {
             throw OAuthAuthorizationError.stateMismatch
+        }
+
+        if let errorCode = value("error") {
+            throw OAuthAuthorizationError.providerError(code: errorCode, description: value("error_description"))
         }
 
         guard let code = value("code"), !code.isEmpty else {
@@ -207,7 +212,10 @@ public struct OAuthAuthorizationSession: Sendable {
 
     #if canImport(AuthenticationServices) && (os(iOS) || os(macOS))
 
-    // MARK: - Running the flow in a browser
+    // MARK: - Run the flow in a browser
+
+    /// A closure that gives the window that presents the browser.
+    public typealias PresentationAnchorProvider = @MainActor @Sendable () -> ASPresentationAnchor
 
     /// Opens the authorization URL in a browser and waits for the callback.
     ///
@@ -218,7 +226,7 @@ public struct OAuthAuthorizationSession: Sendable {
     ///   closes the browser.
     @MainActor
     public func authorize(
-        presentationAnchor: @MainActor @Sendable @escaping () -> ASPresentationAnchor = defaultPresentationAnchor
+        presentationAnchor: @escaping PresentationAnchorProvider = defaultPresentationAnchor
     ) async throws -> Result {
         let request = try makeRequest()
         let callbackURL = try await Self.openInBrowser(
@@ -239,7 +247,7 @@ public struct OAuthAuthorizationSession: Sendable {
         url: URL,
         callbackURLScheme: String?,
         prefersEphemeralWebBrowserSession: Bool,
-        presentationAnchor: @MainActor @Sendable @escaping () -> ASPresentationAnchor
+        presentationAnchor: @escaping PresentationAnchorProvider
     ) async throws -> URL {
         let runner = BrowserSessionRunner(anchor: presentationAnchor)
         return try await withTaskCancellationHandler {
@@ -289,11 +297,11 @@ public struct OAuthAuthorizationSession: Sendable {
     /// Owns the browser session and the continuation that waits for the callback.
     @MainActor
     private final class BrowserSessionRunner: NSObject, ASWebAuthenticationPresentationContextProviding {
-        private let anchor: @MainActor @Sendable () -> ASPresentationAnchor
+        private let anchor: PresentationAnchorProvider
         private var session: ASWebAuthenticationSession?
         private var continuation: CheckedContinuation<URL, Error>?
 
-        init(anchor: @MainActor @Sendable @escaping () -> ASPresentationAnchor) {
+        init(anchor: @escaping PresentationAnchorProvider) {
             self.anchor = anchor
         }
 
@@ -304,6 +312,11 @@ public struct OAuthAuthorizationSession: Sendable {
             continuation: CheckedContinuation<URL, Error>
         ) {
             self.continuation = continuation
+            guard !Task.isCancelled else {
+                complete(callbackURL: nil, error: OAuthAuthorizationError.cancelled)
+                return
+            }
+
             let session = ASWebAuthenticationSession(
                 url: url,
                 callbackURLScheme: callbackURLScheme
@@ -335,7 +348,9 @@ public struct OAuthAuthorizationSession: Sendable {
             guard let continuation else { return }
             self.continuation = nil
             session = nil
-            if let error {
+            if let authorizationError = error as? OAuthAuthorizationError {
+                continuation.resume(throwing: authorizationError)
+            } else if let error {
                 continuation.resume(throwing: OAuthAuthorizationSession.mapSessionError(error))
             } else if let callbackURL {
                 continuation.resume(returning: callbackURL)

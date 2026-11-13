@@ -53,6 +53,48 @@ actor RefreshCounter {
     }
 }
 
+/// The fake server, the store, the refresh counter and the transport of the demo.
+///
+/// The view keeps one instance in its state, so that the transport and the buttons talk to the
+/// same server and the same store.
+@MainActor
+final class TransportDemo {
+    nonisolated static let tokenLifetime: TimeInterval = 15
+
+    let api = FakeAPITransport()
+    let store: InMemoryOAuthCredentialsStore
+    let refreshCounter = RefreshCounter()
+    let transport: AuthenticatingTransport
+
+    init() {
+        let store = InMemoryOAuthCredentialsStore(
+            credentials: OAuthCredentials(
+                accessToken: "access-0",
+                expiresAt: Date().addingTimeInterval(Self.tokenLifetime),
+                refreshToken: "refresh-0"
+            )
+        )
+        let refreshCounter = refreshCounter
+        self.store = store
+        transport = AuthenticatingTransport(
+            wrapping: api,
+            store: store,
+            leeway: 5,
+            isTokenExpired: { data, _ in
+                String(data: data, encoding: .utf8)?.contains("token_expired") ?? false
+            },
+            refresh: { _ in
+                let count = try await refreshCounter.next()
+                return OAuthCredentials(
+                    accessToken: "access-\(count)",
+                    expiresAt: Date().addingTimeInterval(Self.tokenLifetime),
+                    refreshToken: "refresh-\(count)"
+                )
+            }
+        )
+    }
+}
+
 struct OAuthDemoView: View {
     let readme: LocalizedStringKey = """
     `OAuthAuthorizationSession` opens the authorization page of a provider in a browser and \
@@ -71,43 +113,12 @@ struct OAuthDemoView: View {
 
     // MARK: - Authenticating transport
 
-    nonisolated static let tokenLifetime: TimeInterval = 15
-
-    let api = FakeAPITransport()
-    let store = InMemoryOAuthCredentialsStore(
-        credentials: OAuthCredentials(
-            accessToken: "access-0",
-            expiresAt: Date().addingTimeInterval(tokenLifetime),
-            refreshToken: "refresh-0"
-        )
-    )
-    let refreshCounter = RefreshCounter()
+    @State var demo = TransportDemo()
 
     @State var transportOutcome = "No request sent"
     @State var currentToken = "access-0"
     @State var refreshCount = 0
     @State var isRefreshBroken = false
-
-    var transport: AuthenticatingTransport {
-        AuthenticatingTransport(
-            wrapping: api,
-            store: store,
-            leeway: 5,
-            isTokenExpired: { data, _ in
-                String(data: data, encoding: .utf8)?.contains("token_expired") ?? false
-            },
-            refresh: { _ in
-                let count = try await refreshCounter.next()
-                return OAuthCredentials(
-                    accessToken: "access-\(count)",
-                    expiresAt: Date().addingTimeInterval(Self.tokenLifetime),
-                    refreshToken: "refresh-\(count)"
-                )
-            }
-        )
-    }
-
-    @State var sharedTransport: AuthenticatingTransport?
 
     var body: some View {
         Form {
@@ -134,7 +145,7 @@ struct OAuthDemoView: View {
             SwiftUI.Section("Authenticating Transport") {
                 LabeledContent("Current token", value: currentToken)
                 LabeledContent("Refreshes", value: "\(refreshCount)")
-                Text("The token expires after \(Int(Self.tokenLifetime)) seconds. "
+                Text("The token expires after \(Int(TransportDemo.tokenLifetime)) seconds. "
                     + "The transport refreshes it 5 seconds before.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -142,11 +153,11 @@ struct OAuthDemoView: View {
                     Task { await sendRequest() }
                 }
                 Button("Revoke Current Token on the Server") {
-                    Task { await api.revoke(currentToken) }
+                    Task { await demo.api.revoke(currentToken) }
                 }
                 Toggle("Break the refresh token", isOn: $isRefreshBroken)
                     .onChange(of: isRefreshBroken) { _, newValue in
-                        Task { await refreshCounter.setBroken(newValue) }
+                        Task { await demo.refreshCounter.setBroken(newValue) }
                     }
                 Text(transportOutcome)
                     .font(.caption)
@@ -187,17 +198,9 @@ struct OAuthDemoView: View {
     }
 
     func sendRequest() async {
-        let transport: AuthenticatingTransport
-        if let sharedTransport {
-            transport = sharedTransport
-        } else {
-            transport = self.transport
-            sharedTransport = transport
-        }
-
         do {
             let request = URLRequest(url: URL(string: "https://api.example.tld/me")!)
-            let (data, _) = try await transport.send(urlRequest: request, delegate: nil)
+            let (data, _) = try await demo.transport.send(urlRequest: request, delegate: nil)
             transportOutcome = "Response: \(String(data: data, encoding: .utf8) ?? "")"
         } catch let error as ReauthenticationRequiredError {
             transportOutcome = "Re-authentication required: \(error.localizedDescription)"
@@ -205,8 +208,8 @@ struct OAuthDemoView: View {
             transportOutcome = "Error: \(error.localizedDescription)"
         }
 
-        refreshCount = await refreshCounter.count
-        currentToken = await store.load()?.accessToken ?? "<cleared>"
+        refreshCount = await demo.refreshCounter.count
+        currentToken = await demo.store.load()?.accessToken ?? "<cleared>"
     }
 }
 

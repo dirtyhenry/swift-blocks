@@ -19,7 +19,7 @@ public protocol OAuthCredentialsStore: Sendable {
 
 /// A store that keeps the credentials in memory.
 ///
-/// Use it in tests, previews and demos. The credentials are lost when the process stops.
+/// Use it in tests, previews and demos. The store loses the credentials when the process stops.
 @available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
 public actor InMemoryOAuthCredentialsStore: OAuthCredentialsStore {

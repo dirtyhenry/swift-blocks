@@ -92,7 +92,7 @@ public final class AuthenticatingTransport: Transport {
     /// Tells that the token is expired when the status code is 401.
     ///
     /// - Parameters:
-    ///   - data: The response data. Not used.
+    ///   - data: The response data. The detector does not read it.
     ///   - response: The HTTP response.
     /// - Returns: `true` when the status code is 401.
     @Sendable
@@ -104,7 +104,8 @@ public final class AuthenticatingTransport: Transport {
 /// An error that tells that the user must authorize the app again.
 ///
 /// ``AuthenticatingTransport`` throws this error when it cannot get valid credentials. When the
-/// reason is a failed refresh, the transport has cleared the store before it throws.
+/// reason is a failed refresh or a missing refresh token, the transport has cleared the store
+/// before it throws.
 public struct ReauthenticationRequiredError: Error {
     /// The reason why the transport cannot get valid credentials.
     public enum Reason: Sendable {
@@ -152,8 +153,8 @@ actor OAuthCredentialsCoordinator {
     private let refresh: AuthenticatingTransport.Refresh
 
     private var cached: OAuthCredentials?
-    private var hasLoaded = false
     private var inFlightRefresh: Task<OAuthCredentials, Error>?
+    private var rejectedAccessToken: String?
 
     init(
         store: OAuthCredentialsStore,
@@ -187,11 +188,16 @@ actor OAuthCredentialsCoordinator {
             return cached
         }
 
+        if stale.accessToken == rejectedAccessToken {
+            throw ReauthenticationRequiredError(reason: .missingCredentials)
+        }
+
         if let inFlightRefresh {
             return try await inFlightRefresh.value
         }
 
         guard let refreshToken = stale.refreshToken else {
+            await clearCredentials(rejecting: stale)
             throw ReauthenticationRequiredError(reason: .missingRefreshToken)
         }
 
@@ -203,8 +209,7 @@ actor OAuthCredentialsCoordinator {
                 cached = newCredentials
                 return newCredentials
             } catch {
-                cached = nil
-                try? await store.clear()
+                await clearCredentials(rejecting: stale)
                 throw ReauthenticationRequiredError(reason: .refreshFailed(error))
             }
         }
@@ -212,10 +217,11 @@ actor OAuthCredentialsCoordinator {
         return try await task.value
     }
 
+    /// Returns the cached credentials. Reads the store when the cache is empty, so that the
+    /// transport finds the credentials that the app saves after a new authorization.
     private func currentCredentials() async throws -> OAuthCredentials {
-        if !hasLoaded {
+        if cached == nil {
             cached = try await store.load()
-            hasLoaded = true
         }
 
         guard let cached else {
@@ -223,5 +229,12 @@ actor OAuthCredentialsCoordinator {
         }
 
         return cached
+    }
+
+    /// Clears the credentials. Later refresh requests for `stale` throw without a new refresh.
+    private func clearCredentials(rejecting stale: OAuthCredentials) async {
+        cached = nil
+        rejectedAccessToken = stale.accessToken
+        try? await store.clear()
     }
 }
