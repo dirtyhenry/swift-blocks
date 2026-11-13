@@ -49,3 +49,13 @@ public extension URLRequest {
         setValue(headerItem.value, forHTTPHeaderField: headerItem.name)
     }
 }
+
+public extension URLRequestHeaderItem {
+    /// Creates a bearer authentication header item with the specified token.
+    ///
+    /// - Parameter token: The bearer token, for example an OAuth 2.0 access token.
+    /// - Returns: A URLRequestHeaderItem representing the bearer authentication header.
+    static func bearerAuthentication(token: String) -> Self {
+        Self(name: "Authorization", value: "Bearer \(token)")
+    }
+}

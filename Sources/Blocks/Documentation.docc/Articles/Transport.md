@@ -68,6 +68,8 @@ code more easily and make tests easy to write.
 - `LoggingTransport`
 - `MockTransport`
 - `StatusCodeCheckingTransport`
+- `RetryTransport`
+- `AuthenticatingTransport`
 - `MultipartRequest`
 - `TransportError`
 - `WrongStatusCodeError`
