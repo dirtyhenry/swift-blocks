@@ -24,7 +24,8 @@ struct BlocksCLI: AsyncParsableCommand {
             ListIPAddressesCommand.self,
             NewNoteCommand.self,
             MergeTranslationsCommand.self,
-            SlugifyCommand.self
+            SlugifyCommand.self,
+            FMBenchCommand.self
         ]
         #if canImport(FoundationModels)
         commands.append(AICommand.self)
