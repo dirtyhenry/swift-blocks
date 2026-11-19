@@ -54,6 +54,7 @@ swift run blocks-cli exec --help
 | `gen-barcode`        | Creates a QR or Aztec barcode image                                            | — (Core Image)                                              |
 | `read-barcode`       | Reads the payload of a barcode image                                           | — (Vision)                                                  |
 | `ai-demo`            | Rewrites product copy with the on-device model                                 | — (Foundation Models, macOS 26)                             |
+| `fm-bench`           | Measures what the on-device model can classify, tag, summarize and extract     | — (Foundation Models, macOS 26)                             |
 
 ### `exec`
 
@@ -263,6 +264,33 @@ built when the SDK provides `FoundationModels`.
 ```sh
 blocks-cli ai-demo 'our app is very fast and good'
 ```
+
+### `fm-bench`
+
+Runs everyday text tasks through the on-device model and logs each call as JSON
+Lines. The corpus is a folder of Markdown posts with front matter. The front
+matter gives the ground truth: `category`, `tags`, `summary` and `language`.
+
+Tasks: `classify` (one category from the corpus), `tag` (up to five tags),
+`summarize` (160 characters and three bullets), `extract` (languages, tools,
+years) and `rewrite` (six built-in product copy samples).
+
+Configs: `A` baseline (guided generation, role instructions, greedy sampling),
+`B` seeded random sampling, `C` one-line instructions, `D` text output,
+`E` permissive guardrails on text output, `F` the content tagging use case.
+
+```sh
+blocks-cli fm-bench run --corpus ~/blog/posts --limit 5 --configs A --out results.jsonl
+blocks-cli fm-bench run --corpus ~/blog/posts --tasks classify,tag --configs B,C --runs 5 --out results.jsonl
+blocks-cli fm-bench report results.jsonl --by-language
+```
+
+The `run` subcommand needs macOS 26 and an Apple Intelligence-eligible device.
+It uses a fresh session for each call and records the outcome (`ok`, soft
+refusal, `refusal` error, guardrail, context size), latency and, on macOS 27,
+the token counts. The `report` subcommand scores a results file: category
+matches, tag overlap with the post's tags, summary length, and prints a
+Markdown table.
 
 ## Tests
 
