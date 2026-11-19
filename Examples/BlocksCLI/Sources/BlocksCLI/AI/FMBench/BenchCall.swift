@@ -71,9 +71,10 @@ struct BenchCall {
     }
 
     func makeOptions() -> GenerationOptions {
-        let sampling: GenerationOptions.SamplingMode = switch config.sampling {
+        let sampling: GenerationOptions.SamplingMode? = switch config.sampling {
         case .greedy: .greedy
         case .randomTop40: .random(top: 40, seed: seed)
+        case .apiDefault: nil
         }
         return GenerationOptions(samplingMode: sampling, temperature: config.temperature)
     }

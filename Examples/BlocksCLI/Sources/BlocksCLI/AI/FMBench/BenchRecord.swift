@@ -56,6 +56,8 @@ enum BenchSampling: String, Codable, Sendable {
     case greedy
     /// `random(top: 40, seed:)`.
     case randomTop40
+    /// The provider's default sampling. Used by reference runs made against a hosted API.
+    case apiDefault
 }
 
 enum BenchGuardrails: String, Codable, Sendable {
