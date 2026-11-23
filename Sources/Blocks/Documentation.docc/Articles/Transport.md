@@ -74,6 +74,8 @@ response. Each request gets a number. The response shows the same number.
 To read the logs, do these steps:
 
 1. Open Console.app.
+1. Choose **Action > Include Debug Messages**. Most messages use the `debug`
+   level, and Console.app does not show them by default.
 1. Filter on the subsystem of your `LoggingTransport`.
 1. Select a message to see the body and the headers.
 

@@ -79,7 +79,8 @@ struct TransportDemoView: View {
     3. **Throw** if the status code is an error one (`StatusCodeCheckingTransport`);
     4. **Retry** the request if it failed a couple of times (`RetryTransport`).
 
-    To see the logs, open Console.app. Filter on the `net.mickf.blocks` subsystem.
+    To see the logs, open Console.app. Choose **Action > Include Debug Messages**.
+    Filter on the `net.mickf.blocks` subsystem.
     Select a message to see the body and the headers.
     Each retry is a new request, thus it gets a new number.
     """
