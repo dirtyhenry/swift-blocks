@@ -13,7 +13,7 @@ final class HTTPLogFormatterTests: XCTestCase {
         request.setValue("Bearer secret", forHTTPHeaderField: "authorization")
         request.httpBody = Data(#"{"operationName":"SignIn","variables":{"slug":"a/b"}}"#.utf8)
 
-        XCTAssertEqual(sut.requestMessage(id: 12, request: request), """
+        XCTAssertEqual(sut.message(for: sut.requestEntry(id: 12, request: request)), """
         → #12 POST https://example.com/graphql (SignIn)
         {
           "operationName" : "SignIn",
@@ -28,7 +28,10 @@ final class HTTPLogFormatterTests: XCTestCase {
     }
 
     func testRequestWithoutHeadersNorBody() {
-        XCTAssertEqual(sut.requestMessage(id: 1, request: URLRequest(url: url)), "→ #1 GET https://example.com/graphql")
+        XCTAssertEqual(
+            sut.requestEntry(id: 1, request: URLRequest(url: url)),
+            HTTPLogFormatter.Entry(summary: "→ #1 GET https://example.com/graphql", details: nil)
+        )
     }
 
     func testResponseWithTextBody() throws {
@@ -39,13 +42,13 @@ final class HTTPLogFormatterTests: XCTestCase {
             headerFields: ["Content-Type": "text/plain", "Set-Cookie": "visible"]
         ))
 
-        let message = sut.responseMessage(
+        let message = sut.message(for: sut.responseEntry(
             id: 3,
             request: URLRequest(url: url),
             response: response,
             data: Data("Not found".utf8),
             duration: 0.1814
-        )
+        ))
 
         XCTAssertEqual(message, """
         ← #3 404 GET https://example.com/graphql · 181 ms · 9 B
@@ -64,13 +67,13 @@ final class HTTPLogFormatterTests: XCTestCase {
             headerFields: ["Content-Type": "image/png"]
         ))
 
-        let message = sut.responseMessage(
+        let message = sut.message(for: sut.responseEntry(
             id: 4,
             request: URLRequest(url: url),
             response: response,
             data: Data([0xFF, 0xD8, 0xFF, 0xE0] + Array(repeating: 0, count: 2044)),
             duration: 2.5
-        )
+        ))
 
         XCTAssertEqual(message, """
         ← #4 200 GET https://example.com/graphql · 2.50 s · 2.0 KB
@@ -89,13 +92,13 @@ final class HTTPLogFormatterTests: XCTestCase {
         ))
         let body = Data(String(repeating: "é", count: 2000).utf8)
 
-        let message = sut.responseMessage(
+        let message = sut.message(for: sut.responseEntry(
             id: 5,
             request: URLRequest(url: url),
             response: response,
             data: body,
             duration: 0
-        )
+        ))
 
         XCTAssertLessThanOrEqual(message.utf8.count, HTTPLogFormatter.messageByteLimit)
         XCTAssertTrue(message.hasPrefix("← #5 200 GET https://example.com/graphql · 0 ms · 3.9 KB\néé"))
@@ -104,19 +107,47 @@ final class HTTPLogFormatterTests: XCTestCase {
     }
 
     func testError() {
-        let message = sut.errorMessage(
+        let message = sut.message(for: sut.errorEntry(
             id: 6,
             request: URLRequest(url: url),
             error: URLError(.timedOut),
             duration: 30
-        )
+        ))
 
         XCTAssertTrue(message.hasPrefix("← #6 ERROR GET https://example.com/graphql · 30.00 s · "))
+    }
+
+    func testRequestWithStreamedBody() {
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBodyStream = InputStream(data: Data("streamed".utf8))
+
+        XCTAssertEqual(sut.message(for: sut.requestEntry(id: 7, request: request)), """
+        → #7 POST https://example.com/graphql
+        <streamed body>
+        """)
+    }
+
+    func testLargeJSONBodyIsNotParsed() throws {
+        let response = try XCTUnwrap(HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil))
+        let items = String(repeating: "1,", count: HTTPLogFormatter.parsedBodyByteLimit)
+        let body = Data("{\"items\":[\(items)1]}".utf8)
+
+        let entry = sut.responseEntry(id: 8, request: URLRequest(url: url), response: response, data: body, duration: 0)
+
+        XCTAssertTrue(try XCTUnwrap(entry.details).hasPrefix(#"{"items":[1,1,"#))
+    }
+
+    func testDetailsMessage() {
+        XCTAssertEqual(sut.detailsMessage(id: 9, details: "Not found"), "↳ #9 details\nNot found")
     }
 
     @available(iOS 15.0.0, *)
     @available(macOS 12.0, *)
     func testLevels() {
+        XCTAssertEqual(LoggingTransport.level(for: URLError(.timedOut)), .fault)
+        XCTAssertEqual(LoggingTransport.level(for: URLError(.cancelled)), .debug)
+        XCTAssertEqual(LoggingTransport.level(for: CancellationError()), .debug)
         XCTAssertEqual(LoggingTransport.level(forStatusCode: 200), .debug)
         XCTAssertEqual(LoggingTransport.level(forStatusCode: 302), .debug)
         XCTAssertEqual(LoggingTransport.level(forStatusCode: 404), .error)

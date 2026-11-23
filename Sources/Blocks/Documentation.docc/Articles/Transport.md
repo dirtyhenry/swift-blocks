@@ -79,7 +79,11 @@ To read the logs, do these steps:
 
 The log level shows the result. A 4xx status code uses the `error` level. A 5xx
 status code or a thrown error uses the `fault` level. All other messages use
-the `debug` level.
+the `debug` level, cancellations included.
+
+The system stores `error` and `fault` messages on disk. Thus, these messages
+contain only the summary. A second `debug` message, `↳ #12 details`, contains
+the body and the headers.
 
 The logs hide the values of the `Authorization`, `Cookie` and `Set-Cookie`
 headers. To hide other headers, use `LoggingTransport.Configuration`.

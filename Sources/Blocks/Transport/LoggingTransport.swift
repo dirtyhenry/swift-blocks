@@ -8,7 +8,7 @@ import OSLog
 /// privacy.
 ///
 /// Each request gets a number, for example `#12`. The request and its response show the same number. Use this number
-/// to find the response of a request in Console.app.
+/// to find the response of a request in Console.app. All the instances in a process share the numbers.
 ///
 /// The first line of each message is a summary:
 ///
@@ -23,7 +23,10 @@ import OSLog
 ///
 /// - Requests and status codes below 400 use the `debug` level.
 /// - Status codes from 400 to 499 use the `error` level.
-/// - Status codes from 500 and thrown errors use the `fault` level.
+/// - Status codes from 500 and thrown errors use the `fault` level. A cancellation uses the `debug` level.
+///
+/// The system stores `error` and `fault` messages on disk. Thus, for these levels, the message contains only the
+/// summary. A second message with the `debug` level contains the body and the headers.
 ///
 /// The unified logging system cuts messages at approximately 1 KB. Thus, this wrapper cuts long messages. It writes
 /// the body before the headers, thus the cut removes the headers first.
@@ -49,7 +52,7 @@ public final class LoggingTransport: Transport {
     let wrapped: Transport
     let logger: Logger
     let formatter: HTTPLogFormatter
-    private let counter = RequestCounter()
+    private static let counter = RequestCounter()
 
     public init(
         wrapping: Transport,
@@ -66,29 +69,29 @@ public final class LoggingTransport: Transport {
         urlRequest: URLRequest,
         delegate: URLSessionTaskDelegate?
     ) async throws -> (Data, HTTPURLResponse) {
-        let id = counter.next()
-        log(formatter.requestMessage(id: id, request: urlRequest), level: .debug)
+        let id = Self.counter.next()
+        log(formatter.requestEntry(id: id, request: urlRequest), id: id, level: .debug)
 
         let start = ProcessInfo.processInfo.systemUptime
         do {
             let (data, httpResponse) = try await wrapped.send(urlRequest: urlRequest, delegate: delegate)
-            let message = formatter.responseMessage(
+            let entry = formatter.responseEntry(
                 id: id,
                 request: urlRequest,
                 response: httpResponse,
                 data: data,
                 duration: ProcessInfo.processInfo.systemUptime - start
             )
-            log(message, level: Self.level(forStatusCode: httpResponse.statusCode))
+            log(entry, id: id, level: Self.level(forStatusCode: httpResponse.statusCode))
             return (data, httpResponse)
         } catch {
-            let message = formatter.errorMessage(
+            let entry = formatter.errorEntry(
                 id: id,
                 request: urlRequest,
                 error: error,
                 duration: ProcessInfo.processInfo.systemUptime - start
             )
-            log(message, level: .fault)
+            log(entry, id: id, level: Self.level(for: error))
             throw error
         }
     }
@@ -101,6 +104,30 @@ public final class LoggingTransport: Transport {
             .error
         default:
             .debug
+        }
+    }
+
+    static func level(for error: Error) -> OSLogType {
+        if error is CancellationError || (error as? URLError)?.code == .cancelled {
+            return .debug
+        }
+
+        return .fault
+    }
+
+    /// Logs the details in a separate `debug` message when the level is higher than `debug`.
+    ///
+    /// The system stores `error` and `fault` messages on disk, but not `debug` messages. Thus, the body and the
+    /// headers do not go to the disk.
+    private func log(_ entry: HTTPLogFormatter.Entry, id: Int, level: OSLogType) {
+        guard level != .debug else {
+            log(formatter.message(for: entry), level: .debug)
+            return
+        }
+
+        log(formatter.summaryMessage(for: entry), level: level)
+        if let details = entry.details {
+            log(formatter.detailsMessage(id: id, details: details), level: .debug)
         }
     }
 
