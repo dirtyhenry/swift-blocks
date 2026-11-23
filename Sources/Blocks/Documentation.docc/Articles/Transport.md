@@ -91,6 +91,25 @@ headers.
 The logs hide the values of the `Authorization`, `Cookie` and `Set-Cookie`
 headers. To hide other headers, use `LoggingTransport.Configuration`.
 
+### Network Waterfall
+
+`LoggingTransport` also writes one signpost interval for each request.
+Instruments shows these intervals as a waterfall of the network activity.
+Console.app does not show signposts.
+
+To see the waterfall, do these steps:
+
+1. Open Instruments and select the **Blank** template.
+1. Add the **os_signpost** instrument.
+1. Record your app.
+1. Find the subsystem of your `LoggingTransport` and the `Request` intervals.
+
+The start of an interval shows the request number, the method and the URL. The
+end of an interval shows the status code and the size, or the error.
+
+Instruments keeps the intervals in trace files. Thus, the URLs of the intervals
+show no user info, and `?…` replaces the query.
+
 ## Topics
 
 - `Endpoint`

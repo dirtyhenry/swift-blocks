@@ -102,6 +102,33 @@ struct HTTPLogFormatter {
         ].joined(separator: " · ")
     }
 
+    // MARK: - Signposts
+
+    /// Returns the message at the start of the signpost interval of a request.
+    ///
+    /// Instruments stores signposts in trace files, and people share these files. Thus, the URL has no query and no
+    /// user info.
+    func signpostBeginMessage(id: Int, request: URLRequest) -> String {
+        var message = "#\(id) \(method(of: request)) \(url(of: request, redacted: true))"
+        if let operationName = graphQLOperationName(of: request, json: parseJSON(request.httpBody ?? Data())) {
+            message += " (\(operationName))"
+        }
+
+        return message
+    }
+
+    /// Returns the message at the end of the signpost interval of a response.
+    ///
+    /// Instruments shows the duration of the interval, thus the message does not contain it.
+    func signpostEndMessage(response: HTTPURLResponse, byteCount: Int) -> String {
+        "\(response.statusCode) · \(Self.format(byteCount: byteCount))"
+    }
+
+    /// Returns the message at the end of the signpost interval of a thrown error.
+    func signpostEndMessage(error: Error) -> String {
+        "ERROR · \(error.localizedDescription)"
+    }
+
     // MARK: - Messages
 
     /// Returns one message with the summary and the details.

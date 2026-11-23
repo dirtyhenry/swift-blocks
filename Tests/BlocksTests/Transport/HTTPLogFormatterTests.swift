@@ -154,6 +154,24 @@ final class HTTPLogFormatterTests: XCTestCase {
         """)
     }
 
+    func testSignpostBeginMessageHasRedactedURLAndOperationName() throws {
+        var request = try URLRequest(url: XCTUnwrap(URL(string: "https://user:pass@example.com/graphql?token=SECRET")))
+        request.httpMethod = "POST"
+        request.httpBody = Data(#"{"operationName":"SignIn"}"#.utf8)
+
+        XCTAssertEqual(
+            sut.signpostBeginMessage(id: 12, request: request),
+            "#12 POST https://example.com/graphql?… (SignIn)"
+        )
+    }
+
+    func testSignpostEndMessages() throws {
+        let response = try XCTUnwrap(HTTPURLResponse(url: url, statusCode: 404, httpVersion: nil, headerFields: nil))
+
+        XCTAssertEqual(sut.signpostEndMessage(response: response, byteCount: 1536), "404 · 1.5 KB")
+        XCTAssertTrue(sut.signpostEndMessage(error: URLError(.timedOut)).hasPrefix("ERROR · "))
+    }
+
     func testUnits() {
         XCTAssertEqual(HTTPLogFormatter.format(duration: 0.1814), "181 ms")
         XCTAssertEqual(HTTPLogFormatter.format(duration: 0.9996), "1.00 s")
