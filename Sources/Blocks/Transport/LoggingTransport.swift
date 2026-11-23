@@ -34,6 +34,18 @@ import OSLog
 ///
 /// The unified logging system cuts messages at approximately 1 KB. Thus, this wrapper cuts long messages. It writes
 /// the body before the headers, thus the cut removes the headers first.
+///
+/// The wrapper also writes one signpost interval for each request. Use Instruments to see the intervals as a waterfall
+/// of the network activity. The intervals have the name `Request`, and the subsystem and the category of the logs:
+///
+/// ```
+/// #12 POST https://example.com/graphql (SignIn)
+/// 200 · 1.2 KB
+/// ```
+///
+/// Instruments stores the intervals in trace files. Thus, the URLs of the intervals show no user info, and `?…` replaces
+/// the query.
+/// Console.app does not show signposts.
 @available(iOS 15.0.0, *)
 @available(macOS 12.0, *)
 public final class LoggingTransport: Transport {
@@ -55,8 +67,10 @@ public final class LoggingTransport: Transport {
 
     let wrapped: Transport
     let logger: Logger
+    let signposter: OSSignposter
     let formatter: HTTPLogFormatter
     private static let counter = RequestCounter()
+    private static let signpostName: StaticString = "Request"
 
     public init(
         wrapping: Transport,
@@ -66,6 +80,7 @@ public final class LoggingTransport: Transport {
     ) {
         wrapped = wrapping
         logger = Logger(subsystem: subsystem, category: category)
+        signposter = OSSignposter(logger: logger)
         formatter = HTTPLogFormatter(redactedHeaderFields: configuration.redactedHeaderFields)
     }
 
@@ -76,11 +91,21 @@ public final class LoggingTransport: Transport {
         let id = Self.counter.next()
         let formatter = formatter
         logger.debug("\(formatter.requestMessage(id: id, request: urlRequest), privacy: .public)")
+        let signpostState = signposter.beginInterval(
+            Self.signpostName,
+            id: signposter.makeSignpostID(),
+            "\(formatter.signpostBeginMessage(id: id, request: urlRequest), privacy: .public)"
+        )
 
         let start = ProcessInfo.processInfo.systemUptime
         do {
             let (data, httpResponse) = try await wrapped.send(urlRequest: urlRequest, delegate: delegate)
             let duration = ProcessInfo.processInfo.systemUptime - start
+            signposter.endInterval(
+                Self.signpostName,
+                signpostState,
+                "\(formatter.signpostEndMessage(response: httpResponse, byteCount: data.count), privacy: .public)"
+            )
             log(
                 level: Self.level(forStatusCode: httpResponse.statusCode),
                 id: id,
@@ -100,6 +125,11 @@ public final class LoggingTransport: Transport {
             return (data, httpResponse)
         } catch {
             let duration = ProcessInfo.processInfo.systemUptime - start
+            signposter.endInterval(
+                Self.signpostName,
+                signpostState,
+                "\(formatter.signpostEndMessage(error: error), privacy: .public)"
+            )
             log(
                 level: Self.level(for: error),
                 id: id,

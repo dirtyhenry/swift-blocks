@@ -83,6 +83,8 @@ struct TransportDemoView: View {
     Filter on the `net.mickf.blocks` subsystem.
     Select a message to see the body and the headers.
     Each retry is a new request, thus it gets a new number.
+
+    To see a waterfall of the requests, record the app with the os_signpost instrument of Instruments.
     """
 
     @State var taskState: TaskState = .notStarted
