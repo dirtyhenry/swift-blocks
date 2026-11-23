@@ -61,6 +61,36 @@ StatusCodeCheckingTransport(
 This template makes it very easy to compose features around a transport, share
 code more easily and make tests easy to write.
 
+### Network Logs
+
+`LoggingTransport` writes one message for each request and one message for each
+response. Each request gets a number. The response shows the same number.
+
+```
+→ #12 POST https://example.com/graphql (SignIn)
+← #12 200 POST https://example.com/graphql · 181 ms · 1.2 KB
+```
+
+To read the logs, do these steps:
+
+1. Open Console.app.
+1. Choose **Action > Include Debug Messages**. Most messages use the `debug`
+   level, and Console.app does not show them by default.
+1. Filter on the subsystem of your `LoggingTransport`.
+1. Select a message to see the body and the headers.
+
+The log level shows the result. A 4xx status code uses the `error` level. A 5xx
+status code or a thrown error uses the `fault` level. All other messages use
+the `debug` level, cancellations included.
+
+The system stores `error` and `fault` messages on disk. Thus, these messages
+contain only the summary, with no query and no user info in the URL. A second
+`debug` message, `↳ #12 details`, contains the full URL, the body and the
+headers.
+
+The logs hide the values of the `Authorization`, `Cookie` and `Set-Cookie`
+headers. To hide other headers, use `LoggingTransport.Configuration`.
+
 ## Topics
 
 - `Endpoint`
