@@ -100,7 +100,7 @@ private func trimmingSpacesAndDots(_ string: String) -> String {
 }
 
 /// Returns the longest prefix of `string` that uses `maxLength` bytes or less, without a partial character.
-private func utf8Prefix(_ string: String, maxLength: Int) -> String {
+func utf8Prefix(_ string: String, maxLength: Int) -> String {
     var length = 0
     var result = ""
     for character in string {

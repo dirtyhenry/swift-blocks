@@ -3,15 +3,12 @@ import Foundation
 
 /// Builds the log messages of `LoggingTransport`.
 ///
-/// Each entry has a summary line and optional details: the body and the headers. Console.app shows the first line of
-/// a message in the message column and the other lines in the detail pane.
+/// A message starts with a summary line. Details can follow: the body and the headers. Console.app shows the first
+/// line of a message in the message column and the other lines in the detail pane.
+///
+/// The summaries are cheap to build. The details are not, thus `LoggingTransport` builds them only when the system
+/// collects `debug` messages.
 struct HTTPLogFormatter {
-    /// The summary and the details of one request, response or error.
-    struct Entry: Equatable {
-        let summary: String
-        let details: String?
-    }
-
     /// The maximum size of a message, in UTF-8 bytes.
     ///
     /// The unified logging system cuts messages at approximately 1 KB.
@@ -29,12 +26,15 @@ struct HTTPLogFormatter {
         self.redactedHeaderFields = Set(redactedHeaderFields.map { $0.lowercased() })
     }
 
-    func requestEntry(id: Int, request: URLRequest) -> Entry {
+    // MARK: - Requests
+
+    /// Returns the summary and the details of a request.
+    func requestMessage(id: Int, request: URLRequest) -> String {
         let body = request.httpBody ?? Data()
         let json = parseJSON(body)
 
-        var summary = "→ #\(id) \(method(of: request)) \(url(of: request))"
-        if let operationName = (json as? [String: Any])?["operationName"] as? String {
+        var summary = "→ #\(id) \(method(of: request)) \(url(of: request, redacted: false))"
+        if let operationName = graphQLOperationName(of: request, json: json) {
             summary += " (\(operationName))"
         }
 
@@ -46,25 +46,37 @@ struct HTTPLogFormatter {
             nil
         }
 
-        return Entry(
+        return message(
             summary: summary,
             details: details(body: renderedBody, headers: request.allHTTPHeaderFields ?? [:])
         )
     }
 
-    func responseEntry(
+    // MARK: - Responses
+
+    // swiftlint:disable function_parameter_count
+    /// Returns the summary of a response.
+    ///
+    /// - Parameter redactsURL: Set to `true` to remove the query and the user info from the URL.
+    func responseSummary(
         id: Int,
         request: URLRequest,
         response: HTTPURLResponse,
-        data: Data,
-        duration: TimeInterval
-    ) -> Entry {
-        let summary = [
-            "← #\(id) \(response.statusCode) \(method(of: request)) \(url(of: request))",
+        byteCount: Int,
+        duration: TimeInterval,
+        redactsURL: Bool
+    ) -> String {
+        [
+            "← #\(id) \(response.statusCode) \(method(of: request)) \(url(of: request, redacted: redactsURL))",
             Self.format(duration: duration),
-            Self.format(byteCount: data.count)
+            Self.format(byteCount: byteCount)
         ].joined(separator: " · ")
+    }
 
+    // swiftlint:enable function_parameter_count
+
+    /// Returns the body and the headers of a response.
+    func responseDetails(response: HTTPURLResponse, data: Data) -> String? {
         var headers: [String: String] = [:]
         for (name, value) in response.allHeaderFields {
             headers[String(describing: name)] = String(describing: value)
@@ -74,38 +86,41 @@ struct HTTPLogFormatter {
             ? nil
             : render(body: data, json: parseJSON(data), contentType: response.value(forHTTPHeaderField: "Content-Type"))
 
-        return Entry(summary: summary, details: details(body: renderedBody, headers: headers))
+        return details(body: renderedBody, headers: headers)
     }
 
-    func errorEntry(id: Int, request: URLRequest, error: Error, duration: TimeInterval) -> Entry {
-        let summary = [
-            "← #\(id) ERROR \(method(of: request)) \(url(of: request))",
+    // MARK: - Errors
+
+    /// Returns the summary of an error.
+    ///
+    /// - Parameter redactsURL: Set to `true` to remove the query and the user info from the URL.
+    func errorSummary(id: Int, request: URLRequest, error: Error, duration: TimeInterval, redactsURL: Bool) -> String {
+        [
+            "← #\(id) ERROR \(method(of: request)) \(url(of: request, redacted: redactsURL))",
             Self.format(duration: duration),
             error.localizedDescription
         ].joined(separator: " · ")
-
-        return Entry(summary: summary, details: nil)
     }
 
     // MARK: - Messages
 
     /// Returns one message with the summary and the details.
-    func message(for entry: Entry) -> String {
-        guard let details = entry.details else {
-            return truncate(entry.summary)
+    func message(summary: String, details: String?) -> String {
+        guard let details else {
+            return truncate(summary)
         }
 
-        return truncate(entry.summary + "\n" + details)
+        return truncate(summary + "\n" + details)
     }
 
-    /// Returns a message with the summary only.
-    func summaryMessage(for entry: Entry) -> String {
-        truncate(entry.summary)
-    }
+    /// Returns a message with the full URL and the details. Its first line refers to the request number.
+    func detailsMessage(id: Int, request: URLRequest, details: String?) -> String {
+        let head = "↳ #\(id) details\n\(url(of: request, redacted: false))"
+        guard let details else {
+            return truncate(head)
+        }
 
-    /// Returns a message with the details only. Its first line refers to the request number.
-    func detailsMessage(id: Int, details: String) -> String {
-        truncate("↳ #\(id) details\n" + details)
+        return truncate(head + "\n\n" + details)
     }
 
     // MARK: - Message Parts
@@ -114,8 +129,37 @@ struct HTTPLogFormatter {
         request.httpMethod ?? "GET"
     }
 
-    private func url(of request: URLRequest) -> String {
-        request.url?.absoluteString ?? "<no URL>"
+    /// Returns the URL of the request. A redacted URL has no query, no fragment and no user info.
+    private func url(of request: URLRequest, redacted: Bool) -> String {
+        guard let url = request.url else {
+            return "<no URL>"
+        }
+
+        guard redacted, var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+            return url.absoluteString
+        }
+
+        let hasQuery = components.query != nil
+        components.query = nil
+        components.fragment = nil
+        components.user = nil
+        components.password = nil
+        return (components.string ?? "<no URL>") + (hasQuery ? "?…" : "")
+    }
+
+    private func graphQLOperationName(of request: URLRequest, json: Any?) -> String? {
+        if let operationName = (json as? [String: Any])?["operationName"] as? String {
+            return operationName
+        }
+
+        guard let url = request.url else {
+            return nil
+        }
+
+        return URLComponents(url: url, resolvingAgainstBaseURL: true)?
+            .queryItems?
+            .first { $0.name == "operationName" }?
+            .value
     }
 
     /// Puts the body before the headers, because a message can be too long. Then the cut removes headers first.
@@ -126,7 +170,7 @@ struct HTTPLogFormatter {
         }
 
         let headerLines = headers
-            .sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending }
+            .sorted { $0.key.lowercased() < $1.key.lowercased() }
             .map { name, value in
                 "\(name): \(redactedHeaderFields.contains(name.lowercased()) ? "<redacted>" : value)"
             }
@@ -150,7 +194,7 @@ struct HTTPLogFormatter {
             return pretty
         }
 
-        if let text = utf8Prefix(of: body) {
+        if !Self.isBinary(contentType: contentType, body: body), let text = textPrefix(of: body) {
             return text
         }
 
@@ -171,10 +215,22 @@ struct HTTPLogFormatter {
         return String(data: prettyData, encoding: .utf8)
     }
 
+    /// Tells if a body is binary, from its content type or from a NUL byte at its start.
+    static func isBinary(contentType: String?, body: Data) -> Bool {
+        let binaryTypePrefixes = ["image/", "audio/", "video/", "font/", "application/octet-stream"]
+        let binaryTypeFragments = ["protobuf", "zip", "pdf"]
+        let type = contentType?.lowercased() ?? ""
+        if binaryTypePrefixes.contains(where: type.hasPrefix) || binaryTypeFragments.contains(where: type.contains) {
+            return true
+        }
+
+        return body.prefix(messageByteLimit).contains(0)
+    }
+
     /// Decodes only the start of the body, because the message cut removes the rest.
     ///
     /// The prefix can end in the middle of a UTF-8 character. Thus, this function removes up to 3 bytes at the end.
-    private func utf8Prefix(of body: Data) -> String? {
+    private func textPrefix(of body: Data) -> String? {
         let prefix = body.prefix(Self.messageByteLimit)
         let minimumCount = prefix.count == body.count ? prefix.count : max(prefix.count - 3, 1)
         for count in stride(from: prefix.count, through: minimumCount, by: -1) {
@@ -192,14 +248,15 @@ struct HTTPLogFormatter {
         }
 
         let marker = "\n… (truncated)"
-        return message.prefix(utf8ByteCount: Self.messageByteLimit - marker.utf8.count) + marker
+        return utf8Prefix(message, maxLength: Self.messageByteLimit - marker.utf8.count) + marker
     }
 
     // MARK: - Units
 
     static func format(duration: TimeInterval) -> String {
-        if duration < 1 {
-            return "\(Int((duration * 1000).rounded())) ms"
+        let milliseconds = Int((duration * 1000).rounded())
+        if milliseconds < 1000 {
+            return "\(milliseconds) ms"
         }
 
         return String(format: "%.2f s", duration)
@@ -210,29 +267,12 @@ struct HTTPLogFormatter {
             return "\(byteCount) B"
         }
 
-        if byteCount < 1024 * 1024 {
-            return String(format: "%.1f KB", Double(byteCount) / 1024)
+        let kilobytes = (Double(byteCount) / 1024 * 10).rounded() / 10
+        if kilobytes < 1024 {
+            return String(format: "%.1f KB", kilobytes)
         }
 
         return String(format: "%.1f MB", Double(byteCount) / (1024 * 1024))
-    }
-}
-
-private extension String {
-    /// Returns the longest prefix that fits in the given number of UTF-8 bytes, without a split character.
-    func prefix(utf8ByteCount maxByteCount: Int) -> Substring {
-        var byteCount = 0
-        var end = startIndex
-        while end < endIndex {
-            let characterByteCount = self[end].utf8.count
-            if byteCount + characterByteCount > maxByteCount {
-                break
-            }
-            byteCount += characterByteCount
-            end = index(after: end)
-        }
-
-        return self[..<end]
     }
 }
 #endif

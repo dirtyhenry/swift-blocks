@@ -13,7 +13,7 @@ final class HTTPLogFormatterTests: XCTestCase {
         request.setValue("Bearer secret", forHTTPHeaderField: "authorization")
         request.httpBody = Data(#"{"operationName":"SignIn","variables":{"slug":"a/b"}}"#.utf8)
 
-        XCTAssertEqual(sut.message(for: sut.requestEntry(id: 12, request: request)), """
+        XCTAssertEqual(sut.requestMessage(id: 12, request: request), """
         → #12 POST https://example.com/graphql (SignIn)
         {
           "operationName" : "SignIn",
@@ -27,11 +27,28 @@ final class HTTPLogFormatterTests: XCTestCase {
         """)
     }
 
-    func testRequestWithoutHeadersNorBody() {
+    func testRequestWithGraphQLQuery() throws {
+        let request = try URLRequest(url: XCTUnwrap(URL(string: "https://example.com/graphql?operationName=SignIn")))
+
         XCTAssertEqual(
-            sut.requestEntry(id: 1, request: URLRequest(url: url)),
-            HTTPLogFormatter.Entry(summary: "→ #1 GET https://example.com/graphql", details: nil)
+            sut.requestMessage(id: 2, request: request),
+            "→ #2 GET https://example.com/graphql?operationName=SignIn (SignIn)"
         )
+    }
+
+    func testRequestWithoutHeadersNorBody() {
+        XCTAssertEqual(sut.requestMessage(id: 1, request: URLRequest(url: url)), "→ #1 GET https://example.com/graphql")
+    }
+
+    func testRequestWithStreamedBody() {
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBodyStream = InputStream(data: Data("streamed".utf8))
+
+        XCTAssertEqual(sut.requestMessage(id: 7, request: request), """
+        → #7 POST https://example.com/graphql
+        <streamed body>
+        """)
     }
 
     func testResponseWithTextBody() throws {
@@ -39,16 +56,20 @@ final class HTTPLogFormatterTests: XCTestCase {
             url: url,
             statusCode: 404,
             httpVersion: nil,
-            headerFields: ["Content-Type": "text/plain", "Set-Cookie": "visible"]
+            headerFields: ["Set-Cookie": "visible", "Content-Type": "text/plain"]
         ))
 
-        let message = sut.message(for: sut.responseEntry(
-            id: 3,
-            request: URLRequest(url: url),
-            response: response,
-            data: Data("Not found".utf8),
-            duration: 0.1814
-        ))
+        let message = sut.message(
+            summary: sut.responseSummary(
+                id: 3,
+                request: URLRequest(url: url),
+                response: response,
+                byteCount: 9,
+                duration: 0.1814,
+                redactsURL: false
+            ),
+            details: sut.responseDetails(response: response, data: Data("Not found".utf8))
+        )
 
         XCTAssertEqual(message, """
         ← #3 404 GET https://example.com/graphql · 181 ms · 9 B
@@ -66,21 +87,20 @@ final class HTTPLogFormatterTests: XCTestCase {
             httpVersion: nil,
             headerFields: ["Content-Type": "image/png"]
         ))
+        let body = Data([0xFF, 0xD8, 0xFF, 0xE0] + Array(repeating: 0, count: 2044))
 
-        let message = sut.message(for: sut.responseEntry(
-            id: 4,
-            request: URLRequest(url: url),
-            response: response,
-            data: Data([0xFF, 0xD8, 0xFF, 0xE0] + Array(repeating: 0, count: 2044)),
-            duration: 2.5
-        ))
-
-        XCTAssertEqual(message, """
-        ← #4 200 GET https://example.com/graphql · 2.50 s · 2.0 KB
+        XCTAssertEqual(sut.responseDetails(response: response, data: body), """
         <2.0 KB image/png>
 
         Content-Type: image/png
         """)
+    }
+
+    func testBinaryDetection() {
+        XCTAssertTrue(HTTPLogFormatter.isBinary(contentType: "application/x-protobuf", body: Data("abc".utf8)))
+        XCTAssertTrue(HTTPLogFormatter.isBinary(contentType: nil, body: Data([0x61, 0x00, 0x62])))
+        XCTAssertFalse(HTTPLogFormatter.isBinary(contentType: "text/plain", body: Data("abc".utf8)))
+        XCTAssertFalse(HTTPLogFormatter.isBinary(contentType: nil, body: Data("abc".utf8)))
     }
 
     func testResponseWithLongBodyIsTruncated() throws {
@@ -92,40 +112,15 @@ final class HTTPLogFormatterTests: XCTestCase {
         ))
         let body = Data(String(repeating: "é", count: 2000).utf8)
 
-        let message = sut.message(for: sut.responseEntry(
-            id: 5,
-            request: URLRequest(url: url),
-            response: response,
-            data: body,
-            duration: 0
-        ))
+        let message = sut.message(
+            summary: "summary",
+            details: sut.responseDetails(response: response, data: body)
+        )
 
         XCTAssertLessThanOrEqual(message.utf8.count, HTTPLogFormatter.messageByteLimit)
-        XCTAssertTrue(message.hasPrefix("← #5 200 GET https://example.com/graphql · 0 ms · 3.9 KB\néé"))
+        XCTAssertTrue(message.hasPrefix("summary\néé"))
         XCTAssertTrue(message.hasSuffix("é\n… (truncated)"))
         XCTAssertFalse(message.contains("Content-Type"))
-    }
-
-    func testError() {
-        let message = sut.message(for: sut.errorEntry(
-            id: 6,
-            request: URLRequest(url: url),
-            error: URLError(.timedOut),
-            duration: 30
-        ))
-
-        XCTAssertTrue(message.hasPrefix("← #6 ERROR GET https://example.com/graphql · 30.00 s · "))
-    }
-
-    func testRequestWithStreamedBody() {
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBodyStream = InputStream(data: Data("streamed".utf8))
-
-        XCTAssertEqual(sut.message(for: sut.requestEntry(id: 7, request: request)), """
-        → #7 POST https://example.com/graphql
-        <streamed body>
-        """)
     }
 
     func testLargeJSONBodyIsNotParsed() throws {
@@ -133,13 +128,38 @@ final class HTTPLogFormatterTests: XCTestCase {
         let items = String(repeating: "1,", count: HTTPLogFormatter.parsedBodyByteLimit)
         let body = Data("{\"items\":[\(items)1]}".utf8)
 
-        let entry = sut.responseEntry(id: 8, request: URLRequest(url: url), response: response, data: body, duration: 0)
+        let details = try XCTUnwrap(sut.responseDetails(response: response, data: body))
 
-        XCTAssertTrue(try XCTUnwrap(entry.details).hasPrefix(#"{"items":[1,1,"#))
+        XCTAssertTrue(details.hasPrefix(#"{"items":[1,1,"#))
     }
 
-    func testDetailsMessage() {
-        XCTAssertEqual(sut.detailsMessage(id: 9, details: "Not found"), "↳ #9 details\nNot found")
+    func testRedactedURL() throws {
+        let url = try XCTUnwrap(URL(string: "https://user:pass@example.com/items?api_key=SECRET#top"))
+        let request = URLRequest(url: url)
+
+        let summary = sut.errorSummary(
+            id: 6,
+            request: request,
+            error: URLError(.timedOut),
+            duration: 30,
+            redactsURL: true
+        )
+
+        XCTAssertTrue(summary.hasPrefix("← #6 ERROR GET https://example.com/items?… · 30.00 s · "))
+        XCTAssertEqual(sut.detailsMessage(id: 6, request: request, details: "Not found"), """
+        ↳ #6 details
+        https://user:pass@example.com/items?api_key=SECRET#top
+
+        Not found
+        """)
+    }
+
+    func testUnits() {
+        XCTAssertEqual(HTTPLogFormatter.format(duration: 0.1814), "181 ms")
+        XCTAssertEqual(HTTPLogFormatter.format(duration: 0.9996), "1.00 s")
+        XCTAssertEqual(HTTPLogFormatter.format(byteCount: 1023), "1023 B")
+        XCTAssertEqual(HTTPLogFormatter.format(byteCount: 1536), "1.5 KB")
+        XCTAssertEqual(HTTPLogFormatter.format(byteCount: 1_048_575), "1.0 MB")
     }
 
     @available(iOS 15.0.0, *)

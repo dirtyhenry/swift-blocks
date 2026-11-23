@@ -81,6 +81,7 @@ struct TransportDemoView: View {
 
     To see the logs, open Console.app. Filter on the `net.mickf.blocks` subsystem.
     Select a message to see the body and the headers.
+    Each retry is a new request, thus it gets a new number.
     """
 
     @State var taskState: TaskState = .notStarted

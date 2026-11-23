@@ -26,7 +26,11 @@ import OSLog
 /// - Status codes from 500 and thrown errors use the `fault` level. A cancellation uses the `debug` level.
 ///
 /// The system stores `error` and `fault` messages on disk. Thus, for these levels, the message contains only the
-/// summary. A second message with the `debug` level contains the body and the headers.
+/// summary, with no query and no user info in the URL. A second message with the `debug` level contains the full URL,
+/// the body and the headers.
+///
+/// The wrapper builds the bodies and the headers only when the system collects `debug` messages. For example, when
+/// Console.app streams the logs.
 ///
 /// The unified logging system cuts messages at approximately 1 KB. Thus, this wrapper cuts long messages. It writes
 /// the body before the headers, thus the cut removes the headers first.
@@ -70,28 +74,47 @@ public final class LoggingTransport: Transport {
         delegate: URLSessionTaskDelegate?
     ) async throws -> (Data, HTTPURLResponse) {
         let id = Self.counter.next()
-        log(formatter.requestEntry(id: id, request: urlRequest), id: id, level: .debug)
+        let formatter = formatter
+        logger.debug("\(formatter.requestMessage(id: id, request: urlRequest), privacy: .public)")
 
         let start = ProcessInfo.processInfo.systemUptime
         do {
             let (data, httpResponse) = try await wrapped.send(urlRequest: urlRequest, delegate: delegate)
-            let entry = formatter.responseEntry(
+            let duration = ProcessInfo.processInfo.systemUptime - start
+            log(
+                level: Self.level(forStatusCode: httpResponse.statusCode),
                 id: id,
                 request: urlRequest,
-                response: httpResponse,
-                data: data,
-                duration: ProcessInfo.processInfo.systemUptime - start
+                summary: { redactsURL in
+                    formatter.responseSummary(
+                        id: id,
+                        request: urlRequest,
+                        response: httpResponse,
+                        byteCount: data.count,
+                        duration: duration,
+                        redactsURL: redactsURL
+                    )
+                },
+                details: { formatter.responseDetails(response: httpResponse, data: data) }
             )
-            log(entry, id: id, level: Self.level(forStatusCode: httpResponse.statusCode))
             return (data, httpResponse)
         } catch {
-            let entry = formatter.errorEntry(
+            let duration = ProcessInfo.processInfo.systemUptime - start
+            log(
+                level: Self.level(for: error),
                 id: id,
                 request: urlRequest,
-                error: error,
-                duration: ProcessInfo.processInfo.systemUptime - start
+                summary: { redactsURL in
+                    formatter.errorSummary(
+                        id: id,
+                        request: urlRequest,
+                        error: error,
+                        duration: duration,
+                        redactsURL: redactsURL
+                    )
+                },
+                details: { nil }
             )
-            log(entry, id: id, level: Self.level(for: error))
             throw error
         }
     }
@@ -117,22 +140,25 @@ public final class LoggingTransport: Transport {
 
     /// Logs the details in a separate `debug` message when the level is higher than `debug`.
     ///
-    /// The system stores `error` and `fault` messages on disk, but not `debug` messages. Thus, the body and the
-    /// headers do not go to the disk.
-    private func log(_ entry: HTTPLogFormatter.Entry, id: Int, level: OSLogType) {
+    /// The system stores `error` and `fault` messages on disk, but not `debug` messages. Thus, the details and the
+    /// full URL do not go to the disk.
+    ///
+    /// The logger calls the `details` closure only when the system collects `debug` messages.
+    private func log(
+        level: OSLogType,
+        id: Int,
+        request: URLRequest,
+        summary: @escaping (_ redactsURL: Bool) -> String,
+        details: @escaping () -> String?
+    ) {
+        let formatter = formatter
         guard level != .debug else {
-            log(formatter.message(for: entry), level: .debug)
+            logger.debug("\(formatter.message(summary: summary(false), details: details()), privacy: .public)")
             return
         }
 
-        log(formatter.summaryMessage(for: entry), level: level)
-        if let details = entry.details {
-            log(formatter.detailsMessage(id: id, details: details), level: .debug)
-        }
-    }
-
-    private func log(_ message: String, level: OSLogType) {
-        logger.log(level: level, "\(message, privacy: .public)")
+        logger.log(level: level, "\(formatter.message(summary: summary(true), details: nil), privacy: .public)")
+        logger.debug("\(formatter.detailsMessage(id: id, request: request, details: details()), privacy: .public)")
     }
 }
 

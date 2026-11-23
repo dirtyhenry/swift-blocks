@@ -36,7 +36,8 @@ public extension StringProtocol {
 
         if !isEmpty, slug.isEmpty {
             if let extendedSelf = applyingTransform(.toUnicodeName, reverse: false)?
-                .replacingOccurrences(of: "\\N", with: ""), self != extendedSelf {
+                .replacingOccurrences(of: "\\N", with: ""), self != extendedSelf
+            {
                 return extendedSelf.slugify()
             }
         }
