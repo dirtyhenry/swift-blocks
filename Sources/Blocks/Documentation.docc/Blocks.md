@@ -13,6 +13,7 @@
 - **Data Management**. Convert data to hexadecimal or base 64 at ease.
 - <doc:FilenamesAndSlugs> Make a filename or a URL slug from a title.
 - **iCalendar Objects**. Create ical documents.
+- **Elo Ratings**. Rate players or teams from their results with `EloEngine`.
 - <doc:StyledText> Compose colored and formatted text for command-line interfaces.
 - <doc:InteractiveShell> Run external commands with full terminal access.
 - <doc:ReadingALine> Read a line that the user can edit with the arrow keys.
