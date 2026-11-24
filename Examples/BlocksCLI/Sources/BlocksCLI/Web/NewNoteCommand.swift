@@ -49,8 +49,7 @@ struct NewNoteCommand: ParsableCommand {
     }
 
     private func parseDate(_ string: String) throws -> PlainDate {
-        // Comparing the result with the input rejects dates that the parser rolls over, such as February 30.
-        guard let date = PlainDate(from: string), date.description == string else {
+        guard let date = PlainDate(from: string) else {
             throw ValidationError("The date is not a valid YYYY-MM-DD date: \(string)")
         }
         return date

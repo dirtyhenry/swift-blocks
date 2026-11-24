@@ -66,6 +66,15 @@ final class PlainDateTests: XCTestCase {
         XCTAssertEqual("2022-01-19", mockCodable.dateString.description)
     }
 
+    func testDecodableThrowsOnInvalidString() throws {
+        let data = try XCTUnwrap(#"{"dateString":"29/10/2026"}"#.data(using: .utf8))
+        XCTAssertThrowsError(try JSONDecoder().decode(MockCodable.self, from: data)) { error in
+            guard case DecodingError.dataCorrupted = error else {
+                return XCTFail("Unexpected error: \(error)")
+            }
+        }
+    }
+
     func testWeekdays() {
         XCTAssertEqual(PlainDate(stringLiteral: "2023-03-13").weekday, PlainDate.Weekday.monday)
         XCTAssertEqual(PlainDate(stringLiteral: "2023-03-14").weekday, PlainDate.Weekday.tuesday)
@@ -98,13 +107,58 @@ final class PlainDateTests: XCTestCase {
         XCTAssertEqual(PlainDate(stringLiteral: "2023-03-20").yearWeek, "2023-W12")
     }
 
-    func testCraftURL() throws {
-        try XCTAssertEqual(PlainDate(stringLiteral: "2025-05-26").craftURL().absoluteString, "day://2025.05.26")
+    func testCraftURL() {
+        XCTAssertEqual(PlainDate(stringLiteral: "2025-05-26").craftURL().absoluteString, "day://2025.05.26")
+    }
+
+    func testInitFromStringRejectsDaysThatDoNotExist() {
+        XCTAssertNil(PlainDate(from: "2022-02-30"))
+        XCTAssertNil(PlainDate(from: "2023-13-01"))
+        XCTAssertNil(PlainDate(from: "2023-02-29"))
+        XCTAssertNotNil(PlainDate(from: "2024-02-29"))
+    }
+
+    func testInitFromStringRequiresTheISOFormat() {
+        XCTAssertNil(PlainDate(from: "2022-3-2"))
+        XCTAssertNil(PlainDate(from: "20220302"))
+        XCTAssertNil(PlainDate(from: "2022-03-02T10:00:00Z"))
+        XCTAssertNil(PlainDate(from: "+2022-03-02"))
+        XCTAssertNil(PlainDate(from: ""))
+        XCTAssertEqual(PlainDate(from: "0999-01-01")?.description, "0999-01-01")
+    }
+
+    func testYearWeekAtYearBoundaries() {
+        XCTAssertEqual(PlainDate(stringLiteral: "2021-01-03").yearWeek, "2020-W53")
+        XCTAssertEqual(PlainDate(stringLiteral: "2024-12-30").yearWeek, "2025-W01")
+    }
+
+    func testInitFromDateRemovesTimeOfDay() throws {
+        let calendar = Calendar.parisCalendar()
+        let midnight = try XCTUnwrap(PlainDate(from: "2026-10-29", calendar: calendar))
+        let morning = PlainDate(date: midnight.date.addingTimeInterval(10 * 3600 + 42 * 60), calendar: calendar)
+
+        XCTAssertEqual(morning, midnight)
+        XCTAssertEqual(morning.hashValue, midnight.hashValue)
+        XCTAssertEqual(Array(morning ..< midnight.advanced(by: 3)).count, 3)
     }
 
     func testComparable() {
         XCTAssertTrue(PlainDate(stringLiteral: "2025-05-26") == PlainDate(stringLiteral: "2025-05-26"))
         XCTAssertTrue(PlainDate(stringLiteral: "2025-05-26") != PlainDate(stringLiteral: "2025-05-27"))
         XCTAssertTrue(PlainDate(stringLiteral: "2025-05-26") < PlainDate(stringLiteral: "2025-05-27"))
+    }
+
+    func testEqualityIsConsistentWithOrderAcrossCalendars() throws {
+        let paris = try XCTUnwrap(PlainDate(from: "2026-10-29", calendar: .parisCalendar()))
+        let newYork = try XCTUnwrap(PlainDate(from: "2026-10-29", calendar: .newYorkCalendar()))
+        let nextDay = try XCTUnwrap(PlainDate(from: "2026-10-30", calendar: .newYorkCalendar()))
+
+        XCTAssertEqual(paris, newYork)
+        XCTAssertEqual(paris.hashValue, newYork.hashValue)
+        XCTAssertFalse(paris < newYork)
+        XCTAssertFalse(newYork < paris)
+        XCTAssertEqual(Set([paris, newYork]).count, 1)
+        XCTAssertTrue(paris < nextDay)
+        XCTAssertFalse(nextDay < paris)
     }
 }
