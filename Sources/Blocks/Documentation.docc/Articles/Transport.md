@@ -98,6 +98,8 @@ headers. To hide other headers, use `LoggingTransport.Configuration`.
 - `LoggingTransport`
 - `MockTransport`
 - `StatusCodeCheckingTransport`
+- `RetryTransport`
+- `AuthenticatingTransport`
 - `MultipartRequest`
 - `TransportError`
 - `WrongStatusCodeError`

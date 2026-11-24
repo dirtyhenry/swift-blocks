@@ -22,6 +22,7 @@
 		008D62D02A56EA1500254FD9 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 008D62CF2A56EA1500254FD9 /* UniformTypeIdentifiers.framework */; };
 		00925B672F18037C00C00699 /* IPAddressScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00925B662F18037C00C00699 /* IPAddressScannerView.swift */; };
 		00B1C4A12F27A00100D3E1F0 /* QueryClientDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B1C4A02F27A00100D3E1F0 /* QueryClientDemoView.swift */; };
+		00B1C4B12F27A00100D3E1F0 /* OAuthDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B1C4B02F27A00100D3E1F0 /* OAuthDemoView.swift */; };
 		00A12BF42CC0F84B0006D9F7 /* TransportDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A12BF32CC0F8450006D9F7 /* TransportDemoView.swift */; };
 		00A274EA2D1EC88B00A2DD67 /* FormPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A274E92D1EC88B00A2DD67 /* FormPlaygroundView.swift */; };
 		00A37E302B1911A800FA4B5F /* FileSystemExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */; };
@@ -71,6 +72,7 @@
 		008D62CF2A56EA1500254FD9 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
 		00925B662F18037C00C00699 /* IPAddressScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddressScannerView.swift; sourceTree = "<group>"; };
 		00B1C4A02F27A00100D3E1F0 /* QueryClientDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryClientDemoView.swift; sourceTree = "<group>"; };
+		00B1C4B02F27A00100D3E1F0 /* OAuthDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthDemoView.swift; sourceTree = "<group>"; };
 		00A12BF32CC0F8450006D9F7 /* TransportDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportDemoView.swift; sourceTree = "<group>"; };
 		00A274E92D1EC88B00A2DD67 /* FormPlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormPlaygroundView.swift; sourceTree = "<group>"; };
 		00A37E2F2B1911A800FA4B5F /* FileSystemExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSystemExplorerView.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 				00333CCA2C45682900A58365 /* SlugifyView.swift */,
 				00A274E92D1EC88B00A2DD67 /* FormPlaygroundView.swift */,
 				00B1C4A02F27A00100D3E1F0 /* QueryClientDemoView.swift */,
+				00B1C4B02F27A00100D3E1F0 /* OAuthDemoView.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -362,6 +365,7 @@
 				0038EF682C00F1F0004BF4FB /* LoggingPlaygroundView.swift in Sources */,
 				005A6BF12F5845DE00598974 /* ImageCompressionDemoView.swift in Sources */,
 				00B1C4A12F27A00100D3E1F0 /* QueryClientDemoView.swift in Sources */,
+				00B1C4B12F27A00100D3E1F0 /* OAuthDemoView.swift in Sources */,
 				00D1E2482A36327100E8D275 /* BlocksApp.swift in Sources */,
 				00D1E2482A36327100E8D299 /* WatchSessionDelegate.swift in Sources */,
 			);

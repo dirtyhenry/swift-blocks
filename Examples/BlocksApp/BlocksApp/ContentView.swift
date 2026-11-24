@@ -20,6 +20,7 @@ struct ContentView: View {
         case transportDemo = "Transport"
         case imageCompression = "Image Compression"
         case queryClientDemo = "Query Client"
+        case oauthDemo = "OAuth"
 
         var id: String {
             rawValue
@@ -43,6 +44,7 @@ struct ContentView: View {
             case .transportDemo: "arrow.up.arrow.down.circle"
             case .imageCompression: "photo"
             case .queryClientDemo: "arrow.triangle.2.circlepath"
+            case .oauthDemo: "key"
             }
         }
 
@@ -56,7 +58,9 @@ struct ContentView: View {
                 sections += [.fileSystemExplorer, .ipAddressScanner, .mailAndCamera]
                 return sections
             }()),
-            ("Utilities", [.loggingPlayground, .slugifyPlayground, .transportDemo, .imageCompression, .queryClientDemo])
+            ("Utilities", [
+                .loggingPlayground, .slugifyPlayground, .transportDemo, .imageCompression, .queryClientDemo, .oauthDemo
+            ])
         ]
     }
 
@@ -110,6 +114,8 @@ struct ContentView: View {
                         TransportDemoView()
                     case .queryClientDemo:
                         QueryClientDemoView()
+                    case .oauthDemo:
+                        OAuthDemoView()
                     case .formPlayground:
                         FormPlaygroundView()
                     case .watchPairing:

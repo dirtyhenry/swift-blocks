@@ -24,7 +24,7 @@ extension Dictionary {
 /// account as two distinct items. An instance only ever reads, writes, or deletes the
 /// item matching its own ``storage`` mode. See <doc:DataManagement> for a discussion of
 /// the security tradeoffs between the two modes.
-public final class GenericPasswordKeychainItem {
+public final class GenericPasswordKeychainItem: Sendable {
     /// Where a keychain item is stored, and whether it syncs across the user's devices.
     public enum Storage: Sendable {
         /// The secret stays on this device only.
